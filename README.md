@@ -2,6 +2,22 @@
 
 Python package for OpenFlowsWater module from Bentley that mainly contains the stub (*.pyi) files and a few py files to get started.
 
+## Must Create python.exe.config File
+
+Bentley's WaterObjects.NET API contains a mixed mode (managed/unmanaged)
+assemblies as a result, a python configuration file has to placed where the python.exe is location (in your environment). The contents of the file can be copied from below or use from [here](/misc/python.exe.config).
+
+>Note: Filename is important. For "python.exe" create "python.exe.config"
+
+```xml
+<?xml version="1.0"?>
+<configuration>
+  <startup useLegacyV2RuntimeActivationPolicy="true">
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+  </startup>
+</configuration>
+````
+
 ## Installation
 
 Run the following to install:
