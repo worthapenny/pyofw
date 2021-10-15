@@ -1,0 +1,38 @@
+{
+  "python.languageServer": "Pylance",
+  "python.formatting.autopep8Args": [
+    "--ignore",
+    "E402"
+  ],
+  "editor.formatOnSave": true,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingModuleSource": "none",
+    "reportMissingImports": "information",
+    "reportMissingTypeStubs": "information",
+    "reportUnknownMemberType": "information",
+    "reportGeneralTypeIssues": "none",
+    "reportUnknownParameterType": "warning",
+    "reportUnknownArgumentType": "warning",
+    "reportUnusedImport": "warning"
+  },
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "python.testing.unittestArgs": [
+    "-v",
+    "-s",
+    "./tests",
+    "-p",
+    "test_*.py"
+  ],
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestEnabled": true,
+  "cSpell.words": [
+    "Akshaya",
+    "Chrsts",
+    "Coeff",
+    "Niraula",
+    "Orif",
+    "pyofw",
+    "Thres",
+    "vspb"
+  ]
+}

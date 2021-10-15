@@ -1,18 +1,3 @@
-# pyofw
-
-Python package for OpenFlowsWater module from Bentley that mainly contains the stub (*.pyi) files and a few py files to get started.
-
-## Installation
-
-Run the following to install:
-
-```python
-pip install pyofw
-```
-
-## Usage
-
-```python
 from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
 
 # if logging is desired
@@ -61,12 +46,3 @@ setup.end()
 
 # # Option 2:
 # setup.end(close_session=False)
-```
-
-## Developing pyofw
-
-To install `pyofw`, along with the tools you need to develop and run test, run the following in your [virtual]evn:
-
-```python
-pip install -e .[dev]
-```
