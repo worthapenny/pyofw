@@ -54,7 +54,7 @@ class IFieldInfo(INamable, ILabeled):
 
 	@property
 	def Field(self) -> IField:
-		"""No Description
+		"""The field associated with this FieldInfo
 
 		Returns:
 			IFieldInfo: 
@@ -63,7 +63,7 @@ class IFieldInfo(INamable, ILabeled):
 
 	@property
 	def FieldType(self) -> DomainFieldType:
-		"""No Description
+		"""The type of field - domain, support, scenario, etc.
 
 		Returns:
 			IFieldInfo: 
@@ -72,7 +72,7 @@ class IFieldInfo(INamable, ILabeled):
 
 	@property
 	def FieldDataType(self) -> FieldDataType:
-		"""No Description
+		"""The value type for this field when retrieved.
 
 		Returns:
 			IFieldInfo: 
@@ -81,7 +81,7 @@ class IFieldInfo(INamable, ILabeled):
 
 	@property
 	def StorageUnit(self) -> Unit:
-		"""No Description
+		"""If unitized, the storage unit the value is stored in.
 
 		Returns:
 			IFieldInfo: 
@@ -90,7 +90,7 @@ class IFieldInfo(INamable, ILabeled):
 
 	@property
 	def Unit(self) -> IUnit:
-		"""No Description
+		"""If unitized, the format information for the field.
 
 		Returns:
 			IFieldInfo: 
@@ -111,7 +111,7 @@ class INetworkFieldInfo(IFieldInfo):
 
 	@property
 	def AlternativeTypeName(self) -> str:
-		"""No Description
+		"""The name of the alternative type this field belongs to.
 
 		Returns:
 			INetworkFieldInfo: 
@@ -120,7 +120,7 @@ class INetworkFieldInfo(IFieldInfo):
 
 	@property
 	def DomainElementTypeName(self) -> str:
-		"""No Description
+		"""The name of the domain element type that this field is assigned.
 
 		Returns:
 			INetworkFieldInfo: 
@@ -140,7 +140,7 @@ class IUserNetworkfieldInfo(INetworkFieldInfo):
 		pass
 
 	def Delete(self) -> None:
-		"""No Description
+		"""Deletes the user defined field from all supported element types.
 
 		Returns:
 			None: 
@@ -161,7 +161,7 @@ class IResultFieldInfo(IFieldInfo):
 
 	@property
 	def ResultRecordTypeName(self) -> str:
-		"""No Description
+		"""the result record that the field is part of.
 
 		Returns:
 			IResultFieldInfo: 
@@ -170,7 +170,7 @@ class IResultFieldInfo(IFieldInfo):
 
 	@property
 	def NumericalEngineTypeName(self) -> str:
-		"""No Description
+		"""The numerical engine that the field belongs to.
 
 		Returns:
 			IResultFieldInfo: 
@@ -191,7 +191,7 @@ class IComponentElementFieldInfo(IFieldInfo):
 
 	@property
 	def SupportElementTypeName(self) -> str:
-		"""No Description
+		"""The name of the support element
 
 		Returns:
 			IComponentElementFieldInfo: 
@@ -211,30 +211,31 @@ class IFieldManager:
 		pass
 
 	def FieldByName(self, name: str) -> IFieldInfo:
-		"""No Description
+		"""Gets an IFieldInfo given the name.
 
 		Args:
-			name(str): name
+			name(str): The name of the field to return.
 
 		Returns:
-			IFieldInfo: 
+			IFieldInfo: A non-null IFieldInfo implementation if the name is found, otherwise null.
 		"""
 		pass
 
 	def FieldByLabel(self, label: str) -> IFieldInfo:
-		"""No Description
+		"""Gets an IFieldINfo by label.
 
 		Args:
-			label(str): label
+			label(str): The label of the field to search for.  Exact match is used.
 
 		Returns:
-			IFieldInfo: 
+			IFieldInfo: A non-null IFieldInfo if found, otherwise null
 		"""
 		pass
 
 	@property
 	def FieldInfo(self) -> IReadOnlyCollection:
-		"""No Description
+		"""A list of IFieldInfo objects providing information about individual fields including
+            data type, name, etc.
 
 		Returns:
 			IFieldManager: 
@@ -255,7 +256,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def FieldType(self) -> UserFieldDataType:
-		"""No Description
+		"""The created field will use this type of data.
 
 		Returns:
 			IUserFieldOptions: 
@@ -264,7 +265,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def Name(self) -> str:
-		"""No Description
+		"""The name of the field.  Must be unique across all element types being used.
 
 		Returns:
 			IUserFieldOptions: 
@@ -277,7 +278,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def Label(self) -> str:
-		"""No Description
+		"""The display label to show in the user interface (if applicable)
 
 		Returns:
 			IUserFieldOptions: 
@@ -290,7 +291,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def ElementType(self) -> TNetworkElementTypeEnum:
-		"""No Description
+		"""The primary element type this field belongs to.
 
 		Returns:
 			IUserFieldOptions: 
@@ -303,7 +304,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def SharedWith(self) -> List[TNetworkElementTypeEnum]:
-		"""No Description
+		"""The list of element types to share this field with.  Should not include ElementType in this list.
 
 		Returns:
 			IUserFieldOptions: 
@@ -312,7 +313,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def DefaultValue(self) -> TFieldType:
-		"""No Description
+		"""The default value for this field.
 
 		Returns:
 			IUserFieldOptions: 
@@ -325,7 +326,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def Category(self) -> str:
-		"""No Description
+		"""The category the field is placed in the property grid or quick attribute selection.
 
 		Returns:
 			IUserFieldOptions: 
@@ -338,7 +339,7 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 
 	@property
 	def JustLikeField(self) -> IFieldInfo:
-		"""No Description
+		"""The field to use for getting the storage unit for a unitized real field.  Ignored if FieldType is not Real.
 
 		Returns:
 			IUserFieldOptions: 

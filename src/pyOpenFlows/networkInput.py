@@ -24,10 +24,9 @@ class NetworkInput:
 
     def __get_elements_input(self, elements: INetworkElements) -> pd.DataFrame:
         df = pd.DataFrame()
-        # TODO
-        # df["Label"] = elements.Input.Labels()
-        # df["Id"] = df["Label"].apply(lambda d: d.Key).astype(np.int64)
-        # df["Label"] = df["Label"].apply(lambda d: d.Value).astype("string")
+        df["Label"] = elements.Labels()
+        df["Id"] = df["Label"].apply(lambda d: d.Key).astype(np.int64)
+        df["Label"] = df["Label"].apply(lambda d: d.Value).astype("string")
         return df
 
     def __get_physical_elevation_input(self, elements: IPhysicalNodeElementsInput, df: pd.DataFrame) -> pd.DataFrame:
@@ -63,9 +62,9 @@ class NetworkInput:
 
         return df
 
-    def __get_polygons_geometry(self, elements: IBasePolygonInput, df: pd.DataFrame) -> pd.DataFrame:
-        df["Geometry"] = elements.GetRings()
-        df["Geometry"] = self._dict_to_value(df["Geometry"], None)
+    def __get_polygons_geometry(self, elements: IBasePolygonsInput, df: pd.DataFrame) -> pd.DataFrame:
+        df["Geometry"] = elements.Geometries()
+        df["Geometry"] = self.__dict_to_value(df["Geometry"], None)
 
         df["Geometry"] = df["Geometry"].apply(
             lambda pts: [[p.X, p.Y] for p in pts]).tolist()

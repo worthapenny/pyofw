@@ -24,7 +24,7 @@ class OpenFlowsWater:
 	@staticmethod
 	@overload
 	def StartSession(product: WaterProductLicenseType) -> LicenseRunStatusEnum:
-		"""No Description
+		"""Starts a session of OpenFlows.  Must be called before opening a model.
 
 		Args:
 			product(WaterProductLicenseType): product
@@ -37,7 +37,7 @@ class OpenFlowsWater:
 	@staticmethod
 	@overload
 	def StartSession(licensedFeatureSet: ILicensedFeatureSet) -> LicenseRunStatusEnum:
-		"""No Description
+		"""Starts an OpenFlows session using a Framework-managed ILicensedFeatureSet
 
 		Args:
 			licensedFeatureSet(ILicensedFeatureSet): licensedFeatureSet
@@ -49,7 +49,7 @@ class OpenFlowsWater:
 
 	@staticmethod
 	def IsValid() -> bool:
-		"""No Description
+		"""Checks the state of the OpenFlows session.
 
 		Returns:
 			bool: 
@@ -58,10 +58,11 @@ class OpenFlowsWater:
 
 	@staticmethod
 	def SetMaxProjects(count: int) -> None:
-		"""No Description
+		"""Sets the maximum number of projects that can be opened.
+            The default is 1.
 
 		Args:
-			count(int): count
+			count(int): A minimum of 1 and a maximum of 5 is allowed.
 
 		Returns:
 			None: 
@@ -70,11 +71,11 @@ class OpenFlowsWater:
 
 	@staticmethod
 	def Open(filename: str, openInPlace: bool = False) -> IWaterModel:
-		"""No Description
+		"""Opens a model using the provided filename.
 
 		Args:
-			filename(str): filename
-			openInPlace(bool): openInPlace
+			filename(str): The file to open.  Can be the project (wtg) file or the sqlite database.
+			openInPlace(bool): True to open model without a copy.  Otherwise, a copy of the model is made when opened.  Save() has no effect if true.
 
 		Returns:
 			IWaterModel: 
@@ -83,7 +84,7 @@ class OpenFlowsWater:
 
 	@staticmethod
 	def GetModel(project: IProject) -> IWaterModel:
-		"""No Description
+		"""Creates an IWaterModel given a Framework-managed project
 
 		Args:
 			project(IProject): project
@@ -95,7 +96,7 @@ class OpenFlowsWater:
 
 	@staticmethod
 	def EndSession() -> None:
-		"""No Description
+		"""If Save() was not previously called, closes the project without saving changes or results.
 
 		Returns:
 			None: 
@@ -105,7 +106,7 @@ class OpenFlowsWater:
 	@staticmethod
 	@property
 	def Options() -> IOpenFlowsWaterDefaults:
-		"""No Description
+		"""Configure default settings
 
 		Returns:
 			OpenFlowsWater: 

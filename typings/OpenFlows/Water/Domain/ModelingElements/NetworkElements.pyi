@@ -1,12 +1,11 @@
 from OpenFlows.Water.Domain.ModelingElements.Components import IMinorLossCoefficient, IPattern, IPumpDefinition, IValveCharacteristic, IGPVHeadlossCurve, ISCADASignal, TElementManagerType, TElementType, TUnitsType, IZone, IUnitDemandLoad, IAirFlowCurve
 from OpenFlows.Domain.ModelingElements.Collections import ICollectionElement, ICollection, ICollectionElements
-from typing import overload, Dict, List, Generic
-from OpenFlows.Domain.ModelingElements import IElementUnits, IElementsResults, IElementResults, IElement, IGeometryUnits, TElementManagerType, TElementType, TUnitsType
-from array import array
+from typing import overload, Dict, List, Generic, Iterator
+from OpenFlows.Domain.ModelingElements import IElementUnits, IElementsResults, IElementResults, IElement, IGeometryUnits, TElementManagerType, TElementType, TUnitsType, IElementInput, IElementsInput, IModelingElementsBase, IElements, IElementManager, IModelingElementBase
 from OpenFlows.Units import IUnit
 from enum import Enum
 from OpenFlows.Water.Domain import ValveSettingType, TCVCoefficientType, PressureValvesettingType, ConstituentSourceType, PipeStatusType, TankSectionType
-from Haestad.Support.Support import GeometryPoint
+from Haestad.Support.Support import GeometryPoint, IEditLabeled, ILabeled
 from OpenFlows.Domain.ModelingElements.NetworkElements import INetworkElements, TElementInputType, TElementResultsType, TElementsInputType, TElementsResultsType, IActiveElementInput, IActiveElementsInput, INetworkElement, IBaseLinksResults, IBaseLinkResults, IBaseLinkInput, IBaseLinksInput, IBaseLinkUnits, IPointNodeInput, IPointNodesInput, IBasePolygonsInput, IBasePolygonsResults, IBasePolygonResults, IBasePolygonInput
 from OpenFlows.Domain.DataObjects import INetwork
 
@@ -88,7 +87,7 @@ class IMinorLoss(ICollectionElement):
 
 	@property
 	def Quantity(self) -> int:
-		"""No Description
+		"""The multiplier for calculating the composite minor loss
 
 		Returns:
 			IMinorLoss: 
@@ -101,7 +100,7 @@ class IMinorLoss(ICollectionElement):
 
 	@property
 	def MinorLossCoefficient(self) -> IMinorLossCoefficient:
-		"""No Description
+		"""The minor loss coefficient to use.
 
 		Returns:
 			IMinorLoss: 
@@ -126,7 +125,7 @@ class IMinorLosses(ICollection[IMinorLoss]):
 
 	@overload
 	def Add(self, quantity: int, minorLoss: IMinorLossCoefficient) -> IMinorLoss:
-		"""No Description
+		"""Adds a new row to the collection given the data.
 
 		Args:
 			quantity(int): quantity
@@ -184,7 +183,7 @@ class IBaseDirectedNodesResults(IElementsResults, IWaterQualityElementsResults):
 
 	@overload
 	def CannotDeliverFlowsOrHead(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets 'cannot deliver flow or head' for all directed nodes for the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -193,7 +192,7 @@ class IBaseDirectedNodesResults(IElementsResults, IWaterQualityElementsResults):
 
 	@overload
 	def CannotDeliverFlowsOrHead(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets 'cannot deliver flow or head' for all directed nodes for the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -218,7 +217,7 @@ class IBaseDirectedNodesResults(IElementsResults, IWaterQualityElementsResults):
 
 	@overload
 	def IsOpen(self) -> Dict[int,int]:
-		"""No Description
+		"""Set to true for all directed nodes if open during the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -227,7 +226,7 @@ class IBaseDirectedNodesResults(IElementsResults, IWaterQualityElementsResults):
 
 	@overload
 	def IsOpen(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Set to true for all directed nodes if open during the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -264,7 +263,7 @@ class IBaseDirectedNodeResults(IElementResults, IWaterQualityResults):
 
 	@overload
 	def CannotDeliverFlowOrHead(self) -> Union[bool, None]:
-		"""No Description
+		"""If true then the cannot deliver head or cannot deliver flow warning was generated for the element for the current time step.
 
 		Returns:
 			Nullable: 
@@ -273,7 +272,7 @@ class IBaseDirectedNodeResults(IElementResults, IWaterQualityResults):
 
 	@overload
 	def CannotDeliverFlowOrHead(self, timeStepIndex: int) -> Union[bool, None]:
-		"""No Description
+		"""If true then the cannot deliver head or cannot deliver flow warning was generated for the element for the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -283,17 +282,17 @@ class IBaseDirectedNodeResults(IElementResults, IWaterQualityResults):
 		"""
 		pass
 
-	def CannotDeliverFlowsOrHeads(self) -> array(Union[bool, None]):
-		"""No Description
+	def CannotDeliverFlowsOrHeads(self) -> List[Union[bool, None]]:
+		"""If true then the pump cannot deliver head or cannot deliver flow warning was generated for the element across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def IsOpen(self) -> Union[bool, None]:
-		"""No Description
+		"""Set to true if open during the current time step.
 
 		Returns:
 			Nullable: 
@@ -302,7 +301,7 @@ class IBaseDirectedNodeResults(IElementResults, IWaterQualityResults):
 
 	@overload
 	def IsOpen(self, timeStepIndex: int) -> Union[bool, None]:
-		"""No Description
+		"""Set to true if open during the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -312,11 +311,11 @@ class IBaseDirectedNodeResults(IElementResults, IWaterQualityResults):
 		"""
 		pass
 
-	def IsOpens(self) -> array(Union[bool, None]):
-		"""No Description
+	def IsOpens(self) -> List[Union[bool, None]]:
+		"""Set to true if open during across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -334,7 +333,7 @@ class IBaseDirectedNodeInput(IPhysicalNodeElementInput, IWaterZoneableNetworkEle
 
 	@property
 	def DownstreamLink(self) -> IElement:
-		"""No Description
+		"""The downstream link that establishes the directed node's direction.
 
 		Returns:
 			IBaseDirectedNodeInput: 
@@ -347,7 +346,7 @@ class IBaseDirectedNodeInput(IPhysicalNodeElementInput, IWaterZoneableNetworkEle
 
 	@property
 	def InstallationYear(self) -> int:
-		"""No Description
+		"""Specify the install year of the element.  It does not affect the calculations.
 
 		Returns:
 			IBaseDirectedNodeInput: 
@@ -372,7 +371,7 @@ class IBaseDirectedNodesInput(IWaterZoneableNetworkElementsInput, IWaterQualityE
 
 	@overload
 	def InstallationYears(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify the install year of the element.  It does not affect the calculations.
 
 		Returns:
 			Dict[int,int]: 
@@ -405,7 +404,7 @@ class IBaseDirectedNodeUnits(IElementResults, IWaterQualityResultsUnits, IGeomet
 
 	@property
 	def ElevationUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for elevation.
 
 		Returns:
 			IBaseDirectedNodeUnits: 
@@ -426,7 +425,7 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def LocatedAtWye(self) -> bool:
-		"""No Description
+		"""Specifies whether the check valve is simulated as a simple check valve in a run of pipe, or if it is simulated as a wye connection.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -439,7 +438,9 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def CheckValvePipeWithWye(self) -> IPipe:
-		"""No Description
+		"""This node implements a check valve at its connection to one of the 3 pipes meeting at this wye (Y) branch. 
+            Please designate one of the pipes as the one connecting to this node via a check valve. When the valve is 
+            closed, the pipe connecting to the check valve (at the wye branch) has a dead end.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -452,7 +453,7 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def FlowDirection(self) -> CheckValveFlowDirectionEnum:
-		"""No Description
+		"""Denotes the allowable flow direction through the valve: - towards the wye branch, - away from the wye branch.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -465,7 +466,7 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def InitialTypicalFlow(self) -> float:
-		"""No Description
+		"""This value is 0 should the valve be initially closed.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -478,7 +479,8 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def ThresholdPressure(self) -> float:
-		"""No Description
+		"""The pressure difference between upstream and downstream side to (re)open the (closed) valve. If 0 is entered, 
+            the valve (re)opens when the upstream pressure exceeds the downstream pressure.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -491,7 +493,8 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def ClosureTime(self) -> float:
-		"""No Description
+		"""Time to close the valve, from the fully open position, after reverse flow is sensed. This establishes the rate of 
+            closure in case the valve's opening is partial.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -504,7 +507,8 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def OpenTime(self) -> float:
-		"""No Description
+		"""Time to open the valve, from the fully closed position, after specified pressure difference is exceeded. This 
+            establishes the rate of opening in case the valve's closure is partial.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -517,7 +521,7 @@ class ICheckValveElementInput(IBaseDirectedNodeInput):
 
 	@property
 	def AllowDisruptionOfOperation(self) -> bool:
-		"""No Description
+		"""Determines whether an operation (opening or closing) can be terminated prematurely due to a signal to reverse.
 
 		Returns:
 			ICheckValveElementInput: 
@@ -542,7 +546,7 @@ class ICheckValveElementsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def LocatedAtWyes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies whether the check valve is simulated as a simple check valve in a run of pipe, or if it is simulated as a wye connection.
 
 		Returns:
 			Dict[int,int]: 
@@ -563,7 +567,7 @@ class ICheckValveElementsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def FlowDirections(self) -> Dict[int,int]:
-		"""No Description
+		"""Denotes the allowable flow direction through the valve: - towards the wye branch, - away from the wye branch.
 
 		Returns:
 			Dict[int,int]: 
@@ -584,7 +588,7 @@ class ICheckValveElementsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def InitialTypicalFlows(self) -> Dict[int,int]:
-		"""No Description
+		"""This value is 0 should the valve be initially closed.
 
 		Returns:
 			Dict[int,int]: 
@@ -605,7 +609,8 @@ class ICheckValveElementsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def ThresholdPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""The pressure difference between upstream and downstream side to (re)open the (closed) valve. If 0 is entered, 
+            the valve (re)opens when the upstream pressure exceeds the downstream pressure.
 
 		Returns:
 			Dict[int,int]: 
@@ -626,7 +631,8 @@ class ICheckValveElementsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def ClosureTimes(self) -> Dict[int,int]:
-		"""No Description
+		"""Time to close the valve, from the fully open position, after reverse flow is sensed. This establishes the rate of 
+            closure in case the valve's opening is partial.
 
 		Returns:
 			Dict[int,int]: 
@@ -647,7 +653,8 @@ class ICheckValveElementsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def OpenTimes(self) -> Dict[int,int]:
-		"""No Description
+		"""Time to open the valve, from the fully closed position, after specified pressure difference is exceeded. This 
+            establishes the rate of opening in case the valve's closure is partial.
 
 		Returns:
 			Dict[int,int]: 
@@ -668,7 +675,7 @@ class ICheckValveElementsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def AllowDisruptionOfOperations(self) -> Dict[int,int]:
-		"""No Description
+		"""Determines whether an operation (opening or closing) can be terminated prematurely due to a signal to reverse.
 
 		Returns:
 			Dict[int,int]: 
@@ -701,7 +708,7 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the check valve.
 
 		Returns:
 			Nullable: 
@@ -710,7 +717,7 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -720,17 +727,17 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Total flow through the check valve.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def AbsoluteFlow(self) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through the selected check valve.
 
 		Returns:
 			Nullable: 
@@ -739,7 +746,7 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 
 	@overload
 	def AbsoluteFlow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through the selected check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -749,17 +756,17 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def AbsoluteFlows(self) -> array(Union[float, None]):
-		"""No Description
+	def AbsoluteFlows(self) -> List[Union[float, None]]:
+		"""Magnitude of flow through the selected check valve.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Pressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the check valve.
 
 		Returns:
 			Nullable: 
@@ -768,7 +775,7 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Pressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -778,17 +785,17 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Pressures(self) -> array(Union[float, None]):
-		"""No Description
+	def Pressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at the check valve.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def HydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the check valve.
 
 		Returns:
 			Nullable: 
@@ -797,7 +804,7 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 
 	@overload
 	def HydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -807,11 +814,11 @@ class ICheckValveElementResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def HydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def HydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at the check valve.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -829,7 +836,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through the check valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -838,7 +845,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through the check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -863,7 +870,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def AbsoluteFlows(self) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through the selected check valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -872,7 +879,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def AbsoluteFlows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through the selected check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -897,7 +904,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Pressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the check valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -906,7 +913,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Pressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -931,7 +938,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def HydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the check valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -940,7 +947,7 @@ class ICheckValveElementsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def HydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the check valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -977,7 +984,7 @@ class ICheckValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Units and formatting for flow and absolute flow
 
 		Returns:
 			ICheckValveUnits: 
@@ -986,7 +993,7 @@ class ICheckValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Units and formatting for pressure
 
 		Returns:
 			ICheckValveUnits: 
@@ -995,7 +1002,7 @@ class ICheckValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""Units and formatting for hydraulicg rade
 
 		Returns:
 			ICheckValveUnits: 
@@ -1040,7 +1047,7 @@ class IOrificeBetweenTwoPipesInput(IBaseDirectedNodeInput):
 
 	@property
 	def TypicalPressureDrop(self) -> float:
-		"""No Description
+		"""Pressure drop corresponding to the typical flow.
 
 		Returns:
 			IOrificeBetweenTwoPipesInput: 
@@ -1053,7 +1060,7 @@ class IOrificeBetweenTwoPipesInput(IBaseDirectedNodeInput):
 
 	@property
 	def TypicalFlow(self) -> float:
-		"""No Description
+		"""This is a typical (positive) flow through the orifice or valve.
 
 		Returns:
 			IOrificeBetweenTwoPipesInput: 
@@ -1077,7 +1084,7 @@ class IOrificesBetweenTwoPipesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TypicalPressureDrops(self) -> Dict[int,int]:
-		"""No Description
+		"""Pressure drop corresponding to the typical flow.
 
 		Returns:
 			Dict[int,int]: 
@@ -1085,7 +1092,7 @@ class IOrificesBetweenTwoPipesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TypicalFlows(self) -> Dict[int,int]:
-		"""No Description
+		"""This is a typical (positive) flow through the orifice or valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -1106,7 +1113,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the orifice.
 
 		Returns:
 			Nullable: 
@@ -1115,7 +1122,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1125,17 +1132,17 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Total flow through the orifice.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Headloss(self) -> Union[float, None]:
-		"""No Description
+		"""Change in head across orifice.
 
 		Returns:
 			Nullable: 
@@ -1144,7 +1151,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Headloss(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Change in head across orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1154,17 +1161,17 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Headlosses(self) -> array(Union[float, None]):
-		"""No Description
+	def Headlosses(self) -> List[Union[float, None]]:
+		"""Change in head across orifice.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def FromHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the orifice.
 
 		Returns:
 			Nullable: 
@@ -1173,7 +1180,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def FromHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1183,17 +1190,17 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def FromHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def FromHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at the entrance of the orifice.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def ToHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the orifice.
 
 		Returns:
 			Nullable: 
@@ -1202,7 +1209,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def ToHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1212,17 +1219,17 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def ToHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def ToHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at the exit of the orifice.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def FromPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the entrance of the orifice.
 
 		Returns:
 			Nullable: 
@@ -1231,7 +1238,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def FromPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the entrance of the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1241,17 +1248,17 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def FromPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def FromPressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at the entrance of the orifice.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def ToPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the exit to the orifice.
 
 		Returns:
 			Nullable: 
@@ -1260,7 +1267,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def ToPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the exit to the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1270,17 +1277,17 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def ToPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def ToPressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at the exit to the orifice.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def AbsoluteFlow(self) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through the selected orifice.
 
 		Returns:
 			Nullable: 
@@ -1289,7 +1296,7 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 
 	@overload
 	def AbsoluteFlow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through the selected orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1299,11 +1306,11 @@ class IOrificeBetweenTwoPipesResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def AbsoluteFlows(self) -> array(Union[float, None]):
-		"""No Description
+	def AbsoluteFlows(self) -> List[Union[float, None]]:
+		"""Magnitude of flow through the selected orifice.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -1321,7 +1328,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through the orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -1330,7 +1337,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1355,7 +1362,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Headloss(self) -> Dict[int,int]:
-		"""No Description
+		"""Change in head across orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -1364,7 +1371,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Headloss(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Change in head across orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1389,7 +1396,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromHydraulicGrade(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -1398,7 +1405,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromHydraulicGrade(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1423,7 +1430,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToHydraulicGrade(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -1432,7 +1439,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToHydraulicGrade(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1457,7 +1464,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromPressure(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the entrance of the orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -1466,7 +1473,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromPressure(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the entrance of the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1491,7 +1498,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToPressure(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the exit to the orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -1500,7 +1507,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToPressure(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the exit to the orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1524,7 +1531,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 		pass
 
 	def AbsolueFlow(self) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through the selected orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -1533,7 +1540,7 @@ class IOrificesBetweenTwoPipesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def AbsoluteFlow(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through the selected orifice.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -1570,7 +1577,7 @@ class IOrificeBetweenTwoPipesUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			IOrificeBetweenTwoPipesUnits: 
@@ -1579,7 +1586,7 @@ class IOrificeBetweenTwoPipesUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HeadlossUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for headloss
 
 		Returns:
 			IOrificeBetweenTwoPipesUnits: 
@@ -1588,7 +1595,7 @@ class IOrificeBetweenTwoPipesUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for hydraulic grade
 
 		Returns:
 			IOrificeBetweenTwoPipesUnits: 
@@ -1597,7 +1604,7 @@ class IOrificeBetweenTwoPipesUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for pressure
 
 		Returns:
 			IOrificeBetweenTwoPipesUnits: 
@@ -1654,7 +1661,7 @@ class ITurbineFlowHeads(ICollection[ITurbineFlowHead]):
 
 	@overload
 	def Add(self, flow: float, head: float) -> ITurbineFlowHead:
-		"""No Description
+		"""Adds a new row to the collection with the given data.
 
 		Args:
 			flow(float): flow
@@ -1726,7 +1733,7 @@ class ITurbineCurveUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			ITurbineCurveUnits: 
@@ -1735,7 +1742,7 @@ class ITurbineCurveUnits(IElementUnits):
 
 	@property
 	def HeadUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for head
 
 		Returns:
 			ITurbineCurveUnits: 
@@ -1768,7 +1775,7 @@ class IElectricalTorques(ICollection[IElectricalTorque]):
 
 	@overload
 	def Add(self, time: float, torque: float) -> IElectricalTorque:
-		"""No Description
+		"""Adds a new row with the given data.
 
 		Args:
 			time(float): time
@@ -1802,7 +1809,7 @@ class IElectricalTorque(ICollectionElement):
 
 	@property
 	def Time(self) -> float:
-		"""No Description
+		"""The time for this row.
 
 		Returns:
 			IElectricalTorque: 
@@ -1815,7 +1822,7 @@ class IElectricalTorque(ICollectionElement):
 
 	@property
 	def Torque(self) -> float:
-		"""No Description
+		"""The torque for this row
 
 		Returns:
 			IElectricalTorque: 
@@ -1840,7 +1847,7 @@ class IElectricalTorqueUnits(IElementUnits):
 
 	@property
 	def TimeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for time (short)
 
 		Returns:
 			IElectricalTorqueUnits: 
@@ -1849,7 +1856,7 @@ class IElectricalTorqueUnits(IElementUnits):
 
 	@property
 	def TorqueUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for torque
 
 		Returns:
 			IElectricalTorqueUnits: 
@@ -1870,7 +1877,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def TimeDelayUntilValveOperates(self) -> float:
-		"""No Description
+		"""The time delay prior to operating the spherical valve.
 
 		Returns:
 			ITurbineInput: 
@@ -1883,7 +1890,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def TimeForValveToOperate(self) -> float:
-		"""No Description
+		"""Time required to operate the spherical valve. By default, it is set equal to one time step.
 
 		Returns:
 			ITurbineInput: 
@@ -1896,7 +1903,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def SphericalValveDiameter(self) -> float:
-		"""No Description
+		"""The diameter of the spherical valve.
 
 		Returns:
 			ITurbineInput: 
@@ -1909,7 +1916,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def TurbineEfficiency(self) -> float:
-		"""No Description
+		"""The overall efficiency of the turbine and the generator. A typical value is 80.
 
 		Returns:
 			ITurbineInput: 
@@ -1922,7 +1929,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def MomentOfInertia(self) -> float:
-		"""No Description
+		"""The (weight) moment of inertia accounts for the turbine, generator, and entrained water.
 
 		Returns:
 			ITurbineInput: 
@@ -1935,7 +1942,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def RotationalSpeed(self) -> float:
-		"""No Description
+		"""Also known as synchronous speed for a turbine. The power it generates depends on it.
 
 		Returns:
 			ITurbineInput: 
@@ -1948,7 +1955,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def GateOpeningPattern(self) -> IPattern:
-		"""No Description
+		"""Operating Rule describes the percent wicket gate opening vs time.
 
 		Returns:
 			ITurbineInput: 
@@ -1961,7 +1968,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def SpecificSpeed(self) -> float:
-		"""No Description
+		"""This represents the type of turbine. HAMMER ships with 4-quadrant curves for: 30, 45, or 60 (US units), 115, 170, or 230 (metric units). You can add your own curves to this library.
 
 		Returns:
 			ITurbineInput: 
@@ -1974,7 +1981,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def TurbineInitialFlow(self) -> float:
-		"""No Description
+		"""Nominal or rated flow of the turbine.
 
 		Returns:
 			ITurbineInput: 
@@ -1987,7 +1994,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def TurbineInitialHead(self) -> float:
-		"""No Description
+		"""Nominal or rated head of the turbine.
 
 		Returns:
 			ITurbineInput: 
@@ -2000,7 +2007,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def OperatingCase(self) -> TurbineOperatingCaseEnum:
-		"""No Description
+		"""Selects the type of transient event to be modeled.
 
 		Returns:
 			ITurbineInput: 
@@ -2013,7 +2020,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def ReportPeriod(self) -> int:
-		"""No Description
+		"""Number of time steps between successive printouts of operation. By default, this printout is suppressed.
 
 		Returns:
 			ITurbineInput: 
@@ -2026,7 +2033,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def TurbineInitialStatus(self) -> TurbineStatusEnum:
-		"""No Description
+		"""Specify if the turbine is initially open or closed.
 
 		Returns:
 			ITurbineInput: 
@@ -2039,7 +2046,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def TurbineCurveCollection(self) -> ITurbineCurveCollection:
-		"""No Description
+		"""Turbine Curve is only required for a steady run. For a transient run, HAMMER uses a 4-quadrant curve based on Specific Speed, Rated Head and Rated Flow.
 
 		Returns:
 			ITurbineInput: 
@@ -2048,7 +2055,7 @@ class ITurbineInput(IBaseDirectedNodeInput):
 
 	@property
 	def ElectricalTorqueCollection(self) -> IElectricalTorqueCollection:
-		"""No Description
+		"""Defines the time vs torque response for the turbine. Only applies to the Load Rejection operating case.
 
 		Returns:
 			ITurbineInput: 
@@ -2068,7 +2075,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TimeDelayUntilValveOperates(self) -> Dict[int,int]:
-		"""No Description
+		"""The time delay prior to operating the spherical valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -2076,7 +2083,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TimeForValveToOperate(self) -> Dict[int,int]:
-		"""No Description
+		"""Time required to operate the spherical valve. By default, it is set equal to one time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -2084,7 +2091,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def SphericalValveDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""The diameter of the spherical valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -2092,7 +2099,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TurbineEfficiency(self) -> Dict[int,int]:
-		"""No Description
+		"""The overall efficiency of the turbine and the generator. A typical value is 80.
 
 		Returns:
 			Dict[int,int]: 
@@ -2100,7 +2107,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def MomentOfInertia(self) -> Dict[int,int]:
-		"""No Description
+		"""The (weight) moment of inertia accounts for the turbine, generator, and entrained water.
 
 		Returns:
 			Dict[int,int]: 
@@ -2108,7 +2115,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def RotationalSpeed(self) -> Dict[int,int]:
-		"""No Description
+		"""Also known as synchronous speed for a turbine. The power it generates depends on it.
 
 		Returns:
 			Dict[int,int]: 
@@ -2116,7 +2123,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def GateOpeningPattern(self) -> Dict[int,int]:
-		"""No Description
+		"""Operating Rule describes the percent wicket gate opening vs time.
 
 		Returns:
 			Dict[int,int]: 
@@ -2124,7 +2131,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def SpecificSpeed(self) -> Dict[int,int]:
-		"""No Description
+		"""This represents the type of turbine. HAMMER ships with 4-quadrant curves for: 30, 45, or 60 (US units), 115, 170, or 230 (metric units). You can add your own curves to this library.
 
 		Returns:
 			Dict[int,int]: 
@@ -2132,7 +2139,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TurbineInitialFlow(self) -> Dict[int,int]:
-		"""No Description
+		"""Nominal or rated flow of the turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2140,7 +2147,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TurbineInitialHead(self) -> Dict[int,int]:
-		"""No Description
+		"""Nominal or rated head of the turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2148,7 +2155,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def OperatingCase(self) -> Dict[int,int]:
-		"""No Description
+		"""Selects the type of transient event to be modeled.
 
 		Returns:
 			Dict[int,int]: 
@@ -2156,7 +2163,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def ReportPeriod(self) -> Dict[int,int]:
-		"""No Description
+		"""Number of time steps between successive printouts of operation. By default, this printout is suppressed.
 
 		Returns:
 			Dict[int,int]: 
@@ -2164,7 +2171,7 @@ class ITurbinesInput(IBaseDirectedNodesInput):
 		pass
 
 	def TurbineInitialStatus(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify if the turbine is initially open or closed.
 
 		Returns:
 			Dict[int,int]: 
@@ -2185,7 +2192,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the turbine.
 
 		Returns:
 			Nullable: 
@@ -2194,7 +2201,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2204,17 +2211,17 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Total flow through the turbine.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Headloss(self) -> Union[float, None]:
-		"""No Description
+		"""Change in head across turbine.
 
 		Returns:
 			Nullable: 
@@ -2223,7 +2230,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Headloss(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Change in head across turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2233,17 +2240,17 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Headlosses(self) -> array(Union[float, None]):
-		"""No Description
+	def Headlosses(self) -> List[Union[float, None]]:
+		"""Change in head across turbine.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def FromHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the turbine.
 
 		Returns:
 			Nullable: 
@@ -2252,7 +2259,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def FromHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2262,17 +2269,17 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def FromHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def FromHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at the entrance of the turbine.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def ToHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the turbine.
 
 		Returns:
 			Nullable: 
@@ -2281,7 +2288,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def ToHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2291,17 +2298,17 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def ToHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def ToHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at the exit of the turbine.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def FromPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the entrance of the turbine.
 
 		Returns:
 			Nullable: 
@@ -2310,7 +2317,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def FromPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the entrance of the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2320,17 +2327,17 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def FromPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def FromPressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at the entrance of the turbine.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def ToPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the exit to the turbine.
 
 		Returns:
 			Nullable: 
@@ -2339,7 +2346,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def ToPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the exit to the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2349,17 +2356,17 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def ToPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def ToPressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at the exit to the turbine.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def AbsoluteFlow(self) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through the selected turbine.
 
 		Returns:
 			Nullable: 
@@ -2368,7 +2375,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 
 	@overload
 	def AbsoluteFlow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through the selected turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2378,16 +2385,16 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def AbsoluteFlows(self) -> array(Union[float, None]):
-		"""No Description
+	def AbsoluteFlows(self) -> List[Union[float, None]]:
+		"""Magnitude of flow through the selected turbine.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	def MaximumTransientSpeed(self) -> Union[float, None]:
-		"""No Description
+		"""Maximum speed at turbine over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -2395,7 +2402,7 @@ class ITurbineResults(IBaseDirectedNodeResults):
 		pass
 
 	def MinimumTransientSpeed(self) -> Union[float, None]:
-		"""No Description
+		"""Minimum speed at turbine over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -2416,7 +2423,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through the turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2425,7 +2432,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2450,7 +2457,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Headlosses(self) -> Dict[int,int]:
-		"""No Description
+		"""Change in head across turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2459,7 +2466,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Headlosses(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Change in head across turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2484,7 +2491,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2493,7 +2500,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromHydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2518,7 +2525,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2527,7 +2534,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToHydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2552,7 +2559,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the entrance of the turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2561,7 +2568,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromPressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the entrance of the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2586,7 +2593,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the exit to the turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2595,7 +2602,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToPressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the exit to the turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2620,7 +2627,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def AbsoluteFlows(self) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through the selected turbine.
 
 		Returns:
 			Dict[int,int]: 
@@ -2629,7 +2636,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def AbsoluteFlows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through the selected turbine.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2653,7 +2660,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 		pass
 
 	def MaximumTransientSpeeds(self) -> Dict[int,int]:
-		"""No Description
+		"""Maximum speed at turbine over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -2661,7 +2668,7 @@ class ITurbinesResults(IBaseDirectedNodesResults):
 		pass
 
 	def MinimumTransientSpeeds(self) -> Dict[int,int]:
-		"""No Description
+		"""Minimum speed at turbine over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -2682,7 +2689,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def TimeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for valve open time
 
 		Returns:
 			ITurbineUnits: 
@@ -2691,7 +2698,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def DiameterUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for valve diameter
 
 		Returns:
 			ITurbineUnits: 
@@ -2700,7 +2707,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def EfficiencyUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for efficiency
 
 		Returns:
 			ITurbineUnits: 
@@ -2709,7 +2716,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def InertiaUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for inertia
 
 		Returns:
 			ITurbineUnits: 
@@ -2718,7 +2725,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def RotationUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for rotation
 
 		Returns:
 			ITurbineUnits: 
@@ -2727,7 +2734,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			ITurbineUnits: 
@@ -2736,7 +2743,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for pressure
 
 		Returns:
 			ITurbineUnits: 
@@ -2745,7 +2752,7 @@ class ITurbineUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HeadlossUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for headloss
 
 		Returns:
 			ITurbineUnits: 
@@ -2790,7 +2797,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def CalculatedRelativeSpeedFactors(self) -> Dict[int,int]:
-		"""No Description
+		"""Current relative speed factor of pump at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -2799,7 +2806,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def CalculatedRelativeSpeedFactors(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current relative speed factor of pump at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2824,7 +2831,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def SuctionHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Current hydraulic grade at suction side of the pump at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -2833,7 +2840,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def SuctionHydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current hydraulic grade at suction side of the pump at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2858,7 +2865,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def DischargeHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Current hydraulic grade at discharge side of the pump at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -2867,7 +2874,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def DischargeHydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current hydraulic grade at discharge side of the pump at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2892,7 +2899,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def SuctionPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Current pressure at suction side of the pump at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -2901,7 +2908,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def SuctionPressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current pressure at suction side of the pump at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2926,7 +2933,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def DischargePressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Current pressure at discharge side of the pump at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -2935,7 +2942,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def DischargePressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current pressure at discharge side of the pump at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2960,7 +2967,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Current flow pumped by standard pump or the pump battery at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -2969,7 +2976,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current flow pumped by standard pump or the pump battery at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -2994,7 +3001,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PumpHeads(self) -> Dict[int,int]:
-		"""No Description
+		"""Current head gain between suction and discharge side of the pump at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -3003,7 +3010,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PumpHeads(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current head gain between suction and discharge side of the pump at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3028,7 +3035,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def AvailableNPSHs(self) -> Dict[int,int]:
-		"""No Description
+		"""Current margin of actual (available) pressure head over vapor pressure at the suction side of the pump (at the impeller) at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -3037,7 +3044,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def AvailableNPSHs(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current margin of actual (available) pressure head over vapor pressure at the suction side of the pump (at the impeller) at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3062,7 +3069,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def RequiredNPSHs(self) -> Dict[int,int]:
-		"""No Description
+		"""Current required (manufacturer specified) pressure head over vapor pressure at the suction side of the pump (at the impeller) that is required in order to avoid pump cavitation at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -3071,7 +3078,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def RequiredNPSHs(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Current required (manufacturer specified) pressure head over vapor pressure at the suction side of the pump (at the impeller) that is required in order to avoid pump cavitation at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3096,7 +3103,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PumpExceedsOperatingRanges(self) -> Dict[int,int]:
-		"""No Description
+		"""Is true if the system demands on the pump exceeds its capabilities at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -3105,7 +3112,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PumpExceedsOperatingRanges(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Is true if the system demands on the pump exceeds its capabilities at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3130,7 +3137,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PumpStatuses(self) -> Dict[int,int]:
-		"""No Description
+		"""Displays whether the selected pump is 'On' or 'Off' during current time step at current time step for all pumps.
 
 		Returns:
 			Dict[int,int]: 
@@ -3139,7 +3146,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PumpStatuses(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Displays whether the selected pump is 'On' or 'Off' during current time step at given time step for all pumps.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3164,7 +3171,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def WirePower(self) -> Dict[int,int]:
-		"""No Description
+		"""The amount of energy delivered to the pump motor for all pumps at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -3173,7 +3180,7 @@ class IBasePumpsResults(IBaseDirectedNodesResults):
 
 	@overload
 	def WirePower(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""The amount of energy delivered to the pump motor for all pumps at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3210,7 +3217,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def CalculatedRelativeSpeedFactor(self) -> Union[float, None]:
-		"""No Description
+		"""Current relative speed factor of pump at current time step.
 
 		Returns:
 			Nullable: 
@@ -3219,7 +3226,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def CalculatedRelativeSpeedFactor(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Current relative speed factor of pump at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3229,17 +3236,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def CalculatedRelativeSpeedFactors(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedRelativeSpeedFactors(self) -> List[Union[float, None]]:
+		"""Current relative speed factor of pump across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def SuctionHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at suction side of the pump at current time step.
 
 		Returns:
 			Nullable: 
@@ -3248,7 +3255,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def SuctionHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at suction side of the pump at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3258,17 +3265,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def SuctionHyraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def SuctionHyraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at suction side of the pump across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def DischargeHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at discharge side of the pump at current time step.
 
 		Returns:
 			Nullable: 
@@ -3277,7 +3284,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def DischargeHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at discharge side of the pump at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3287,17 +3294,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def DischargeHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def DischargeHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at discharge side of the pump across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def SuctionPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at suction side of the pump at current time step.
 
 		Returns:
 			Nullable: 
@@ -3306,7 +3313,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def SuctionPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at suction side of the pump at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3316,17 +3323,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def SuctionPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def SuctionPressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at suction side of the pump across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def DischargePressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at discharge side of the pump at current time step.
 
 		Returns:
 			Nullable: 
@@ -3335,7 +3342,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def DischargePressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at discharge side of the pump at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3345,17 +3352,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def DischargePressures(self) -> array(Union[float, None]):
-		"""No Description
+	def DischargePressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at discharge side of the pump across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Total flow pumped by standard pump or the pump battery at current time step.
 
 		Returns:
 			Nullable: 
@@ -3364,7 +3371,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total flow pumped by standard pump or the pump battery at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3374,17 +3381,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Total flow pumped by standard pump or the pump battery across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def PumpHead(self) -> Union[float, None]:
-		"""No Description
+		"""Head gain between suction and discharge side of the pump at current time step.
 
 		Returns:
 			Nullable: 
@@ -3393,7 +3400,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def PumpHead(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Head gain between suction and discharge side of the pump at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3403,17 +3410,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def PumpHeads(self) -> array(Union[float, None]):
-		"""No Description
+	def PumpHeads(self) -> List[Union[float, None]]:
+		"""Head gain between suction and discharge side of the pump across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def AvailableNPSH(self) -> Union[float, None]:
-		"""No Description
+		"""The margin of actual (available) pressure head over vapor pressure at the suction side of the pump (at the impeller) at current time step.
 
 		Returns:
 			Nullable: 
@@ -3422,7 +3429,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def AvailableNPSH(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The margin of actual (available) pressure head over vapor pressure at the suction side of the pump (at the impeller) at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3432,17 +3439,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def AvailableNPSHs(self) -> array(Union[float, None]):
-		"""No Description
+	def AvailableNPSHs(self) -> List[Union[float, None]]:
+		"""The margin of actual (available) pressure head over vapor pressure at the suction side of the pump (at the impeller) across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def RequiredNPSH(self) -> Union[float, None]:
-		"""No Description
+		"""The required (manufacturer specified) pressure head over vapor pressure at the suction side of the pump (at the impeller) that is required in order to avoid pump cavitation at current time step.
 
 		Returns:
 			Nullable: 
@@ -3451,7 +3458,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def RequiredNPSH(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The required (manufacturer specified) pressure head over vapor pressure at the suction side of the pump (at the impeller) that is required in order to avoid pump cavitation at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3461,17 +3468,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def RequiredNPSHs(self) -> array(Union[float, None]):
-		"""No Description
+	def RequiredNPSHs(self) -> List[Union[float, None]]:
+		"""The required (manufacturer specified) pressure head over vapor pressure at the suction side of the pump (at the impeller) that is required in order to avoid pump cavitation across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def PumpExceedsOperatingRange(self) -> Union[bool, None]:
-		"""No Description
+		"""Is true if the system demands on the pump exceeds its capabilities at current time step.
 
 		Returns:
 			Nullable: 
@@ -3480,7 +3487,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def PumpExceedsOperatingRange(self, timeStepIndex: int) -> Union[bool, None]:
-		"""No Description
+		"""Is true if the system demands on the pump exceeds its capabilities at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3490,17 +3497,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def PumpExceedsOperatingRanges(self) -> array(Union[bool, None]):
-		"""No Description
+	def PumpExceedsOperatingRanges(self) -> List[Union[bool, None]]:
+		"""Is true if the system demands on the pump exceeds its capabilities across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def CalculatedPumpStatus(self) -> Union[PumpStatusEnum, None]:
-		"""No Description
+		"""Displays whether the selected pump is 'On' or 'Off' during current time step at current time step.
 
 		Returns:
 			Nullable: 
@@ -3509,7 +3516,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def CalculatedPumpStatus(self, timeStepIndex: int) -> Union[PumpStatusEnum, None]:
-		"""No Description
+		"""Displays whether the selected pump is 'On' or 'Off' during current time step at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3519,17 +3526,17 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def CalculatedPumpStatuses(self) -> array(Union[PumpStatusEnum, None]):
-		"""No Description
+	def CalculatedPumpStatuses(self) -> List[Union[PumpStatusEnum, None]]:
+		"""Displays whether the selected pump is 'On' or 'Off' during current time step across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def WirePower(self) -> Union[float, None]:
-		"""No Description
+		"""The amount of energy delivered to the pump motor at the current time step.
 
 		Returns:
 			Nullable: 
@@ -3538,7 +3545,7 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 
 	@overload
 	def WirePower(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The amount of energy delivered to the pump motor at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -3548,11 +3555,11 @@ class IBasePumpResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def WirePowers(self) -> array(Union[float, None]):
-		"""No Description
+	def WirePowers(self) -> List[Union[float, None]]:
+		"""The amount of energy delivered to the pump motor for all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -3570,7 +3577,7 @@ class IBasePumpInput(IBaseDirectedNodeInput):
 
 	@property
 	def InitialRelativeSpeedFactor(self) -> float:
-		"""No Description
+		"""Determines the initial speed of the pump impeller relative to the speed at which the pump curve is defined.
 
 		Returns:
 			IBasePumpInput: 
@@ -3583,7 +3590,7 @@ class IBasePumpInput(IBaseDirectedNodeInput):
 
 	@property
 	def InitialStatus(self) -> int:
-		"""No Description
+		"""Sets the initial status of the pump to on or off.
 
 		Returns:
 			IBasePumpInput: 
@@ -3608,7 +3615,7 @@ class IBasePumpsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def InitialRelativeSpeedFactors(self) -> Dict[int,int]:
-		"""No Description
+		"""Determines the initial speed of the pump impeller relative to the speed at which the pump curve is defined.
 
 		Returns:
 			Dict[int,int]: 
@@ -3629,7 +3636,7 @@ class IBasePumpsInput(IBaseDirectedNodesInput):
 
 	@overload
 	def InitialStatus(self) -> Dict[int,int]:
-		"""No Description
+		"""Sets the initial status of the pump to on or off.
 
 		Returns:
 			Dict[int,int]: 
@@ -3662,7 +3669,7 @@ class IBasePumpUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def RelativeSpeedFactorUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for relative speed factor.
 
 		Returns:
 			IBasePumpUnits: 
@@ -3671,7 +3678,7 @@ class IBasePumpUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for hydraulic grade results.
 
 		Returns:
 			IBasePumpUnits: 
@@ -3680,7 +3687,7 @@ class IBasePumpUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for pressure results.
 
 		Returns:
 			IBasePumpUnits: 
@@ -3689,7 +3696,7 @@ class IBasePumpUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for flow results.
 
 		Returns:
 			IBasePumpUnits: 
@@ -3698,7 +3705,7 @@ class IBasePumpUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HeadUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for head results.
 
 		Returns:
 			IBasePumpUnits: 
@@ -3707,7 +3714,7 @@ class IBasePumpUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def NPSHUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for NPSH results.
 
 		Returns:
 			IBasePumpUnits: 
@@ -3716,7 +3723,7 @@ class IBasePumpUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def PowerUnit(self) -> IUnit:
-		"""No Description
+		"""Unit for energy result fields
 
 		Returns:
 			IBasePumpUnits: 
@@ -3797,7 +3804,7 @@ class IPumpInput(IBasePumpInput):
 
 	@property
 	def PumpDefinition(self) -> IPumpDefinition:
-		"""No Description
+		"""Select the pump definition to apply to the selected pump.
 
 		Returns:
 			IPumpInput: 
@@ -3857,7 +3864,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def PumpDefinitions(self) -> Dict[int,int]:
-		"""No Description
+		"""Select pump definition for the lead and lag pumps in the battery.
 
 		Returns:
 			Dict[int,int]: 
@@ -3865,7 +3872,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def ControlNodes(self) -> Dict[int,int]:
-		"""No Description
+		"""The node that the battery checks to determine whether to increase, maintain, or decrease its relative speed factor.
 
 		Returns:
 			Dict[int,int]: 
@@ -3873,7 +3880,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def TargetHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""The Head that the battery will attempt to maintain for the Control Node.
 
 		Returns:
 			Dict[int,int]: 
@@ -3881,7 +3888,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def MaximumRelativeSpeedFactors(self) -> Dict[int,int]:
-		"""No Description
+		"""The highest relative speed factor that the pump can be set at to meet the target head at the control node. If the target head cannot be met when the pump is set at the maximum relative speed factor, the maximum will be used.
 
 		Returns:
 			Dict[int,int]: 
@@ -3889,7 +3896,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def NumberOfLagPumps(self) -> Dict[int,int]:
-		"""No Description
+		"""Number of lag pumps (identical to the lead pump) whose relative speed factor is adjusted to maintain the target head for a fixed head VSPB. (Lag pumps are not used for constant flow VSPBs).
 
 		Returns:
 			Dict[int,int]: 
@@ -3897,7 +3904,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def ControlNodeOnSuctionSide(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies if the VSPB has a suction side control node.
 
 		Returns:
 			Dict[int,int]: 
@@ -3905,7 +3912,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def TargetFlows(self) -> Dict[int,int]:
-		"""No Description
+		"""The relative speed of the lead pump will be adjusted to meet the Flow (Target). (Lag pumps are not used for constant flow VSPBs).
 
 		Returns:
 			Dict[int,int]: 
@@ -3913,7 +3920,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def TargetPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""The Pressure that the battery will attempt to maintain for the Control Node.
 
 		Returns:
 			Dict[int,int]: 
@@ -3921,7 +3928,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def VSPBTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify how the variable speed pump battery is controlled.
 
 		Returns:
 			Dict[int,int]: 
@@ -3929,7 +3936,7 @@ class IVSPBsInput(IBasePumpsInput):
 		pass
 
 	def VSPBFixedHeadTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Establish if the battery should be regulated by pressure or hydraulic grade.
 
 		Returns:
 			Dict[int,int]: 
@@ -3950,7 +3957,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def PumpDefinition(self) -> IPumpDefinition:
-		"""No Description
+		"""Select pump definition for the lead and lag pumps in the battery.
 
 		Returns:
 			IVSPBInput: 
@@ -3963,7 +3970,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def ControlNode(self) -> IWaterElement:
-		"""No Description
+		"""The node that the battery checks to determine whether to increase, maintain, or decrease its relative speed factor.
 
 		Returns:
 			IVSPBInput: 
@@ -3976,7 +3983,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def TargetHydraulicGrade(self) -> float:
-		"""No Description
+		"""The Head that the battery will attempt to maintain for the Control Node.
 
 		Returns:
 			IVSPBInput: 
@@ -3989,7 +3996,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def MaximumRelativeSpeedFactor(self) -> float:
-		"""No Description
+		"""The highest relative speed factor that the pump can be set at to meet the target head at the control node. If the target head cannot be met when the pump is set at the maximum relative speed factor, the maximum will be used.
 
 		Returns:
 			IVSPBInput: 
@@ -4002,7 +4009,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def NumberOfLagPumps(self) -> int:
-		"""No Description
+		"""Number of lag pumps (identical to the lead pump) whose relative speed factor is adjusted to maintain the target head for a fixed head VSPB. (Lag pumps are not used for constant flow VSPBs).
 
 		Returns:
 			IVSPBInput: 
@@ -4015,7 +4022,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def ControlNodeOnSuctionSide(self) -> bool:
-		"""No Description
+		"""Specifies if the VSPB has a suction side control node.
 
 		Returns:
 			IVSPBInput: 
@@ -4028,7 +4035,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def TargetFlow(self) -> float:
-		"""No Description
+		"""The relative speed of the lead pump will be adjusted to meet the Flow (Target). (Lag pumps are not used for constant flow VSPBs).
 
 		Returns:
 			IVSPBInput: 
@@ -4041,7 +4048,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def TargetPressure(self) -> float:
-		"""No Description
+		"""The Pressure that the battery will attempt to maintain for the Control Node.
 
 		Returns:
 			IVSPBInput: 
@@ -4054,7 +4061,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def VSPBType(self) -> VSPBType:
-		"""No Description
+		"""Specify how the variable speed pump battery is controlled.
 
 		Returns:
 			IVSPBInput: 
@@ -4067,7 +4074,7 @@ class IVSPBInput(IBasePumpInput):
 
 	@property
 	def VSPBFixedHeadType(self) -> VSPBFixedHeadType:
-		"""No Description
+		"""Establish if the battery should be regulated by pressure or hydraulic grade.
 
 		Returns:
 			IVSPBInput: 
@@ -4092,7 +4099,7 @@ class IVSPBsResults(IBasePumpsResults):
 
 	@overload
 	def LeadPumpFlows(self) -> Dict[int,int]:
-		"""No Description
+		"""Flow contributed by the lead pump in the pump battery.
 
 		Returns:
 			Dict[int,int]: 
@@ -4101,7 +4108,7 @@ class IVSPBsResults(IBasePumpsResults):
 
 	@overload
 	def LeadPumpFlows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Flow contributed by the lead pump in the pump battery.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4126,7 +4133,7 @@ class IVSPBsResults(IBasePumpsResults):
 
 	@overload
 	def NumberOfRunningLagPumps(self) -> Dict[int,int]:
-		"""No Description
+		"""Number of pump battery lag pumps running duing the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4135,7 +4142,7 @@ class IVSPBsResults(IBasePumpsResults):
 
 	@overload
 	def NumberOfRunningLagPumps(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Number of pump battery lag pumps running duing the current time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4172,7 +4179,7 @@ class IVSPBResults(IBasePumpResults):
 
 	@overload
 	def LeadPumpFlow(self) -> Union[float, None]:
-		"""No Description
+		"""Flow contributed by the lead pump in the pump battery.
 
 		Returns:
 			Nullable: 
@@ -4181,7 +4188,7 @@ class IVSPBResults(IBasePumpResults):
 
 	@overload
 	def LeadPumpFlow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Flow contributed by the lead pump in the pump battery.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4191,17 +4198,17 @@ class IVSPBResults(IBasePumpResults):
 		"""
 		pass
 
-	def LoadPumpFlows(self) -> array(Union[float, None]):
-		"""No Description
+	def LoadPumpFlows(self) -> List[Union[float, None]]:
+		"""Flow contributed by the lead pump in the pump battery.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def NumberOfRunningLagPumps(self) -> Union[float, None]:
-		"""No Description
+		"""Number of pump battery lag pumps running duing the current time step.
 
 		Returns:
 			Nullable: 
@@ -4210,7 +4217,7 @@ class IVSPBResults(IBasePumpResults):
 
 	@overload
 	def NumberOfRunningLagPumps(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Number of pump battery lag pumps running duing the current time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4220,11 +4227,11 @@ class IVSPBResults(IBasePumpResults):
 		"""
 		pass
 
-	def NumberRunningLagPumps(self) -> array(Union[float, None]):
-		"""No Description
+	def NumberRunningLagPumps(self) -> List[Union[float, None]]:
+		"""Number of pump battery lag pumps running duing the current time step.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -4254,7 +4261,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through at all valve at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4263,7 +4270,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Total flow through at all valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4288,7 +4295,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Velocities(self) -> Dict[int,int]:
-		"""No Description
+		"""Velocity of flow traveling through the valve at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4297,7 +4304,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Velocities(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Velocity of flow traveling through the valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4322,7 +4329,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Headlosses(self) -> Dict[int,int]:
-		"""No Description
+		"""Change in head across all valves at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4331,7 +4338,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Headlosses(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Change in head across all valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4356,7 +4363,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PressureLosses(self) -> Dict[int,int]:
-		"""No Description
+		"""Change in pressure across all valves at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4365,7 +4372,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def PressureLosses(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Change in pressure across all valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4390,7 +4397,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of all valves at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4399,7 +4406,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromHydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of all valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4424,7 +4431,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of all valves at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4433,7 +4440,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToHydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of all valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4458,7 +4465,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the entrance of all valves at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4467,7 +4474,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def FromPressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the entrance of all valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4492,7 +4499,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the exit to all valves at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4501,7 +4508,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def ToPressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at the exit to all valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4526,7 +4533,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Status(self) -> Dict[int,int]:
-		"""No Description
+		"""Displays the current calculated status (Open, Closed etc...) of all valves at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -4535,7 +4542,7 @@ class IBaseValvesResults(IBaseDirectedNodesResults):
 
 	@overload
 	def Status(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Di plays the current calculated status (Open, Closed etc...) of all valves at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4572,7 +4579,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4581,7 +4588,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4591,17 +4598,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Total flow through the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Velocity(self) -> Union[float, None]:
-		"""No Description
+		"""Velocity of flow traveling through the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4610,7 +4617,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Velocity(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Velocity of flow traveling through the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4620,17 +4627,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Velocities(self) -> array(Union[float, None]):
-		"""No Description
+	def Velocities(self) -> List[Union[float, None]]:
+		"""Velocity of flow traveling through the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Headloss(self) -> Union[float, None]:
-		"""No Description
+		"""Change in head across the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4639,7 +4646,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def Headloss(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Change in head across the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4649,17 +4656,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def Headlosses(self) -> array(Union[float, None]):
-		"""No Description
+	def Headlosses(self) -> List[Union[float, None]]:
+		"""Change in head across the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def PressureLoss(self) -> Union[float, None]:
-		"""No Description
+		"""Change in pressure across the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4668,7 +4675,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def PressureLoss(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Change in pressure across the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4678,17 +4685,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def PressureLosses(self) -> array(Union[float, None]):
-		"""No Description
+	def PressureLosses(self) -> List[Union[float, None]]:
+		"""Change in pressure across the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def FromHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4697,7 +4704,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def FromHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the entrance of the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4707,17 +4714,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def FromHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def FromHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at the entrance of the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def ToHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4726,7 +4733,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def ToHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at the exit of the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4736,17 +4743,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def ToHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def ToHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at the exit of the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def FromPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the entrance of the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4755,7 +4762,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def FromPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the entrance of the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4765,17 +4772,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def FromPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def FromPressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at the entrance of the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def ToPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the exit to the valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4784,7 +4791,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def ToPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at the exit to the valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4794,17 +4801,17 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def ToPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def ToPressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at the exit to the valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def CalculatedStatus(self) -> Union[int, None]:
-		"""No Description
+		"""Di plays the current calculated status (Open, Closed etc...) of the selected valve at the current time step.
 
 		Returns:
 			Nullable: 
@@ -4813,7 +4820,7 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 
 	@overload
 	def CalculatedStatus(self, timeStepIndex: int) -> Union[int, None]:
-		"""No Description
+		"""Di plays the current calculated status (Open, Closed etc...) of the selected valve at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -4823,11 +4830,11 @@ class IBaseValveResults(IBaseDirectedNodeResults):
 		"""
 		pass
 
-	def CalculatedStatuses(self) -> array(Union[int, None]):
-		"""No Description
+	def CalculatedStatuses(self) -> List[Union[int, None]]:
+		"""Di plays the current calculated status (Open, Closed etc...) of the selected valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -4845,7 +4852,7 @@ class IBaseValveInput(IBaseDirectedNodeInput):
 
 	@property
 	def InitialStatus(self) -> ValveSettingType:
-		"""No Description
+		"""Set the initial status for the valve.
 
 		Returns:
 			IBaseValveInput: 
@@ -4858,7 +4865,7 @@ class IBaseValveInput(IBaseDirectedNodeInput):
 
 	@property
 	def ValveDiameter(self) -> float:
-		"""No Description
+		"""Inside diameter of the valve. Used to calculate the velocity through the valve and a corresponding minor loss when a minor loss coefficient is entered.
 
 		Returns:
 			IBaseValveInput: 
@@ -4871,7 +4878,7 @@ class IBaseValveInput(IBaseDirectedNodeInput):
 
 	@property
 	def MinorLossCoefficientCollection(self) -> IMinorLossCoefficientCollection:
-		"""No Description
+		"""List of all associated minor losses associated with the element, and can be used to generate the composite minor loss coefficient.
 
 		Returns:
 			IBaseValveInput: 
@@ -4880,7 +4887,7 @@ class IBaseValveInput(IBaseDirectedNodeInput):
 
 	@property
 	def LocalMinorLossCoefficient(self) -> float:
-		"""No Description
+		"""User input minor loss coefficent.  You can either type in the value directly or select the value from the Minor Loss Library. The minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			IBaseValveInput: 
@@ -4893,7 +4900,7 @@ class IBaseValveInput(IBaseDirectedNodeInput):
 
 	@property
 	def SpecifyLocalMinorLoss(self) -> bool:
-		"""No Description
+		"""If true then the minor coefficent for the element is manually set, otherwise the value is derived from the minor loss library.
 
 		Returns:
 			IBaseValveInput: 
@@ -4906,7 +4913,7 @@ class IBaseValveInput(IBaseDirectedNodeInput):
 
 	@property
 	def DerivedMinorLossCoefficient(self) -> float:
-		"""No Description
+		"""Displays the composite value calculated from the data in the minor loss collection. The composite minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			IBaseValveInput: 
@@ -4927,7 +4934,7 @@ class IBaseValvesInput(IBaseDirectedNodesInput):
 
 	@overload
 	def InitialStatus(self) -> Dict[int,int]:
-		"""No Description
+		"""Set the initial status for the valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -4948,7 +4955,7 @@ class IBaseValvesInput(IBaseDirectedNodesInput):
 
 	@overload
 	def Diameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Inside diameter of the valve. Used to calculate the velocity through the valve and a corresponding minor loss when a minor loss coefficient is entered.
 
 		Returns:
 			Dict[int,int]: 
@@ -4968,7 +4975,7 @@ class IBaseValvesInput(IBaseDirectedNodesInput):
 		pass
 
 	def LocalMinorLossCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""User input minor loss coefficent.  You can either type in the value directly or select the value from the Minor Loss Library. The minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			Dict[int,int]: 
@@ -4976,7 +4983,7 @@ class IBaseValvesInput(IBaseDirectedNodesInput):
 		pass
 
 	def SpecifyLocalMinorLoss(self) -> Dict[int,int]:
-		"""No Description
+		"""If true then the minor coefficent for the element is manually set, otherwise the value is derived from the minor loss library.
 
 		Returns:
 			Dict[int,int]: 
@@ -4984,7 +4991,7 @@ class IBaseValvesInput(IBaseDirectedNodesInput):
 		pass
 
 	def DerivedMinorLossCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""Displays the composite value calculated from the data in the minor loss collection. The composite minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			Dict[int,int]: 
@@ -5005,7 +5012,7 @@ class IBaseValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def ValveDiameterUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for valve diameter.
 
 		Returns:
 			IBaseValveUnits: 
@@ -5014,7 +5021,7 @@ class IBaseValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for flow.
 
 		Returns:
 			IBaseValveUnits: 
@@ -5023,7 +5030,7 @@ class IBaseValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def VelocityUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for velocity.
 
 		Returns:
 			IBaseValveUnits: 
@@ -5032,7 +5039,7 @@ class IBaseValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HeadlossUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for headloss.
 
 		Returns:
 			IBaseValveUnits: 
@@ -5041,7 +5048,7 @@ class IBaseValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def PressureLossUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for pressure loss.
 
 		Returns:
 			IBaseValveUnits: 
@@ -5050,7 +5057,7 @@ class IBaseValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for hydraulic grade.
 
 		Returns:
 			IBaseValveUnits: 
@@ -5059,7 +5066,7 @@ class IBaseValveUnits(IBaseDirectedNodeUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for pressure.
 
 		Returns:
 			IBaseValveUnits: 
@@ -5104,7 +5111,7 @@ class IFlowControlValvesResults(IBaseValvesResults):
 
 	@overload
 	def CalculatedFlowSettings(self) -> Dict[int,int]:
-		"""No Description
+		"""Flow setting for current time step at all FCVs.
 
 		Returns:
 			Dict[int,int]: 
@@ -5113,7 +5120,7 @@ class IFlowControlValvesResults(IBaseValvesResults):
 
 	@overload
 	def CalculatedFlowSettings(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Flow setting for given time step at all FCVs.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -5150,7 +5157,7 @@ class IFlowControlValveResults(IBaseValveResults):
 
 	@overload
 	def CalculatedFlowSetting(self) -> Union[float, None]:
-		"""No Description
+		"""Flow setting at selected valve for current time step.
 
 		Returns:
 			Nullable: 
@@ -5159,7 +5166,7 @@ class IFlowControlValveResults(IBaseValveResults):
 
 	@overload
 	def CalculatedFlowSetting(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Flow setting at selected valve for given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -5169,11 +5176,11 @@ class IFlowControlValveResults(IBaseValveResults):
 		"""
 		pass
 
-	def CalculatedFlowSettings(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedFlowSettings(self) -> List[Union[float, None]]:
+		"""Flow setting at selected valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -5191,7 +5198,7 @@ class IFlowControlValvesInput(IBaseValvesInput):
 
 	@overload
 	def InitialFlowSettings(self) -> Dict[int,int]:
-		"""No Description
+		"""Initial flow setting for all flow control valves.
 
 		Returns:
 			Dict[int,int]: 
@@ -5211,7 +5218,7 @@ class IFlowControlValvesInput(IBaseValvesInput):
 		pass
 
 	def ValveCharacteristics(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			Dict[int,int]: 
@@ -5219,7 +5226,7 @@ class IFlowControlValvesInput(IBaseValvesInput):
 		pass
 
 	def ValveTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			Dict[int,int]: 
@@ -5240,7 +5247,7 @@ class IFlowControlValveInput(IBaseValveInput):
 
 	@property
 	def InitialFlowSetting(self) -> float:
-		"""No Description
+		"""Initial flow setting for the flow control valve.
 
 		Returns:
 			IFlowControlValveInput: 
@@ -5253,7 +5260,7 @@ class IFlowControlValveInput(IBaseValveInput):
 
 	@property
 	def ValveCharacteristics(self) -> IValveCharacteristic:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			IFlowControlValveInput: 
@@ -5266,7 +5273,7 @@ class IFlowControlValveInput(IBaseValveInput):
 
 	@property
 	def ValveType(self) -> HammerValveType:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			IFlowControlValveInput: 
@@ -5291,7 +5298,7 @@ class IFlowControlValveUnits(IBaseValveUnits):
 
 	@property
 	def InitialFlowSettingUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for initial flow setting.
 
 		Returns:
 			IFlowControlValveUnits: 
@@ -5336,7 +5343,7 @@ class IThrottleControlValvesResults(IBaseValvesResults):
 
 	@overload
 	def Settings(self) -> Dict[int,int]:
-		"""No Description
+		"""Discharge Coefficient:  Discharge coefficient setting (Cv) at the current time step across all TCVs.
 
 		Returns:
 			Dict[int,int]: 
@@ -5345,7 +5352,7 @@ class IThrottleControlValvesResults(IBaseValvesResults):
 
 	@overload
 	def Settings(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Discharge Coefficient:  Discharge coefficient setting (Cv) at the given time step across all TCVs.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -5382,7 +5389,7 @@ class IThrottleControlValveResults(IBaseValveResults):
 
 	@overload
 	def CalculatedSetting(self) -> Union[float, None]:
-		"""No Description
+		"""Discharge Coefficient:  TCV discharge coefficient setting (Cv) at the current time step.
 
 		Returns:
 			Nullable: 
@@ -5391,7 +5398,7 @@ class IThrottleControlValveResults(IBaseValveResults):
 
 	@overload
 	def CalculatedSetting(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Discharge Coefficient:  TCV discharge coefficient setting (Cv) at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -5401,11 +5408,11 @@ class IThrottleControlValveResults(IBaseValveResults):
 		"""
 		pass
 
-	def CalculatedSettings(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedSettings(self) -> List[Union[float, None]]:
+		"""Discharge Coefficient:  TCV discharge coefficient setting (Cv) at all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -5423,7 +5430,7 @@ class IThrottleControlValveInput(IBaseValveInput):
 
 	@property
 	def TCVCoefficientType(self) -> TCVCoefficientType:
-		"""No Description
+		"""Specifies which type of coefficient to enter for the TCV. If entering discharge coefficient, the value is internally converted into an equivalent headloss coefficient.
 
 		Returns:
 			IThrottleControlValveInput: 
@@ -5436,7 +5443,7 @@ class IThrottleControlValveInput(IBaseValveInput):
 
 	@property
 	def InitialCoefficient(self) -> float:
-		"""No Description
+		"""(A relative closure of 0%% means the valve is 0%% closed, or 100%% open. Conversely, a relative closure of 100%% means the valve is 100%% closed, or 0%% open).
 
 		Returns:
 			IThrottleControlValveInput: 
@@ -5449,7 +5456,7 @@ class IThrottleControlValveInput(IBaseValveInput):
 
 	@property
 	def ValveCharacteristics(self) -> IValveCharacteristic:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			IThrottleControlValveInput: 
@@ -5462,7 +5469,7 @@ class IThrottleControlValveInput(IBaseValveInput):
 
 	@property
 	def ValveType(self) -> HammerValveType:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			IThrottleControlValveInput: 
@@ -5487,7 +5494,7 @@ class IThrottleControlValvesInput(IBaseValvesInput):
 
 	@overload
 	def TCVCoefficientTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies which type of coefficient to enter for the TCV. If entering discharge coefficient, the value is internally converted into an equivalent headloss coefficient.
 
 		Returns:
 			Dict[int,int]: 
@@ -5508,7 +5515,7 @@ class IThrottleControlValvesInput(IBaseValvesInput):
 
 	@overload
 	def InitialCoefficients(self) -> Dict[int,int]:
-		"""No Description
+		"""(A relative closure of 0%% means the valve is 0%% closed, or 100%% open. Conversely, a relative closure of 100%% means the valve is 100%% closed, or 0%% open).
 
 		Returns:
 			Dict[int,int]: 
@@ -5528,7 +5535,7 @@ class IThrottleControlValvesInput(IBaseValvesInput):
 		pass
 
 	def ValveCharacteristics(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			Dict[int,int]: 
@@ -5536,7 +5543,7 @@ class IThrottleControlValvesInput(IBaseValvesInput):
 		pass
 
 	def ValveTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			Dict[int,int]: 
@@ -5557,7 +5564,7 @@ class IThrottleControlValveUnits(IBaseValveUnits):
 
 	@property
 	def CoefficientUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information depending on the setting of TCVCoefficientType.
 
 		Returns:
 			IThrottleControlValveUnits: 
@@ -5601,7 +5608,7 @@ class IGeneralPurposeValvesInput(IBaseValvesInput):
 		pass
 
 	def GPVHeadlossCurves(self) -> Dict[int,int]:
-		"""No Description
+		"""Select the GPV headloss curve to apply to the selected valve. The General Purpose Valve is a fictitious element allowing simulation of unique headloss/flow relationships, therefore, the headloss curve relationship is always applied. Minor losses are never applied for this valve type and as such the valve does not support a (fully) open status.
 
 		Returns:
 			Dict[int,int]: 
@@ -5609,7 +5616,7 @@ class IGeneralPurposeValvesInput(IBaseValvesInput):
 		pass
 
 	def ValveCharacteristics(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			Dict[int,int]: 
@@ -5617,7 +5624,7 @@ class IGeneralPurposeValvesInput(IBaseValvesInput):
 		pass
 
 	def ValveTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			Dict[int,int]: 
@@ -5662,7 +5669,7 @@ class IGeneralPurposeValveInput(IBaseValveInput):
 
 	@property
 	def GPVHeadlossCurve(self) -> IGPVHeadlossCurve:
-		"""No Description
+		"""Select the GPV headloss curve to apply to the selected valve. The General Purpose Valve is a fictitious element allowing simulation of unique headloss/flow relationships, therefore, the headloss curve relationship is always applied. Minor losses are never applied for this valve type and as such the valve does not support a (fully) open status.
 
 		Returns:
 			IGeneralPurposeValveInput: 
@@ -5675,7 +5682,7 @@ class IGeneralPurposeValveInput(IBaseValveInput):
 
 	@property
 	def ValveCharacteristics(self) -> IValveCharacteristic:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			IGeneralPurposeValveInput: 
@@ -5688,7 +5695,7 @@ class IGeneralPurposeValveInput(IBaseValveInput):
 
 	@property
 	def ValveType(self) -> HammerValveType:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			IGeneralPurposeValveInput: 
@@ -5725,7 +5732,7 @@ class IPressureValvesResults(IBaseValvesResults):
 
 	@overload
 	def CalculatedSettings(self) -> Dict[int,int]:
-		"""No Description
+		"""Pressure:  Pressure setting for all pressure valves at current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -5734,7 +5741,7 @@ class IPressureValvesResults(IBaseValvesResults):
 
 	@overload
 	def CalculatedSettings(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Pressure:  Pressure setting for all pressure valves at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -5771,7 +5778,7 @@ class IPressureValveResults(IBaseValveResults):
 
 	@overload
 	def CalculatedSetting(self) -> Union[float, None]:
-		"""No Description
+		"""Pressure:  Pressure setting for valve at current time step.
 
 		Returns:
 			Nullable: 
@@ -5780,7 +5787,7 @@ class IPressureValveResults(IBaseValveResults):
 
 	@overload
 	def CalculatedSetting(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Pressure:  Pressure setting for valve at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -5790,11 +5797,11 @@ class IPressureValveResults(IBaseValveResults):
 		"""
 		pass
 
-	def CalculatedSettings(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedSettings(self) -> List[Union[float, None]]:
+		"""Pressure:  Pressure setting for valve across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -5812,7 +5819,7 @@ class IPressureValveInput(IBaseValveInput):
 
 	@property
 	def PressureValveSetting(self) -> PressureValvesettingType:
-		"""No Description
+		"""Establish if the valve should be regulated by pressure or hydraulic grade.
 
 		Returns:
 			IPressureValveInput: 
@@ -5825,7 +5832,7 @@ class IPressureValveInput(IBaseValveInput):
 
 	@property
 	def InitialSetting(self) -> float:
-		"""No Description
+		"""Hydraulic Grade Setting (Initial) - Specify the initial hydraulic grade setting for the valve.
 
 		Returns:
 			IPressureValveInput: 
@@ -5850,7 +5857,7 @@ class IPressureValvesInput(IBaseValvesInput):
 
 	@overload
 	def PressureValveSettings(self) -> Dict[int,int]:
-		"""No Description
+		"""Establish if the valve should be regulated by pressure or hydraulic grade.
 
 		Returns:
 			Dict[int,int]: 
@@ -5871,7 +5878,7 @@ class IPressureValvesInput(IBaseValvesInput):
 
 	@overload
 	def InitialSettings(self) -> Dict[int,int]:
-		"""No Description
+		"""Hydraulic Grade Setting (Initial) - Specify the initial hydraulic grade setting for the valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -5904,7 +5911,7 @@ class IPressureValveUnits(IBaseValveUnits):
 
 	@property
 	def SettingUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for setting depending on the setting of PressureValveSetting.
 
 		Returns:
 			IPressureValveUnits: 
@@ -6032,7 +6039,7 @@ class IPressureSustainingValvesInput(IPressureValvesInput):
 		pass
 
 	def ValveCharacteristics(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			Dict[int,int]: 
@@ -6040,7 +6047,7 @@ class IPressureSustainingValvesInput(IPressureValvesInput):
 		pass
 
 	def ValveTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			Dict[int,int]: 
@@ -6085,7 +6092,7 @@ class IPressureSustainingValveInput(IPressureValveInput):
 
 	@property
 	def ValveCharacteristics(self) -> IValveCharacteristic:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			IPressureSustainingValveInput: 
@@ -6098,7 +6105,7 @@ class IPressureSustainingValveInput(IPressureValveInput):
 
 	@property
 	def ValveType(self) -> HammerValveType:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			IPressureSustainingValveInput: 
@@ -6158,7 +6165,7 @@ class IPressureReducingValvesInput(IPressureValvesInput):
 		pass
 
 	def ValveCharacteristics(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			Dict[int,int]: 
@@ -6166,7 +6173,7 @@ class IPressureReducingValvesInput(IPressureValvesInput):
 		pass
 
 	def ValveTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			Dict[int,int]: 
@@ -6211,7 +6218,7 @@ class IPressureReducingValveInput(IPressureValveInput):
 
 	@property
 	def ValveCharacteristics(self) -> IValveCharacteristic:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			IPressureReducingValveInput: 
@@ -6224,7 +6231,7 @@ class IPressureReducingValveInput(IPressureValveInput):
 
 	@property
 	def ValveType(self) -> HammerValveType:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			IPressureReducingValveInput: 
@@ -6285,7 +6292,7 @@ class IValveLinearAreaChangeInput(IBaseValveInput):
 
 	@property
 	def TimeToClose(self) -> float:
-		"""No Description
+		"""For a slow-closing air valve, the valve starts to close linearly with respect to area once air begins to exit the pipe. If air subsequently re-enters, then the air valve opens fully again. For a valve with linear area change, the valve will close linearly over this time, starting at the beginning of the simulation if this value is greater than zero. If this value equals zero a valve with linear area change will close when reverse flow is first sensed and will remain closed for the remainder of the simulation. For an air valve, adiabatic compression (i.e., gas law exponent = 1.4) is assumed.
 
 		Returns:
 			IValveLinearAreaChangeInput: 
@@ -6298,7 +6305,7 @@ class IValveLinearAreaChangeInput(IBaseValveInput):
 
 	@property
 	def DischargeCoefficient(self) -> float:
-		"""No Description
+		"""The discharge coefficient for the valve. This is used to determine the flow/headloss relationship of the valve for the steady state / EPS analysis. Minor losses are never applied for this valve type and as such the valve does not support a (fully) open status.
 
 		Returns:
 			IValveLinearAreaChangeInput: 
@@ -6323,7 +6330,7 @@ class IValvesLinearAreaChangeInput(IBaseValvesInput):
 
 	@overload
 	def TimeToClose(self) -> Dict[int,int]:
-		"""No Description
+		"""For a slow-closing air valve, the valve starts to close linearly with respect to area once air begins to exit the pipe. If air subsequently re-enters, then the air valve opens fully again. For a valve with linear area change, the valve will close linearly over this time, starting at the beginning of the simulation if this value is greater than zero. If this value equals zero a valve with linear area change will close when reverse flow is first sensed and will remain closed for the remainder of the simulation. For an air valve, adiabatic compression (i.e., gas law exponent = 1.4) is assumed.
 
 		Returns:
 			Dict[int,int]: 
@@ -6344,7 +6351,7 @@ class IValvesLinearAreaChangeInput(IBaseValvesInput):
 
 	@overload
 	def DischargeCoefficients(self) -> Dict[int,int]:
-		"""No Description
+		"""The discharge coefficient for the valve. This is used to determine the flow/headloss relationship of the valve for the steady state / EPS analysis. Minor losses are never applied for this valve type and as such the valve does not support a (fully) open status.
 
 		Returns:
 			Dict[int,int]: 
@@ -6401,7 +6408,7 @@ class IValveWithLinearAreaChangeUnits(IBaseValveUnits):
 
 	@property
 	def DischargeCoefficientUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for the discharge coefficient
 
 		Returns:
 			IValveWithLinearAreaChangeUnits: 
@@ -6410,7 +6417,7 @@ class IValveWithLinearAreaChangeUnits(IBaseValveUnits):
 
 	@property
 	def TimeToCloseUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information about time to close.
 
 		Returns:
 			IValveWithLinearAreaChangeUnits: 
@@ -6466,27 +6473,27 @@ class DomainElementExtensions:
 	@staticmethod
 	@overload
 	def Create(junctions: IJunctions, label: str, point: GeometryPoint) -> IJunction:
-		"""No Description
+		"""Creates a new junction given the label and geometry.
 
 		Args:
-			junctions(IJunctions): junctions
-			label(str): label
-			point(GeometryPoint): point
+			junctions(IJunctions): The junction manager
+			label(str): The label of the new junction
+			point(GeometryPoint): The geometry of the new junction
 
 		Returns:
-			IJunction: 
+			IJunction: An IJunction instance
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(hydrants: IHydrants, label: str, point: GeometryPoint) -> IHydrant:
-		"""No Description
+		"""Creates a new hydrant given the label and geometry.
 
 		Args:
-			hydrants(IHydrants): hydrants
-			label(str): label
-			point(GeometryPoint): point
+			hydrants(IHydrants): The hydrant manager
+			label(str): The label of the new hydrant
+			point(GeometryPoint): The geometry of the new hydrant
 
 		Returns:
 			IHydrant: 
@@ -6496,7 +6503,7 @@ class DomainElementExtensions:
 	@staticmethod
 	@overload
 	def Create(tanks: ITanks, label: str, point: GeometryPoint) -> ITank:
-		"""No Description
+		"""Creates a new tank given the label and geometry.
 
 		Args:
 			tanks(ITanks): tanks
@@ -6511,12 +6518,12 @@ class DomainElementExtensions:
 	@staticmethod
 	@overload
 	def Create(reservoirs: IReservoirs, label: str, point: GeometryPoint) -> IReservoir:
-		"""No Description
+		"""Creates a new reservoir given the label and geometry
 
 		Args:
-			reservoirs(IReservoirs): reservoirs
-			label(str): label
-			point(GeometryPoint): point
+			reservoirs(IReservoirs): The reservoir manager
+			label(str): The label of the new reservoir
+			point(GeometryPoint): The geometry of the new reservoir
 
 		Returns:
 			IReservoir: 
@@ -6526,13 +6533,13 @@ class DomainElementExtensions:
 	@staticmethod
 	@overload
 	def Create(taps: ITaps, label: str, point: GeometryPoint, associatedElement: IPipe) -> ITap:
-		"""No Description
+		"""Creates a new top associated with the provided pipe.
 
 		Args:
-			taps(ITaps): taps
-			label(str): label
-			point(GeometryPoint): point
-			associatedElement(IPipe): associatedElement
+			taps(ITaps): The taps manager
+			label(str): The label of the new tap
+			point(GeometryPoint): The geometry location of the new tap
+			associatedElement(IPipe): The associated pipe for the new tap
 
 		Returns:
 			ITap: 
@@ -6557,13 +6564,13 @@ class DomainElementExtensions:
 
 	@staticmethod
 	@overload
-	def Create(pumpStations: IPumpStations, label: str, rings: array(array(GeometryPoint))) -> IPumpStation:
-		"""No Description
+	def Create(pumpStations: IPumpStations, label: str, rings: List[List[GeometryPoint]]) -> IPumpStation:
+		"""Creates a new pump station given the label and ring geometry
 
 		Args:
-			pumpStations(IPumpStations): pumpStations
-			label(str): label
-			rings(array(array(GeometryPoint))): rings
+			pumpStations(IPumpStations): The pump station manager
+			label(str): The label of the new pump station
+			rings(List[List[GeometryPoint]]): The geometry of the pump station rings
 
 		Returns:
 			IPumpStation: 
@@ -6573,122 +6580,122 @@ class DomainElementExtensions:
 	@staticmethod
 	@overload
 	def Create(valves: IFlowControlValves, label: str, point: GeometryPoint, downstreamLink: IElement) -> IFlowControlValve:
-		"""No Description
+		"""Creates a new valve with the given data.
 
 		Args:
 			valves(IFlowControlValves): valves
-			label(str): label
-			point(GeometryPoint): point
-			downstreamLink(IElement): downstreamLink
+			label(str): The label of the new valve
+			point(GeometryPoint): The geometry of the new valve
+			downstreamLink(IElement): The downstream link of the valve determining its direction
 
 		Returns:
-			IFlowControlValve: 
+			IFlowControlValve: A new valve
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(valves: IGeneralPurposeValves, label: str, point: GeometryPoint, downstreamLink: IElement) -> IGeneralPurposeValve:
-		"""No Description
+		"""Creates a new valve with the given data.
 
 		Args:
 			valves(IGeneralPurposeValves): valves
-			label(str): label
-			point(GeometryPoint): point
-			downstreamLink(IElement): downstreamLink
+			label(str): The label of the new valve
+			point(GeometryPoint): The geometry of the new valve
+			downstreamLink(IElement): The downstream link of the valve determining its direction
 
 		Returns:
-			IGeneralPurposeValve: 
+			IGeneralPurposeValve: A new valve
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(valves: IPressureBreakingValves, label: str, point: GeometryPoint, downstreamLink: IElement) -> IPressureBreakingValve:
-		"""No Description
+		"""Creates a new valve with the given data.
 
 		Args:
 			valves(IPressureBreakingValves): valves
-			label(str): label
-			point(GeometryPoint): point
-			downstreamLink(IElement): downstreamLink
+			label(str): The label of the new valve
+			point(GeometryPoint): The geometry of the new valve
+			downstreamLink(IElement): The downstream link of the valve determining its direction
 
 		Returns:
-			IPressureBreakingValve: 
+			IPressureBreakingValve: A new valve
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(valves: IPressureReducingValves, label: str, point: GeometryPoint, downstreamLink: IElement) -> IPressureReducingValve:
-		"""No Description
+		"""Creates a new valve with the given data.
 
 		Args:
 			valves(IPressureReducingValves): valves
-			label(str): label
-			point(GeometryPoint): point
-			downstreamLink(IElement): downstreamLink
+			label(str): The label of the new valve
+			point(GeometryPoint): The geometry of the new valve
+			downstreamLink(IElement): The downstream link of the valve determining its direction
 
 		Returns:
-			IPressureReducingValve: 
+			IPressureReducingValve: A new valve
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(valves: IPressureSustainingValves, label: str, point: GeometryPoint, downstreamLink: IElement) -> IPressureSustainingValve:
-		"""No Description
+		"""Creates a new valve with the given data.
 
 		Args:
 			valves(IPressureSustainingValves): valves
-			label(str): label
-			point(GeometryPoint): point
-			downstreamLink(IElement): downstreamLink
+			label(str): The label of the new valve
+			point(GeometryPoint): The geometry of the new valve
+			downstreamLink(IElement): The downstream link of the valve determining its direction
 
 		Returns:
-			IPressureSustainingValve: 
+			IPressureSustainingValve: A new valve
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(valves: IThrottleControlValves, label: str, point: GeometryPoint, downstreamLink: IElement) -> IThrottleControlValve:
-		"""No Description
+		"""Creates a new valve with the given data.
 
 		Args:
 			valves(IThrottleControlValves): valves
-			label(str): label
-			point(GeometryPoint): point
-			downstreamLink(IElement): downstreamLink
+			label(str): The label of the new valve
+			point(GeometryPoint): The geometry of the new valve
+			downstreamLink(IElement): The downstream link of the valve determining its direction
 
 		Returns:
-			IThrottleControlValve: 
+			IThrottleControlValve: A new valve
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(scadaElements: ISCADAElements, label: str, point: GeometryPoint, targetElement: IWaterElement = None, scadaTargetAttribute: SCADATargetAttribute = SCADATargetAttribute.UnAssigned, realTimeSignal: ISCADASignal = None, historicalSignal: ISCADASignal = None) -> ISCADAElement:
-		"""No Description
+		"""Creates a new SCADA Element
 
 		Args:
-			scadaElements(ISCADAElements): scadaElements
-			label(str): label
-			point(GeometryPoint): point
-			targetElement(IWaterElement): targetElement
-			scadaTargetAttribute(SCADATargetAttribute): scadaTargetAttribute
-			realTimeSignal(ISCADASignal): realTimeSignal
-			historicalSignal(ISCADASignal): historicalSignal
+			scadaElements(ISCADAElements): The SCADA element manager
+			label(str): The label of the new SCADA element
+			point(GeometryPoint): The geometry point of the SCADA element
+			targetElement(IWaterElement): The target element the SCADA element points to.  Default is null.
+			scadaTargetAttribute(SCADATargetAttribute): The attribute to use with this SCADA element.  The default is unassigned.
+			realTimeSignal(ISCADASignal): The real-time signal to use with this SCADA element.  The default is null.
+			historicalSignal(ISCADASignal): The historical signal to use with this SCADA element.  The default is null.
 
 		Returns:
-			ISCADAElement: 
+			ISCADAElement: A new SCADA element with the provided settings.
 		"""
 		pass
 
 	@staticmethod
 	@overload
 	def Create(valves: IIsolationValves, label: str, point: GeometryPoint, pipe: IPipe) -> IIsolationValve:
-		"""No Description
+		"""Creates an isolation valve providing the label, location and referenced pipe.
 
 		Args:
 			valves(IIsolationValves): valves
@@ -6715,7 +6722,7 @@ class IWaterElement(IElement):
 
 	@property
 	def WaterElementType(self) -> WaterNetworkElementType:
-		"""No Description
+		"""The type of domain element this object represents
 
 		Returns:
 			IWaterElement: 
@@ -6760,7 +6767,7 @@ class IWaterZoneableNetworkElementInput(IActiveElementInput):
 
 	@property
 	def Zone(self) -> IZone:
-		"""No Description
+		"""Returns null if no zone is assigned.
 
 		Returns:
 			IWaterZoneableNetworkElementInput: 
@@ -6785,7 +6792,7 @@ class IWaterZoneableNetworkElementsInput(IActiveElementsInput):
 
 	@overload
 	def Zones(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets assigned zones across all elements of this type.
 
 		Returns:
 			Dict[int,int]: 
@@ -6817,7 +6824,7 @@ class IWaterTraceableInput:
 		pass
 
 	def MakeActiveTraceElement(self) -> None:
-		"""No Description
+		"""Makes the current element the trace element in the active scenario's trace alternative.
 
 		Returns:
 			None: 
@@ -6838,7 +6845,7 @@ class IWaterQualityResults:
 
 	@overload
 	def Age(self) -> Union[float, None]:
-		"""No Description
+		"""Age at selected element for current time step.
 
 		Returns:
 			Nullable: 
@@ -6847,27 +6854,27 @@ class IWaterQualityResults:
 
 	@overload
 	def Age(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Age at selected element for the time step.
 
 		Args:
-			timeStepIndex(int): timeStepIndex
+			timeStepIndex(int): The time step index to use to retrieve the result.
 
 		Returns:
 			Nullable: 
 		"""
 		pass
 
-	def Ages(self) -> array(Union[float, None]):
-		"""No Description
+	def Ages(self) -> List[Union[float, None]]:
+		"""Age across all time steps for element.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Trace(self) -> Union[float, None]:
-		"""No Description
+		"""Trace at selected element for current time step.
 
 		Returns:
 			Nullable: 
@@ -6876,27 +6883,27 @@ class IWaterQualityResults:
 
 	@overload
 	def Trace(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Trace at selected element for the time step.
 
 		Args:
-			timeStepIndex(int): timeStepIndex
+			timeStepIndex(int): The time step index to use to retrieve the result.
 
 		Returns:
 			Nullable: 
 		"""
 		pass
 
-	def Traces(self) -> array(Union[float, None]):
-		"""No Description
+	def Traces(self) -> List[Union[float, None]]:
+		"""Trace across all time steps for element.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Concentration(self) -> Union[float, None]:
-		"""No Description
+		"""Concentration at selected element for current time step.
 
 		Returns:
 			Nullable: 
@@ -6905,21 +6912,21 @@ class IWaterQualityResults:
 
 	@overload
 	def Concentration(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Concentration at selected element for the time step.
 
 		Args:
-			timeStepIndex(int): timeStepIndex
+			timeStepIndex(int): The time step index to use to retrieve the result.
 
 		Returns:
 			Nullable: 
 		"""
 		pass
 
-	def Concentrations(self) -> array(Union[float, None]):
-		"""No Description
+	def Concentrations(self) -> List[Union[float, None]]:
+		"""Concentration across all time steps for element.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -6937,7 +6944,7 @@ class IWaterQualityElementsInput:
 
 	@overload
 	def InitialAge(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the initial age for all elements of this type.
 
 		Returns:
 			Dict[int,int]: 
@@ -6958,7 +6965,7 @@ class IWaterQualityElementsInput:
 
 	@overload
 	def InitialTrace(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the initial trace for all elements of this type.
 
 		Returns:
 			Dict[int,int]: 
@@ -6979,7 +6986,7 @@ class IWaterQualityElementsInput:
 
 	@overload
 	def InitialConcentration(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the initial concentration for all elements of this type.
 
 		Returns:
 			Dict[int,int]: 
@@ -7012,7 +7019,7 @@ class IWaterQualityElementInput:
 
 	@property
 	def InitialAge(self) -> float:
-		"""No Description
+		"""The fluid age at this element at the start of the age analysis. This value is also used to initialize the age in downstream pipes.
 
 		Returns:
 			IWaterQualityElementInput: 
@@ -7025,7 +7032,7 @@ class IWaterQualityElementInput:
 
 	@property
 	def InitialConcentration(self) -> float:
-		"""No Description
+		"""The initial concentration in display units.
 
 		Returns:
 			IWaterQualityElementInput: 
@@ -7038,7 +7045,8 @@ class IWaterQualityElementInput:
 
 	@property
 	def InitialTrace(self) -> float:
-		"""No Description
+		"""The percentage of water attributable to the trace source node at the start of the trace analysis. 
+            This value is also used to initialize the trace value in downstream pipes.
 
 		Returns:
 			IWaterQualityElementInput: 
@@ -7063,7 +7071,7 @@ class IWaterQualityNodeInput:
 
 	@property
 	def IsConstituentSource(self) -> bool:
-		"""No Description
+		"""If true then the selected node can inject a set concentration of the global constituent into the system.
 
 		Returns:
 			IWaterQualityNodeInput: 
@@ -7076,7 +7084,7 @@ class IWaterQualityNodeInput:
 
 	@property
 	def ConstituentSourceType(self) -> ConstituentSourceType:
-		"""No Description
+		"""Specify how a constituent is injected into the system.
 
 		Returns:
 			IWaterQualityNodeInput: 
@@ -7089,7 +7097,7 @@ class IWaterQualityNodeInput:
 
 	@property
 	def BaseConstituent(self) -> float:
-		"""No Description
+		"""If the Source Type is Mass Booster, represents base mass rate in display units.
 
 		Returns:
 			IWaterQualityNodeInput: 
@@ -7126,7 +7134,7 @@ class IWaterQualityElementsResults:
 
 	@overload
 	def Ages(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the calculated age results across all elements at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7135,7 +7143,7 @@ class IWaterQualityElementsResults:
 
 	@overload
 	def Ages(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the calculated age results across all elements at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7160,7 +7168,7 @@ class IWaterQualityElementsResults:
 
 	@overload
 	def Traces(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the calculated tract results across all elements at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7169,7 +7177,7 @@ class IWaterQualityElementsResults:
 
 	@overload
 	def Traces(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the calculated tract results across all elements at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7194,7 +7202,7 @@ class IWaterQualityElementsResults:
 
 	@overload
 	def Concentrations(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the calculated concentration results across all elements at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7203,7 +7211,7 @@ class IWaterQualityElementsResults:
 
 	@overload
 	def Concentrations(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the calculated concentration results across all elements at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7240,7 +7248,7 @@ class IWaterQualityResultsUnits(IElementUnits):
 
 	@property
 	def AgeUnit(self) -> IUnit:
-		"""No Description
+		"""The name of the numeric formatter for the age result.
 
 		Returns:
 			IWaterQualityResultsUnits: 
@@ -7249,7 +7257,7 @@ class IWaterQualityResultsUnits(IElementUnits):
 
 	@property
 	def TraceUnit(self) -> IUnit:
-		"""No Description
+		"""The name of the numeric formatter for the trace result.
 
 		Returns:
 			IWaterQualityResultsUnits: 
@@ -7258,7 +7266,7 @@ class IWaterQualityResultsUnits(IElementUnits):
 
 	@property
 	def ConcentrationUnit(self) -> IUnit:
-		"""No Description
+		"""The name of the numeric formatter for the concentration result.
 
 		Returns:
 			IWaterQualityResultsUnits: 
@@ -7279,7 +7287,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Pipes(self) -> IPipes:
-		"""No Description
+		"""The pipes in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7288,7 +7296,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Laterals(self) -> ILaterals:
-		"""No Description
+		"""The laterals in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7297,7 +7305,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Junctions(self) -> IJunctions:
-		"""No Description
+		"""The junctions in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7306,7 +7314,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Hydrants(self) -> IHydrants:
-		"""No Description
+		"""The hydrants in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7315,7 +7323,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Tanks(self) -> ITanks:
-		"""No Description
+		"""The tanks in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7324,7 +7332,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Reservoirs(self) -> IReservoirs:
-		"""No Description
+		"""The reservoirs in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7333,7 +7341,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Taps(self) -> ITaps:
-		"""No Description
+		"""The taps in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7342,7 +7350,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def CustomerMeters(self) -> ICustomerMeters:
-		"""No Description
+		"""The customer meters in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7351,7 +7359,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Pumps(self) -> IPumps:
-		"""No Description
+		"""The pumps in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7360,7 +7368,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def VSPBs(self) -> IVariableSpeedPumpBatterys:
-		"""No Description
+		"""The VSPBs in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7369,7 +7377,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def PumpStations(self) -> IPumpStations:
-		"""No Description
+		"""The pump stations in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7378,7 +7386,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def SCADAElements(self) -> ISCADAElements:
-		"""No Description
+		"""The SCADA elements in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7387,7 +7395,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def PRVs(self) -> IPressureReducingValves:
-		"""No Description
+		"""The PRVs in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7396,7 +7404,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def PBVs(self) -> IPressureBreakingValves:
-		"""No Description
+		"""The PBVs in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7405,7 +7413,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def PSVs(self) -> IPressureSustainingValves:
-		"""No Description
+		"""The PSVs in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7414,7 +7422,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def TCVs(self) -> IThrottleControlValves:
-		"""No Description
+		"""The TCVs in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7423,7 +7431,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def FCVs(self) -> IFlowControlValves:
-		"""No Description
+		"""The FCVs in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7432,7 +7440,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def GPVs(self) -> IGeneralPurposeValves:
-		"""No Description
+		"""The GPVs in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7441,7 +7449,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def IsolationValves(self) -> IIsolationValves:
-		"""No Description
+		"""The ISO valves in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7450,7 +7458,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def CheckValves(self) -> ICheckValves:
-		"""No Description
+		"""The check valves in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7459,7 +7467,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def SpotElevations(self) -> ISpotElevations:
-		"""No Description
+		"""The spot elevations in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7468,7 +7476,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def ValvesWithLinearAreaChange(self) -> IValvesWithLinearAreaChange:
-		"""No Description
+		"""The valves with linear area change in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7477,7 +7485,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def PeriodicHeadFlows(self) -> IPeriodicHeadFlows:
-		"""No Description
+		"""The period head-flow nodes in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7486,7 +7494,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def AirValves(self) -> IAirValves:
-		"""No Description
+		"""The air valves in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7495,7 +7503,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def OrificesBetweenTwoPipes(self) -> IOrificesBetweenTwoPipes:
-		"""No Description
+		"""Orifices between two pipes in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7504,7 +7512,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def SurgeValves(self) -> ISurgeValves:
-		"""No Description
+		"""The surge valves (Sav/Srv) nodes in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7513,7 +7521,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def DischargeToAtmospheres(self) -> IDischargeToAtmospheres:
-		"""No Description
+		"""Discharge to atmosphere nodes in model
 
 		Returns:
 			IWaterNetwork: 
@@ -7522,7 +7530,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def RuptureDisks(self) -> IRuptureDisks:
-		"""No Description
+		"""The rupture disks in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7531,7 +7539,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def Turbines(self) -> ITurbines:
-		"""No Description
+		"""The turbines in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7540,7 +7548,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def SurgeTanks(self) -> ISurgeTanks:
-		"""No Description
+		"""The surge tanks in the model.
 
 		Returns:
 			IWaterNetwork: 
@@ -7549,7 +7557,7 @@ class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
 
 	@property
 	def HydropneumaticTanks(self) -> IHydropneumaticTanks:
-		"""No Description
+		"""The hydropneumatic tanks in the model
 
 		Returns:
 			IWaterNetwork: 
@@ -7594,7 +7602,7 @@ class IHammerPipesResults:
 
 	@overload
 	def MaximumHeads(self) -> Dict[int,int]:
-		"""No Description
+		"""Maximum head at any point along the pipe over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -7627,7 +7635,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets flows for all pipes for the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7636,7 +7644,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets flows for all pipes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7661,7 +7669,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Velocities(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the velocities for all pipes at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7670,7 +7678,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Velocities(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the velocities for all pipes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7695,7 +7703,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Headlosses(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the headlosses for all pipes at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7704,7 +7712,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Headlosses(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the headlosses for all pipes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7729,7 +7737,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def HeadlossGradients(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the headloss gradients for all pipes at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7738,7 +7746,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def HeadlossGradients(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the headloss gradients for all pipes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7763,7 +7771,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Statuses(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the status for all pipes at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -7772,7 +7780,7 @@ class IPipesResults(IBaseLinksResults, IWaterQualityElementsResults, IHammerPipe
 
 	@overload
 	def Statuses(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the status for all pipes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7808,7 +7816,7 @@ class IHammerPipeResults:
 		pass
 
 	def MaximumHead(self) -> Union[float, None]:
-		"""No Description
+		"""Maximum head at any point along the pipe over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -7829,7 +7837,7 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the pipe.  If the value is negative the flow is traveling from the stop node to the start node, and vice versa if positive at current time step.
 
 		Returns:
 			Nullable: 
@@ -7838,27 +7846,27 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total flow through the pipe.  If the value is negative the flow is traveling from the stop node to the start node, and vice versa if positive at given time step.
 
 		Args:
-			timeStepIndex(int): timeStepIndex
+			timeStepIndex(int): The time step index to use to retrieve the result.
 
 		Returns:
 			Nullable: 
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Total flow through the pipe.  If the value is negative the flow is traveling from the stop node to the start node, and vice versa if positive across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Velocity(self) -> Union[float, None]:
-		"""No Description
+		"""Velocity of fluid through the pipe at current time step.
 
 		Returns:
 			Nullable: 
@@ -7867,27 +7875,27 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 
 	@overload
 	def Velocity(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Velocity of fluid through the pipe at given time step.
 
 		Args:
-			timeStepIndex(int): timeStepIndex
+			timeStepIndex(int): The time step index to use to retrieve the result.
 
 		Returns:
 			Nullable: 
 		"""
 		pass
 
-	def Velocities(self) -> array(Union[float, None]):
-		"""No Description
+	def Velocities(self) -> List[Union[float, None]]:
+		"""Velocity of fluid through the pipe across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Headloss(self) -> Union[float, None]:
-		"""No Description
+		"""Total headloss occurring in the pipe, including both friction and minor headlosses and any minor losses from isolation valves at current time step.
 
 		Returns:
 			Nullable: 
@@ -7896,7 +7904,7 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 
 	@overload
 	def Headloss(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total headloss occurring in the pipe, including both friction and minor headlosses and any minor losses from isolation valves at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7906,17 +7914,17 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 		"""
 		pass
 
-	def Headlosses(self) -> array(Union[float, None]):
-		"""No Description
+	def Headlosses(self) -> List[Union[float, None]]:
+		"""Total headloss occurring in the pipe, including both friction and minor headlosses and any minor losses from isolation valves across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: A non-null double array in display units.  An empty array if no results available.
 		"""
 		pass
 
 	@overload
 	def HeadlossGradient(self) -> Union[float, None]:
-		"""No Description
+		"""The headloss per unit length in the pipe at current time step.
 
 		Returns:
 			Nullable: 
@@ -7925,7 +7933,7 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 
 	@overload
 	def HeadlossGradient(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The headloss per unit length in the pipe at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7935,26 +7943,26 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 		"""
 		pass
 
-	def HeadlossGradients(self) -> array(Union[float, None]):
-		"""No Description
+	def HeadlossGradients(self) -> List[Union[float, None]]:
+		"""The headloss per unit length in the pipe across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: A non-null double array in display units. An empty array if no results available.
 		"""
 		pass
 
 	@overload
 	def CalculatedStatus(self) -> Union[int, None]:
-		"""No Description
+		"""Whether or not the pipe is open or closed during current time step at current time step.
 
 		Returns:
-			Nullable: 
+			Nullable: The status of the pipe.  Null if no results available.
 		"""
 		pass
 
 	@overload
 	def CalculatedStatus(self, timeStepIndex: int) -> Union[int, None]:
-		"""No Description
+		"""Whether or not the pipe is open or closed during current time step at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -7964,11 +7972,11 @@ class IPipeResults(IBaseLinkResults, IWaterQualityResults, IHammerPipeResults):
 		"""
 		pass
 
-	def CalculatedStatuses(self) -> array(Union[int, None]):
-		"""No Description
+	def CalculatedStatuses(self) -> List[Union[int, None]]:
+		"""Whether or not the pipe is open or closed during current time step across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -7986,7 +7994,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def InstallationYear(self) -> int:
-		"""No Description
+		"""Specify the install year of the element.  It does not affect the calculations.
 
 		Returns:
 			IPipeInput: 
@@ -7999,7 +8007,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def InitialStatus(self) -> PipeStatusType:
-		"""No Description
+		"""Specify if the pipe is initially open or closed.
 
 		Returns:
 			IPipeInput: 
@@ -8012,7 +8020,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def Diameter(self) -> float:
-		"""No Description
+		"""Value represents the internal diameter of a circular pipe or four times the hydraulic radius for non-circular cross-sections.
 
 		Returns:
 			IPipeInput: 
@@ -8025,7 +8033,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def Material(self) -> str:
-		"""No Description
+		"""The pipe's material type.
 
 		Returns:
 			IPipeInput: 
@@ -8038,7 +8046,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def FrictionCoefficient(self) -> float:
-		"""No Description
+		"""Manning's - Roughness coefficient used in Manning's formula.
 
 		Returns:
 			IPipeInput: 
@@ -8051,7 +8059,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def MinorLossCoefficientCollection(self) -> IMinorLossCoefficientCollection:
-		"""No Description
+		"""List of all associated minor losses associated with the element, and can be used to generate the composite minor loss coefficient.
 
 		Returns:
 			IPipeInput: 
@@ -8060,7 +8068,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def LocalMinorLossCoefficient(self) -> float:
-		"""No Description
+		"""User input minor loss coefficent.  You can either type in the value directly or select the value from the Minor Loss Library. The minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			IPipeInput: 
@@ -8073,7 +8081,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def SpecifyLocalMinorLoss(self) -> bool:
-		"""No Description
+		"""If true then the minor coefficent for the element is manually set, otherwise the value is derived from the minor loss library.
 
 		Returns:
 			IPipeInput: 
@@ -8086,7 +8094,7 @@ class IPipeInput(IBaseLinkInput, IWaterZoneableNetworkElementInput):
 
 	@property
 	def DerivedMinorLossCoefficient(self) -> float:
-		"""No Description
+		"""Displays the composite value calculated from the data in the minor loss collection. The composite minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			IPipeInput: 
@@ -8107,7 +8115,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 
 	@overload
 	def InstallationYears(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify the install year of the element.  It does not affect the calculations.
 
 		Returns:
 			Dict[int,int]: 
@@ -8128,7 +8136,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 
 	@overload
 	def PipeStatuses(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify if the pipe is initially open or closed.
 
 		Returns:
 			Dict[int,int]: 
@@ -8149,7 +8157,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 
 	@overload
 	def Diameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Value represents the internal diameter of a circular pipe or four times the hydraulic radius for non-circular cross-sections.
 
 		Returns:
 			Dict[int,int]: 
@@ -8170,7 +8178,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 
 	@overload
 	def Materials(self) -> Dict[int,int]:
-		"""No Description
+		"""The pipe's material type.
 
 		Returns:
 			Dict[int,int]: 
@@ -8191,7 +8199,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 
 	@overload
 	def FrictionCoefficients(self) -> Dict[int,int]:
-		"""No Description
+		"""Manning's - Roughness coefficient used in Manning's formula.
 
 		Returns:
 			Dict[int,int]: 
@@ -8211,7 +8219,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 		pass
 
 	def LocalMinorLossCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""User input minor loss coefficent.  You can either type in the value directly or select the value from the Minor Loss Library. The minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			Dict[int,int]: 
@@ -8219,7 +8227,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 		pass
 
 	def SpecifyLocalMinorLoss(self) -> Dict[int,int]:
-		"""No Description
+		"""If true then the minor coefficent for the element is manually set, otherwise the value is derived from the minor loss library.
 
 		Returns:
 			Dict[int,int]: 
@@ -8227,7 +8235,7 @@ class IPipesInput(IBaseLinksInput, IWaterZoneableNetworkElementsInput):
 		pass
 
 	def DerivedMinorLossCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""Displays the composite value calculated from the data in the minor loss collection. The composite minor loss is applied to the valve when it is fully open (inactive). Note that minor losses do not apply to the following valve types: General Purpose Valve and Valve With Linear Area Change. These two valve types do not support a (fully) open status and always apply the head/flow relationship defined by their headloss curve and discharge coefficient respectively.
 
 		Returns:
 			Dict[int,int]: 
@@ -8248,7 +8256,7 @@ class IPipeUnits(IBaseLinkUnits, IWaterQualityResultsUnits):
 
 	@property
 	def DiameterUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for diameter.
 
 		Returns:
 			IPipeUnits: 
@@ -8257,7 +8265,7 @@ class IPipeUnits(IBaseLinkUnits, IWaterQualityResultsUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for flow.
 
 		Returns:
 			IPipeUnits: 
@@ -8266,7 +8274,7 @@ class IPipeUnits(IBaseLinkUnits, IWaterQualityResultsUnits):
 
 	@property
 	def VelocityUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for velocity
 
 		Returns:
 			IPipeUnits: 
@@ -8275,7 +8283,7 @@ class IPipeUnits(IBaseLinkUnits, IWaterQualityResultsUnits):
 
 	@property
 	def HeadlossUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for headloss.
 
 		Returns:
 			IPipeUnits: 
@@ -8284,7 +8292,7 @@ class IPipeUnits(IBaseLinkUnits, IWaterQualityResultsUnits):
 
 	@property
 	def HeadlossGradientUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for headloss gradient.
 
 		Returns:
 			IPipeUnits: 
@@ -8353,7 +8361,7 @@ class IFireFlowNodesResults(IDemandNodesResults):
 
 	@overload
 	def Demands(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the total calculated demand for all fire flow nodes at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -8362,7 +8370,7 @@ class IFireFlowNodesResults(IDemandNodesResults):
 
 	@overload
 	def Demands(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the total calculated demand for all fire flow nodes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -8387,7 +8395,7 @@ class IFireFlowNodesResults(IDemandNodesResults):
 
 	@overload
 	def Pressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the node pressure at all fire flow nodes at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -8396,7 +8404,7 @@ class IFireFlowNodesResults(IDemandNodesResults):
 
 	@overload
 	def Pressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the node pressure at all fire flow nodes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -8433,7 +8441,7 @@ class IFireFlowNodeResults(IDemandNodeResults):
 
 	@overload
 	def Demand(self) -> Union[float, None]:
-		"""No Description
+		"""Total calculated demand at selected element at current time step.
 
 		Returns:
 			Nullable: 
@@ -8442,7 +8450,7 @@ class IFireFlowNodeResults(IDemandNodeResults):
 
 	@overload
 	def Demand(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total calculated demand at selected element at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -8452,17 +8460,17 @@ class IFireFlowNodeResults(IDemandNodeResults):
 		"""
 		pass
 
-	def Demands(self) -> array(Union[float, None]):
-		"""No Description
+	def Demands(self) -> List[Union[float, None]]:
+		"""Total calculated demand at selected element across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Pressure(self) -> Union[float, None]:
-		"""No Description
+		"""TCalculated pressure at node at current time step.
 
 		Returns:
 			Nullable: 
@@ -8471,7 +8479,7 @@ class IFireFlowNodeResults(IDemandNodeResults):
 
 	@overload
 	def Pressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at node at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -8481,11 +8489,11 @@ class IFireFlowNodeResults(IDemandNodeResults):
 		"""
 		pass
 
-	def Pressures(self) -> array(Union[float, None]):
-		"""No Description
+	def Pressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at node across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -8527,7 +8535,7 @@ class IFireFlowNodeUnits(IDemandNodeUnits):
 
 	@property
 	def DemandUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for the calculated demand.
 
 		Returns:
 			IFireFlowNodeUnits: 
@@ -8536,7 +8544,7 @@ class IFireFlowNodeUnits(IDemandNodeUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for pressure.
 
 		Returns:
 			IFireFlowNodeUnits: 
@@ -8725,7 +8733,7 @@ class IDemandNodeInput(IBaseNodeInput):
 
 	@property
 	def DemandCollection(self) -> IDemandCollection:
-		"""No Description
+		"""A collection of baseline demands and associated temporal patterns.
 
 		Returns:
 			IDemandNodeInput: 
@@ -8734,7 +8742,7 @@ class IDemandNodeInput(IBaseNodeInput):
 
 	@property
 	def UnitDemandLoadCollection(self) -> IUnitLoadDemandCollection:
-		"""No Description
+		"""A collection of unit demands, associated unit counts, and temporal patterns.
 
 		Returns:
 			IDemandNodeInput: 
@@ -8815,11 +8823,11 @@ class IDemands(ICollection[IDemand]):
 
 	@overload
 	def Add(self, flow: float, pattern: IPattern) -> IDemand:
-		"""No Description
+		"""Adds a new row to the list of demands and assigns the provided values.
 
 		Args:
-			flow(float): flow
-			pattern(IPattern): pattern
+			flow(float): The demand flow in display units
+			pattern(IPattern): The pattern to apply.  If null, assumes fixed pattern.
 
 		Returns:
 			IDemand: 
@@ -8849,7 +8857,7 @@ class IDemand(ICollectionElement):
 
 	@property
 	def BaseFlow(self) -> float:
-		"""No Description
+		"""Enter the baseline flow rate for the load.
 
 		Returns:
 			IDemand: 
@@ -8862,7 +8870,7 @@ class IDemand(ICollectionElement):
 
 	@property
 	def DemandPattern(self) -> IPattern:
-		"""No Description
+		"""Choose the EPS pattern that will apply to this load. Each load in the table can have a different EPS pattern. The multipliers defined in the pattern will be applied against the baseline load.
 
 		Returns:
 			IDemand: 
@@ -8887,7 +8895,7 @@ class IDemandUnits(IElementUnits):
 
 	@property
 	def BaseFlowUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for the base flow.
 
 		Returns:
 			IDemandUnits: 
@@ -8920,13 +8928,13 @@ class IUnitLoadDemands(ICollection[IUnitLoadDemand]):
 
 	@overload
 	def Add(self, unitDemandLoad: IUnitDemandLoad, numberOfLoadingUnits: float, unitDemandBaseFlow: float, unitDemandPattern: IPattern) -> IUnitLoadDemand:
-		"""No Description
+		"""Adds a new row to the unit demands and assigns the values.
 
 		Args:
-			unitDemandLoad(IUnitDemandLoad): unitDemandLoad
-			numberOfLoadingUnits(float): numberOfLoadingUnits
-			unitDemandBaseFlow(float): unitDemandBaseFlow
-			unitDemandPattern(IPattern): unitDemandPattern
+			unitDemandLoad(IUnitDemandLoad): The unit demand load to use.
+			numberOfLoadingUnits(float): The number of loading units to use.
+			unitDemandBaseFlow(float): The unit demand base flow in display units.
+			unitDemandPattern(IPattern): The demand pattern to apply.  If null, assumes fixed pattern.
 
 		Returns:
 			IUnitLoadDemand: 
@@ -8956,7 +8964,7 @@ class IUnitLoadDemand(ICollectionElement):
 
 	@property
 	def UnitDemandLoad(self) -> IUnitDemandLoad:
-		"""No Description
+		"""The ID of the unit demand.
 
 		Returns:
 			IUnitLoadDemand: 
@@ -8969,7 +8977,7 @@ class IUnitLoadDemand(ICollectionElement):
 
 	@property
 	def NumberOfLoadingUnits(self) -> float:
-		"""No Description
+		"""The number of loading units.
 
 		Returns:
 			IUnitLoadDemand: 
@@ -8982,7 +8990,7 @@ class IUnitLoadDemand(ICollectionElement):
 
 	@property
 	def UnitDemandBaseFlow(self) -> float:
-		"""No Description
+		"""The unit demand base flow in display units.
 
 		Returns:
 			IUnitLoadDemand: 
@@ -8995,7 +9003,7 @@ class IUnitLoadDemand(ICollectionElement):
 
 	@property
 	def UnitDemandPattern(self) -> IPattern:
-		"""No Description
+		"""The ID of the unit demand load pattern.
 
 		Returns:
 			IUnitLoadDemand: 
@@ -9020,7 +9028,7 @@ class IUnitLoadDemandUnits(IElementUnits):
 
 	@property
 	def UnitDemandBaseFlowUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter name for unit demand base flow.
 
 		Returns:
 			IUnitLoadDemandUnits: 
@@ -9040,7 +9048,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 		pass
 
 	def VolumeFulls(self) -> Dict[int,int]:
-		"""No Description
+		"""The full active volume of all tanks between the limits of the defined operating range, exclusive of any inactive volume at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -9049,7 +9057,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def Levels(self) -> Dict[int,int]:
-		"""No Description
+		"""The difference between the calculated hydraulic grade and the base elevation of the tank at the current time step at all tanks.
 
 		Returns:
 			Dict[int,int]: 
@@ -9058,7 +9066,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def Levels(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""The difference between the calculated hydraulic grade and the base elevation of the tank at the given time step at all tanks.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9083,7 +9091,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def Volumes(self) -> Dict[int,int]:
-		"""No Description
+		"""Total volume of fluid in tank including the inactive volume at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -9092,7 +9100,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def Volumes(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Total volume of fluid in tank including the inactive volume at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9117,7 +9125,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def PercentFulls(self) -> Dict[int,int]:
-		"""No Description
+		"""The ratio of tank active volume to the tank full active volume. Active volume is the tank volume within the operating range and is exclusive of inactive volume at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -9126,7 +9134,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def PercentFulls(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""The ratio of tank active volume to the tank full active volume. Active volume is the tank volume within the operating range and is exclusive of inactive volume at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9151,7 +9159,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def TankStatuses(self) -> Dict[int,int]:
-		"""No Description
+		"""Whether a tank is empty, emptying, full, or filling at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -9160,7 +9168,7 @@ class IConventionalTanksResults(IBaseTanksResults):
 
 	@overload
 	def TankStatuses(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Whether a tank is empty, emptying, full, or filling at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9196,7 +9204,7 @@ class IConventionalTankResults(IBaseTankResults):
 		pass
 
 	def VolumeFull(self) -> Union[float, None]:
-		"""No Description
+		"""The full active volume of the tank between the limits of the defined operating range, exclusive of any inactive volume at the current time step.
 
 		Returns:
 			Nullable: 
@@ -9205,7 +9213,7 @@ class IConventionalTankResults(IBaseTankResults):
 
 	@overload
 	def Level(self) -> Union[float, None]:
-		"""No Description
+		"""The difference between the calculated hydraulic grade and the base elevation of the tank at the current time step.
 
 		Returns:
 			Nullable: 
@@ -9214,7 +9222,7 @@ class IConventionalTankResults(IBaseTankResults):
 
 	@overload
 	def Level(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The difference between the calculated hydraulic grade and the base elevation of the tank at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9224,17 +9232,17 @@ class IConventionalTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def Levels(self) -> array(Union[float, None]):
-		"""No Description
+	def Levels(self) -> List[Union[float, None]]:
+		"""The difference between the calculated hydraulic grade and the base elevation of the tank across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Volume(self) -> Union[float, None]:
-		"""No Description
+		"""Total volume of fluid in tank including the inactive volume at the current time step.
 
 		Returns:
 			Nullable: 
@@ -9243,7 +9251,7 @@ class IConventionalTankResults(IBaseTankResults):
 
 	@overload
 	def Volume(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Total volume of fluid in tank including the inactive volume at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9253,17 +9261,17 @@ class IConventionalTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def Volumes(self) -> array(Union[float, None]):
-		"""No Description
+	def Volumes(self) -> List[Union[float, None]]:
+		"""Total volume of fluid in tank including the inactive volume across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def PercentFull(self) -> Union[float, None]:
-		"""No Description
+		"""The ratio of tank active volume to the tank full active volume. Active volume is the tank volume within the operating range and is exclusive of inactive volume at the current time step.
 
 		Returns:
 			Nullable: 
@@ -9272,7 +9280,7 @@ class IConventionalTankResults(IBaseTankResults):
 
 	@overload
 	def PercentFull(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The ratio of tank active volume to the tank full active volume. Active volume is the tank volume within the operating range and is exclusive of inactive volume at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9282,17 +9290,17 @@ class IConventionalTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def PercentFulls(self) -> array(Union[float, None]):
-		"""No Description
+	def PercentFulls(self) -> List[Union[float, None]]:
+		"""The ratio of tank active volume to the tank full active volume. Active volume is the tank volume within the operating range and is exclusive of inactive volume over all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def TankStatus(self) -> Union[int, None]:
-		"""No Description
+		"""Whether a tank is empty, emptying, full, or filling at the current time step.
 
 		Returns:
 			Nullable: 
@@ -9301,7 +9309,7 @@ class IConventionalTankResults(IBaseTankResults):
 
 	@overload
 	def TankStatus(self, timeStepIndex: int) -> Union[int, None]:
-		"""No Description
+		"""Whether a tank is empty, emptying, full, or filling at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -9311,11 +9319,11 @@ class IConventionalTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def TankStatuses(self) -> array(Union[int, None]):
-		"""No Description
+	def TankStatuses(self) -> List[Union[int, None]]:
+		"""Whether a tank is empty, emptying, full, or filling across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -9333,7 +9341,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def TankSection(self) -> Dict[int,int]:
-		"""No Description
+		"""The type of section the tank is using.
 
 		Returns:
 			Dict[int,int]: 
@@ -9354,7 +9362,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def ActiveVolumeFull(self) -> Dict[int,int]:
-		"""No Description
+		"""InvalidOperationException is thrown if the section type is not variable area.
 
 		Returns:
 			Dict[int,int]: 
@@ -9375,7 +9383,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def Diameter(self) -> Dict[int,int]:
-		"""No Description
+		"""InvalidOperationException is thrown if the section type is not circular.
 
 		Returns:
 			Dict[int,int]: 
@@ -9396,7 +9404,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def AverageArea(self) -> Dict[int,int]:
-		"""No Description
+		"""InvalidOperationException is thrown if the section type is not non-circular.
 
 		Returns:
 			Dict[int,int]: 
@@ -9417,7 +9425,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def BaseElevation(self) -> Dict[int,int]:
-		"""No Description
+		"""Always in display units.
 
 		Returns:
 			Dict[int,int]: 
@@ -9438,7 +9446,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def MinimumLevel(self) -> Dict[int,int]:
-		"""No Description
+		"""If the operational range is set to elevation, the minimum elevation is automatically calculated and set when this property is set.
 
 		Returns:
 			Dict[int,int]: 
@@ -9459,7 +9467,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def InitialLevel(self) -> Dict[int,int]:
-		"""No Description
+		"""If the operational range is set to elevation, the initial elevation is automatically calculated and set when this property is set.
 
 		Returns:
 			Dict[int,int]: 
@@ -9480,7 +9488,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def MaximumLevel(self) -> Dict[int,int]:
-		"""No Description
+		"""If the operational range is et to elevation, the maximum elevation is automatically calculated and set when this property is set.
 
 		Returns:
 			Dict[int,int]: 
@@ -9501,7 +9509,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def UseHighAlarm(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies whether or not to check high alarm levels during Steady State/EPS calculation and generate messages if the levels are violated.
 
 		Returns:
 			Dict[int,int]: 
@@ -9522,7 +9530,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def HighAlarmLevel(self) -> Dict[int,int]:
-		"""No Description
+		"""The level above which the high level alarm is generated. Calculation notifications are produced to advise you of any alarm level violations.
 
 		Returns:
 			Dict[int,int]: 
@@ -9543,7 +9551,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def UseLowAlarm(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies whether or not to check low alarm levels during Steady State/EPS calculation and generate messages if the levels are violated.
 
 		Returns:
 			Dict[int,int]: 
@@ -9564,7 +9572,7 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def LowAlarmLevel(self) -> Dict[int,int]:
-		"""No Description
+		"""The level below which the low level alarm is generated. Calculation notifications are produced to advise you of any alarm level violations.
 
 		Returns:
 			Dict[int,int]: 
@@ -9585,7 +9593,8 @@ class IConventionalTanksInput(IBaseTanksInput):
 
 	@overload
 	def InactiveVolume(self) -> Dict[int,int]:
-		"""No Description
+		"""The inactive volume of the tank. 
+            This volume is the inaccessible volume of the tank that is below the tank active operating range and can become important in water quality simulations subject to the selected mixing model.
 
 		Returns:
 			Dict[int,int]: 
@@ -9618,7 +9627,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def TankSection(self) -> TankSectionType:
-		"""No Description
+		"""The type of section the tank is using.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9631,7 +9640,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def ActiveVolumeFull(self) -> float:
-		"""No Description
+		"""InvalidOperationException is thrown if the section type is not variable area.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9644,7 +9653,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def CrossSectionCurve(self) -> ICrossSectionCurveCollection:
-		"""No Description
+		"""InvalidOperationException is thrown if the section type is not variable area.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9653,7 +9662,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def Diameter(self) -> float:
-		"""No Description
+		"""InvalidOperationException is thrown if the section type is not circular.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9666,7 +9675,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def AverageArea(self) -> float:
-		"""No Description
+		"""InvalidOperationException is thrown if the section type is not non-circular.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9679,7 +9688,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def BaseElevation(self) -> float:
-		"""No Description
+		"""Always in display units.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9692,7 +9701,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def MinimumLevel(self) -> float:
-		"""No Description
+		"""If the operational range is set to elevation, the minimum elevation is automatically calculated and set when this property is set.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9705,7 +9714,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def InitialLevel(self) -> float:
-		"""No Description
+		"""If the operational range is set to elevation, the initial elevation is automatically calculated and set when this property is set.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9718,7 +9727,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def MaximumLevel(self) -> float:
-		"""No Description
+		"""If the operational range is et to elevation, the maximum elevation is automatically calculated and set when this property is set.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9731,7 +9740,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def UseHighAlarm(self) -> bool:
-		"""No Description
+		"""Specifies whether or not to check high alarm levels during Steady State/EPS calculation and generate messages if the levels are violated.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9744,7 +9753,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def HighAlarmLevel(self) -> float:
-		"""No Description
+		"""The level above which the high level alarm is generated. Calculation notifications are produced to advise you of any alarm level violations.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9757,7 +9766,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def UseLowAlarm(self) -> bool:
-		"""No Description
+		"""Specifies whether or not to check low alarm levels during Steady State/EPS calculation and generate messages if the levels are violated.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9770,7 +9779,7 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def LowAlarmLevel(self) -> float:
-		"""No Description
+		"""The level below which the low level alarm is generated. Calculation notifications are produced to advise you of any alarm level violations.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9783,7 +9792,8 @@ class IConventionalTankInput(IBaseTankInput):
 
 	@property
 	def InactiveVolume(self) -> float:
-		"""No Description
+		"""The inactive volume of the tank. 
+            This volume is the inaccessible volume of the tank that is below the tank active operating range and can become important in water quality simulations subject to the selected mixing model.
 
 		Returns:
 			IConventionalTankInput: 
@@ -9808,7 +9818,7 @@ class IConventionalTankUnits(IBaseTankUnits):
 
 	@property
 	def LevelUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for minimum level, maximum level and initial level.
 
 		Returns:
 			IConventionalTankUnits: 
@@ -9817,7 +9827,7 @@ class IConventionalTankUnits(IBaseTankUnits):
 
 	@property
 	def VolumeUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for volume.
 
 		Returns:
 			IConventionalTankUnits: 
@@ -9826,7 +9836,7 @@ class IConventionalTankUnits(IBaseTankUnits):
 
 	@property
 	def PercentFullUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for percent full.
 
 		Returns:
 			IConventionalTankUnits: 
@@ -9859,11 +9869,11 @@ class ICrossSectionCurve(ICollection[ICrossSectionCurveElement]):
 
 	@overload
 	def Add(self, depthRatio: float, volumeRatio: float) -> ICrossSectionCurveElement:
-		"""No Description
+		"""Adds a row to the cross-section curve and assigns the values.
 
 		Args:
-			depthRatio(float): depthRatio
-			volumeRatio(float): volumeRatio
+			depthRatio(float): The depth ratio in display units.
+			volumeRatio(float): The volume ratio in display units.
 
 		Returns:
 			ICrossSectionCurveElement: 
@@ -9893,7 +9903,7 @@ class ICrossSectionCurveElement(ICollectionElement):
 
 	@property
 	def DepthRatio(self) -> float:
-		"""No Description
+		"""Ratio of depth to total height of the tank.
 
 		Returns:
 			ICrossSectionCurveElement: 
@@ -9906,7 +9916,7 @@ class ICrossSectionCurveElement(ICollectionElement):
 
 	@property
 	def VolumeRatio(self) -> float:
-		"""No Description
+		"""Ratio of volume at given to depth to the total volume of the tank.
 
 		Returns:
 			ICrossSectionCurveElement: 
@@ -9931,7 +9941,7 @@ class ICrossSectionCurveUnits(IElementUnits):
 
 	@property
 	def RatioUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter for the depth and volume ratio fields.
 
 		Returns:
 			ICrossSectionCurveUnits: 
@@ -9999,7 +10009,7 @@ class ITanksInput(IConventionalTanksInput):
 		pass
 
 	def ValveCharacteristics(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			Dict[int,int]: 
@@ -10007,7 +10017,7 @@ class ITanksInput(IConventionalTanksInput):
 		pass
 
 	def ValveTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			Dict[int,int]: 
@@ -10028,7 +10038,7 @@ class ITankInput(IConventionalTankInput, IWaterTraceableInput):
 
 	@property
 	def ValveCharacteristics(self) -> IValveCharacteristic:
-		"""No Description
+		"""Specifies the valve characteristics definition to be used for this valve. If the Valve Characteristic Curve is not defined then a default curve will be used. The default curve will have (Relative Closure, Relative Area) points of (0,1) and (1,0).
 
 		Returns:
 			ITankInput: 
@@ -10041,7 +10051,7 @@ class ITankInput(IConventionalTankInput, IWaterTraceableInput):
 
 	@property
 	def ValveType(self) -> HammerValveType:
-		"""No Description
+		"""Specifies the type of valve. Choices are Butterfly, Needle, Circular Gate, Globe, Ball and User Defined.
 
 		Returns:
 			ITankInput: 
@@ -10078,7 +10088,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def TankOrificeDiameter(self) -> float:
-		"""No Description
+		"""Specifies the diameter of the tank inlet orifice. Only used by the transient engine.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10091,7 +10101,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def RatioOfLosses(self) -> float:
-		"""No Description
+		"""Ratio of the head losses for equal inflows to / outflows from the tank via the orifice. Default value is 2.5.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10104,7 +10114,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def HeadlossCoefficient(self) -> float:
-		"""No Description
+		"""Applies to flow from the tank to the pipe/riser. This must be a positive number.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10117,7 +10127,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def SurgeTankType(self) -> SurgeTankTypeEnum:
-		"""No Description
+		"""Specifies the type of surge tank to simulate in the transient engine.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10130,7 +10140,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def HasCheckValve(self) -> bool:
-		"""No Description
+		"""Specify whether there is a check valve installed on the tank inlet/outlet. For the case of steady state and EPS simulations, a surge tank with a check valve is simulated as a pressure junction.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10143,7 +10153,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def WeirCoefficient(self) -> float:
-		"""No Description
+		"""Coefficient k in the formula for weir flow over the top of the tank as follows: Q = k L H^1.5 ( H >= 0 ) where Q is the rate of overflow, L is the width of the weir, and H is the height above the top of the tank. The coefficient must be positive. By default, it is the large positive number 99999, say. For a broad-crested weir, in SI units k = 1.84 (refer to Streeter and Wylie, pg. 358).
 
 		Returns:
 			ISurgeTankInput: 
@@ -10156,7 +10166,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def WeirLength(self) -> float:
-		"""No Description
+		"""The width of the weir.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10169,7 +10179,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def InternalRiserDiameter(self) -> float:
-		"""No Description
+		"""This is the upper riser.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10182,7 +10192,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def InternalRiserTopElevation(self) -> float:
-		"""No Description
+		"""The top of the upper riser.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10195,7 +10205,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def JunctionElevation(self) -> float:
-		"""No Description
+		"""Elevation at which the external and internal risers meet.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10208,7 +10218,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def DiameterExternalRiser(self) -> float:
-		"""No Description
+		"""This is the lower riser.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10221,7 +10231,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def ElevationOrificeFromInternalRiserInTank(self) -> float:
-		"""No Description
+		"""Elevation of the internal riser orifice.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10234,7 +10244,7 @@ class ISurgeTankInput(IConventionalTankInput):
 
 	@property
 	def ElevationTopOfTankBase(self) -> float:
-		"""No Description
+		"""The elevation of the top of the hemisherical base of the tank. For a cylindrical tank, this is equal to the pipe elevation.
 
 		Returns:
 			ISurgeTankInput: 
@@ -10258,7 +10268,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def TankOrificeDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the diameter of the tank inlet orifice. Only used by the transient engine.
 
 		Returns:
 			Dict[int,int]: 
@@ -10266,7 +10276,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def RatioOfLosses(self) -> Dict[int,int]:
-		"""No Description
+		"""Ratio of the head losses for equal inflows to / outflows from the tank via the orifice. Default value is 2.5.
 
 		Returns:
 			Dict[int,int]: 
@@ -10274,7 +10284,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def HeadlossCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""Applies to flow from the tank to the pipe/riser. This must be a positive number.
 
 		Returns:
 			Dict[int,int]: 
@@ -10282,7 +10292,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def SurgeTankType(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies the type of surge tank to simulate in the transient engine.
 
 		Returns:
 			Dict[int,int]: 
@@ -10290,7 +10300,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def HasCheckValve(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify whether there is a check valve installed on the tank inlet/outlet. For the case of steady state and EPS simulations, a surge tank with a check valve is simulated as a pressure junction.
 
 		Returns:
 			Dict[int,int]: 
@@ -10298,7 +10308,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def WeirCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""Coefficient k in the formula for weir flow over the top of the tank as follows: Q = k L H^1.5 ( H >= 0 ) where Q is the rate of overflow, L is the width of the weir, and H is the height above the top of the tank. The coefficient must be positive. By default, it is the large positive number 99999, say. For a broad-crested weir, in SI units k = 1.84 (refer to Streeter and Wylie, pg. 358).
 
 		Returns:
 			Dict[int,int]: 
@@ -10306,7 +10316,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def WeirLength(self) -> Dict[int,int]:
-		"""No Description
+		"""The width of the weir.
 
 		Returns:
 			Dict[int,int]: 
@@ -10314,7 +10324,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def InternalRiserDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""This is the upper riser.
 
 		Returns:
 			Dict[int,int]: 
@@ -10322,7 +10332,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def InternalRiserTopElevation(self) -> Dict[int,int]:
-		"""No Description
+		"""The top of the upper riser.
 
 		Returns:
 			Dict[int,int]: 
@@ -10330,7 +10340,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def JunctionElevation(self) -> Dict[int,int]:
-		"""No Description
+		"""Elevation at which the external and internal risers meet.
 
 		Returns:
 			Dict[int,int]: 
@@ -10338,7 +10348,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def DiameterExternalRiser(self) -> Dict[int,int]:
-		"""No Description
+		"""This is the lower riser.
 
 		Returns:
 			Dict[int,int]: 
@@ -10346,7 +10356,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def ElevationOrificeFromInternalRiserInTank(self) -> Dict[int,int]:
-		"""No Description
+		"""Elevation of the internal riser orifice.
 
 		Returns:
 			Dict[int,int]: 
@@ -10354,7 +10364,7 @@ class ISurgeTanksInput(IConventionalTanksInput):
 		pass
 
 	def ElevationTopOfTankBase(self) -> Dict[int,int]:
-		"""No Description
+		"""The elevation of the top of the hemisherical base of the tank. For a cylindrical tank, this is equal to the pipe elevation.
 
 		Returns:
 			Dict[int,int]: 
@@ -10399,7 +10409,7 @@ class ISurgeTankUnits(IConventionalTankUnits):
 
 	@property
 	def DiameterUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for diameter
 
 		Returns:
 			ISurgeTankUnits: 
@@ -10408,7 +10418,7 @@ class ISurgeTankUnits(IConventionalTankUnits):
 
 	@property
 	def RatioUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for ratio
 
 		Returns:
 			ISurgeTankUnits: 
@@ -10417,7 +10427,7 @@ class ISurgeTankUnits(IConventionalTankUnits):
 
 	@property
 	def WeirCoefficientUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for weir coefficient
 
 		Returns:
 			ISurgeTankUnits: 
@@ -10426,7 +10436,7 @@ class ISurgeTankUnits(IConventionalTankUnits):
 
 	@property
 	def LengthUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for length
 
 		Returns:
 			ISurgeTankUnits: 
@@ -10471,7 +10481,7 @@ class IBaseTanksResults(IDemandNodesResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Net flow out of the element at current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -10480,7 +10490,7 @@ class IBaseTanksResults(IDemandNodesResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Net flow out of the element at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -10517,7 +10527,7 @@ class IBaseTankResults(IDemandNodeResults):
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Net flow out of the element at current time step.
 
 		Returns:
 			Nullable: 
@@ -10526,7 +10536,7 @@ class IBaseTankResults(IDemandNodeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Net flow out of the element at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -10536,11 +10546,11 @@ class IBaseTankResults(IDemandNodeResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Net flow out of the element across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -10582,7 +10592,7 @@ class IBaseTankUnits(IDemandNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter name for flow.
 
 		Returns:
 			IBaseTankUnits: 
@@ -10615,7 +10625,7 @@ class ILevelDiameters(ICollection[ILevelDiameter]):
 
 	@overload
 	def Add(self, liquidLevel: float, diameter: float) -> ILevelDiameter:
-		"""No Description
+		"""Adds a new row with the given data.
 
 		Args:
 			liquidLevel(float): liquidLevel
@@ -10649,7 +10659,7 @@ class ILevelDiameter(ICollectionElement):
 
 	@property
 	def LiquidLevel(self) -> float:
-		"""No Description
+		"""The level of the liquid.
 
 		Returns:
 			ILevelDiameter: 
@@ -10662,7 +10672,7 @@ class ILevelDiameter(ICollectionElement):
 
 	@property
 	def EquivalentDiameter(self) -> float:
-		"""No Description
+		"""The equivalent diameter in the tank.
 
 		Returns:
 			ILevelDiameter: 
@@ -10687,7 +10697,7 @@ class IVariableLevelCurveUnits(IElementUnits):
 
 	@property
 	def LevelUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for liquid level
 
 		Returns:
 			IVariableLevelCurveUnits: 
@@ -10696,7 +10706,7 @@ class IVariableLevelCurveUnits(IElementUnits):
 
 	@property
 	def DiameterUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information diameter
 
 		Returns:
 			IVariableLevelCurveUnits: 
@@ -10717,7 +10727,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def InitialVolumeOfGas(self) -> float:
-		"""No Description
+		"""The initial volume of gas in the pressure vessel at the start of the simulation. During the transient event, this gas volume expands or compresses, depending on the transient pressures in the system. Not used in steady state or EPS analyses.
 
 		Returns:
 			IHydroTankInput: 
@@ -10730,7 +10740,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TankInletOrificeDiameter(self) -> float:
-		"""No Description
+		"""This is the size of the opening between the gas vessel and the main pipe line. It is typically smaller than the main pipe size. It is used to compute the correct velocity through the tank inlet, so the correct headloss is computed based on the minor loss coefficient (the standard head loss equation is used: Hl = K*V2/2g.)
 
 		Returns:
 			IHydroTankInput: 
@@ -10743,7 +10753,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def RatioOfLosses(self) -> float:
-		"""No Description
+		"""For same flow magnitude, ratio of inflow head loss to outflow loss. Default value is 2.5.
 
 		Returns:
 			IHydroTankInput: 
@@ -10756,7 +10766,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def GasLawExponent(self) -> float:
-		"""No Description
+		"""Refers to the exponent to be used in the gas law equation. The usual range of this exponent is 1.0 to 1.4.
 
 		Returns:
 			IHydroTankInput: 
@@ -10769,7 +10779,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def HasBladder(self) -> bool:
-		"""No Description
+		"""Denotes whether the gas is contained within a bladder. If it is set to true, the transient analysis automatically assumes that the bladder occupied the full-tank volume at the preset pressure at some time and that the air volume was compressed to a smaller size by the steady-state pressure in the system. In this case the full-tank volume is specified by the Volume (Tank) field under ?Physical?.
 
 		Returns:
 			IHydroTankInput: 
@@ -10782,7 +10792,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def GasPresetPressure(self) -> float:
-		"""No Description
+		"""If there is a bladder, this is the pressure of the gas prior to exposing the tank to pipeline pressure; otherwise, this should be omitted as it is ignored.
 
 		Returns:
 			IHydroTankInput: 
@@ -10795,7 +10805,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def MeanLiquidElevation(self) -> float:
-		"""No Description
+		"""The mean elevation of the liquid at the gas-liquid interface. (Liquid level referenced from a datum of 0).
 
 		Returns:
 			IHydroTankInput: 
@@ -10808,7 +10818,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def AirInflowOrificeDiameter(self) -> float:
-		"""No Description
+		"""This is the equivalent orifice size of the opening that allows air to enter the tank.
 
 		Returns:
 			IHydroTankInput: 
@@ -10821,7 +10831,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def AirOutflowOrificeDiameter(self) -> float:
-		"""No Description
+		"""This is the equivalent orifice size of the opening that allows air to leave the tank.
 
 		Returns:
 			IHydroTankInput: 
@@ -10834,7 +10844,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def DippingTubeDiameter(self) -> float:
-		"""No Description
+		"""The diameter of the dipping or ventilation tube within the hydropneumatic tank (only applicable for the Dipping Tube tank type)
 
 		Returns:
 			IHydroTankInput: 
@@ -10847,7 +10857,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def CompressionChamberVolume(self) -> float:
-		"""No Description
+		"""The volume of the air around the dipping tube that is compressed once the water level elevation exceeds the bottom of the dipping tube.
 
 		Returns:
 			IHydroTankInput: 
@@ -10860,7 +10870,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TopElevationDippingTube(self) -> float:
-		"""No Description
+		"""The elevation of the top of the dipping tube and the dipping tube-type hydropneumatic tank.
 
 		Returns:
 			IHydroTankInput: 
@@ -10873,7 +10883,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def BottomElevationDippingTube(self) -> float:
-		"""No Description
+		"""The elevation of the bottom of the dipping tube.
 
 		Returns:
 			IHydroTankInput: 
@@ -10886,7 +10896,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def LevelType(self) -> GasVesselLevelType:
-		"""No Description
+		"""Specify the elevation type to be used for the transient analysis of the gas-liquid interface. The elevation in this instance is used to refer to the liquid level elevation (i.e., level referenced from a datum of zero.)
 
 		Returns:
 			IHydroTankInput: 
@@ -10899,7 +10909,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def HydroTankType(self) -> HydroTankType:
-		"""No Description
+		"""Specify the type of Hydropneumatic Tank that this model element represents. Sealed means the tank is a fully sealed pressure vessel. Vented means the tank has an air valve attached. Dipping tube means the tank has an internal dipping or ventilation tube.
 
 		Returns:
 			IHydroTankInput: 
@@ -10912,7 +10922,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def VariableLevelCurve(self) -> IVariableLevelCurveCollection:
-		"""No Description
+		"""Defines the gas vessel chamber geometry as a function of liquid elevation versus equivalent diameter.
 
 		Returns:
 			IHydroTankInput: 
@@ -10921,7 +10931,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TankVolume(self) -> float:
-		"""No Description
+		"""The total volume of the hydropneumatic tank. This value is used by steady state / EPS analysis for both the Constant Area Approximation and Gas Law calculation models. For a transient analysis, this value is only used if the "Has Bladder?" property under ?Transient (Physical)? is set to true.
 
 		Returns:
 			IHydroTankInput: 
@@ -10934,7 +10944,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def InflowMinorLossCoefficient(self) -> float:
-		"""No Description
+		"""Dimensionless quantity, typical value = 2.5. This property is used only for transient analysis, to restrict the flow out of the hydropneumatic tank.
 
 		Returns:
 			IHydroTankInput: 
@@ -10947,7 +10957,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TankBaseElevation(self) -> float:
-		"""No Description
+		"""Elevation of the storage tank base used as a reference when entering water surface elevations in the tank in terms of levels.
 
 		Returns:
 			IHydroTankInput: 
@@ -10960,7 +10970,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TreatAsJunction(self) -> bool:
-		"""No Description
+		"""Specifies whether or not to treat the hydropneumatic tank as a junction in steady state and EPS simulations. Note that if you wish to use the steady state / EPS results as input for a HAMMER transient analysis and you set this field to true, you will need to manually enter the initial gas volume of the tank for HAMMER.
 
 		Returns:
 			IHydroTankInput: 
@@ -10973,7 +10983,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def OperatingRangeType(self) -> OperatingRangeTypeEnum:
-		"""No Description
+		"""Specify whether the vertical parameters of the tank are specified as levels measured from the base elevation or as elevations measured from the global datum.
 
 		Returns:
 			IHydroTankInput: 
@@ -10986,7 +10996,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TankCalculationModel(self) -> TankCalculationModel:
-		"""No Description
+		"""Specifies which of the two models (constant area approximation and gas law model) should be used to simulate this hydropneumatic tank. Applies to steady state and EPS analyses only.
 
 		Returns:
 			IHydroTankInput: 
@@ -10999,7 +11009,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TankInitialElevation(self) -> float:
-		"""No Description
+		"""Starting water surface elevation/level in the tank. Used in steady state and EPS analyses.
 
 		Returns:
 			IHydroTankInput: 
@@ -11012,7 +11022,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TankInitialLevel(self) -> float:
-		"""No Description
+		"""Starting water surface elevation/level in the tank. Used in steady state and EPS analyses.
 
 		Returns:
 			IHydroTankInput: 
@@ -11025,7 +11035,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def TankInitialLiquidVolume(self) -> float:
-		"""No Description
+		"""Starting liquid volume in the tank. For constant area approximation tanks, this volume includes the inactive volume of the tank that lies below the effective volume.
 
 		Returns:
 			IHydroTankInput: 
@@ -11038,7 +11048,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def AirInflowOrificeAirFlowCurve(self) -> IAirFlowCurve:
-		"""No Description
+		"""The curve that defines the rate of air inflow (a ?free air? rate, measured at atmospheric pressure) into the tank versus the differential pressure across the air valve.
 
 		Returns:
 			IHydroTankInput: 
@@ -11051,7 +11061,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def AirOutflowOrificeAirFlowCurve(self) -> IAirFlowCurve:
-		"""No Description
+		"""The curve that defines the rate of air outflow (a ?free air? rate, measured at atmospheric pressure) out of the tank versus the differential pressure across the air valve.
 
 		Returns:
 			IHydroTankInput: 
@@ -11064,7 +11074,7 @@ class IHydroTankInput(IBaseTankInput):
 
 	@property
 	def AirFlowCalculationMethod(self) -> AirFlowCalculationMethod:
-		"""No Description
+		"""Specify whether the air valve air flow rate is determined by user-entered curves of pressure vs. air flow rate, or whether it is calculated based on a user-entered orifice diameter (not applicable for a sealed hydropneumatic tank).
 
 		Returns:
 			IHydroTankInput: 
@@ -11088,7 +11098,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def InitialVolumeOfGas(self) -> Dict[int,int]:
-		"""No Description
+		"""The initial volume of gas in the pressure vessel at the start of the simulation. During the transient event, this gas volume expands or compresses, depending on the transient pressures in the system. Not used in steady state or EPS analyses.
 
 		Returns:
 			Dict[int,int]: 
@@ -11096,7 +11106,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TankInletOrificeDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""This is the size of the opening between the gas vessel and the main pipe line. It is typically smaller than the main pipe size. It is used to compute the correct velocity through the tank inlet, so the correct headloss is computed based on the minor loss coefficient (the standard head loss equation is used: Hl = K*V2/2g.)
 
 		Returns:
 			Dict[int,int]: 
@@ -11104,7 +11114,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def RatioOfLosses(self) -> Dict[int,int]:
-		"""No Description
+		"""For same flow magnitude, ratio of inflow head loss to outflow loss. Default value is 2.5.
 
 		Returns:
 			Dict[int,int]: 
@@ -11112,7 +11122,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def GasLawExponent(self) -> Dict[int,int]:
-		"""No Description
+		"""Refers to the exponent to be used in the gas law equation. The usual range of this exponent is 1.0 to 1.4.
 
 		Returns:
 			Dict[int,int]: 
@@ -11120,7 +11130,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def HasBladder(self) -> Dict[int,int]:
-		"""No Description
+		"""Denotes whether the gas is contained within a bladder. If it is set to true, the transient analysis automatically assumes that the bladder occupied the full-tank volume at the preset pressure at some time and that the air volume was compressed to a smaller size by the steady-state pressure in the system. In this case the full-tank volume is specified by the Volume (Tank) field under ?Physical?.
 
 		Returns:
 			Dict[int,int]: 
@@ -11128,7 +11138,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def GasPresetPressure(self) -> Dict[int,int]:
-		"""No Description
+		"""If there is a bladder, this is the pressure of the gas prior to exposing the tank to pipeline pressure; otherwise, this should be omitted as it is ignored.
 
 		Returns:
 			Dict[int,int]: 
@@ -11136,7 +11146,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def MeanLiquidElevation(self) -> Dict[int,int]:
-		"""No Description
+		"""The mean elevation of the liquid at the gas-liquid interface. (Liquid level referenced from a datum of 0).
 
 		Returns:
 			Dict[int,int]: 
@@ -11144,7 +11154,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def AirInflowOrificeDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""This is the equivalent orifice size of the opening that allows air to enter the tank.
 
 		Returns:
 			Dict[int,int]: 
@@ -11152,7 +11162,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def AirOutflowOrificeDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""This is the equivalent orifice size of the opening that allows air to leave the tank.
 
 		Returns:
 			Dict[int,int]: 
@@ -11160,7 +11170,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def DippingTubeDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""The diameter of the dipping or ventilation tube within the hydropneumatic tank (only applicable for the Dipping Tube tank type)
 
 		Returns:
 			Dict[int,int]: 
@@ -11168,7 +11178,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def CompressionChamberVolume(self) -> Dict[int,int]:
-		"""No Description
+		"""The volume of the air around the dipping tube that is compressed once the water level elevation exceeds the bottom of the dipping tube.
 
 		Returns:
 			Dict[int,int]: 
@@ -11176,7 +11186,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TopElevationDippingTube(self) -> Dict[int,int]:
-		"""No Description
+		"""The elevation of the top of the dipping tube and the dipping tube-type hydropneumatic tank.
 
 		Returns:
 			Dict[int,int]: 
@@ -11184,7 +11194,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def BottomElevationDippingTube(self) -> Dict[int,int]:
-		"""No Description
+		"""The elevation of the bottom of the dipping tube.
 
 		Returns:
 			Dict[int,int]: 
@@ -11192,7 +11202,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def LevelType(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify the elevation type to be used for the transient analysis of the gas-liquid interface. The elevation in this instance is used to refer to the liquid level elevation (i.e., level referenced from a datum of zero.)
 
 		Returns:
 			Dict[int,int]: 
@@ -11200,7 +11210,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def HydroTankType(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify the type of Hydropneumatic Tank that this model element represents. Sealed means the tank is a fully sealed pressure vessel. Vented means the tank has an air valve attached. Dipping tube means the tank has an internal dipping or ventilation tube.
 
 		Returns:
 			Dict[int,int]: 
@@ -11208,7 +11218,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TankVolume(self) -> Dict[int,int]:
-		"""No Description
+		"""The total volume of the hydropneumatic tank. This value is used by steady state / EPS analysis for both the Constant Area Approximation and Gas Law calculation models. For a transient analysis, this value is only used if the "Has Bladder?" property under ?Transient (Physical)? is set to true.
 
 		Returns:
 			Dict[int,int]: 
@@ -11216,7 +11226,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def InflowMinorLossCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""Dimensionless quantity, typical value = 2.5. This property is used only for transient analysis, to restrict the flow out of the hydropneumatic tank.
 
 		Returns:
 			Dict[int,int]: 
@@ -11224,7 +11234,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TankBaseElevation(self) -> Dict[int,int]:
-		"""No Description
+		"""Elevation of the storage tank base used as a reference when entering water surface elevations in the tank in terms of levels.
 
 		Returns:
 			Dict[int,int]: 
@@ -11232,7 +11242,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TreatAsJunction(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies whether or not to treat the hydropneumatic tank as a junction in steady state and EPS simulations. Note that if you wish to use the steady state / EPS results as input for a HAMMER transient analysis and you set this field to true, you will need to manually enter the initial gas volume of the tank for HAMMER.
 
 		Returns:
 			Dict[int,int]: 
@@ -11240,7 +11250,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def OperatingRangeType(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify whether the vertical parameters of the tank are specified as levels measured from the base elevation or as elevations measured from the global datum.
 
 		Returns:
 			Dict[int,int]: 
@@ -11248,7 +11258,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TankCalculationModel(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies which of the two models (constant area approximation and gas law model) should be used to simulate this hydropneumatic tank. Applies to steady state and EPS analyses only.
 
 		Returns:
 			Dict[int,int]: 
@@ -11256,7 +11266,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TankInitialElevation(self) -> Dict[int,int]:
-		"""No Description
+		"""Starting water surface elevation/level in the tank. Used in steady state and EPS analyses.
 
 		Returns:
 			Dict[int,int]: 
@@ -11264,7 +11274,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TankInitialLevel(self) -> Dict[int,int]:
-		"""No Description
+		"""Starting water surface elevation/level in the tank. Used in steady state and EPS analyses.
 
 		Returns:
 			Dict[int,int]: 
@@ -11272,7 +11282,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def TankInitialLiquidVolume(self) -> Dict[int,int]:
-		"""No Description
+		"""Starting liquid volume in the tank. For constant area approximation tanks, this volume includes the inactive volume of the tank that lies below the effective volume.
 
 		Returns:
 			Dict[int,int]: 
@@ -11280,7 +11290,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def AirInflowOrificeAirFlowCurve(self) -> Dict[int,int]:
-		"""No Description
+		"""The curve that defines the rate of air inflow (a ?free air? rate, measured at atmospheric pressure) into the tank versus the differential pressure across the air valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -11288,7 +11298,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def AirOutflowOrificeAirFlowCurve(self) -> Dict[int,int]:
-		"""No Description
+		"""The curve that defines the rate of air outflow (a ?free air? rate, measured at atmospheric pressure) out of the tank versus the differential pressure across the air valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -11296,7 +11306,7 @@ class IHydroTanksInput(IBaseTanksInput):
 		pass
 
 	def AirFlowCalculationMethod(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify whether the air valve air flow rate is determined by user-entered curves of pressure vs. air flow rate, or whether it is calculated based on a user-entered orifice diameter (not applicable for a sealed hydropneumatic tank).
 
 		Returns:
 			Dict[int,int]: 
@@ -11317,7 +11327,7 @@ class IHydroTankResults(IBaseTankResults):
 
 	@overload
 	def CalculatedGasVolume(self) -> Union[float, None]:
-		"""No Description
+		"""The calculated volume of gas in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Nullable: 
@@ -11326,7 +11336,7 @@ class IHydroTankResults(IBaseTankResults):
 
 	@overload
 	def CalculatedGasVolume(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The calculated volume of gas in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11336,17 +11346,17 @@ class IHydroTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def CalculatedGasVolumes(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedGasVolumes(self) -> List[Union[float, None]]:
+		"""The calculated volume of gas in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def CalculatedPressure(self) -> Union[float, None]:
-		"""No Description
+		"""The calculated pressure in the hydropenumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Nullable: 
@@ -11355,7 +11365,7 @@ class IHydroTankResults(IBaseTankResults):
 
 	@overload
 	def CalculatedPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The calculated pressure in the hydropenumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11365,17 +11375,17 @@ class IHydroTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def CalculatedPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedPressures(self) -> List[Union[float, None]]:
+		"""The calculated pressure in the hydropenumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def CalculatedLiquidVolume(self) -> Union[float, None]:
-		"""No Description
+		"""The calculated liquid volume in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Nullable: 
@@ -11384,7 +11394,7 @@ class IHydroTankResults(IBaseTankResults):
 
 	@overload
 	def CalculatedLiquidVolume(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The calculated liquid volume in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11394,17 +11404,17 @@ class IHydroTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def CalculatedLiquidVolumes(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedLiquidVolumes(self) -> List[Union[float, None]]:
+		"""The calculated liquid volume in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def CalculatedPercentFull(self) -> Union[float, None]:
-		"""No Description
+		"""The ratio of the fluid volume in the tank to the calculated full volume of the tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Nullable: 
@@ -11413,7 +11423,7 @@ class IHydroTankResults(IBaseTankResults):
 
 	@overload
 	def CalculatedPercentFull(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""The ratio of the fluid volume in the tank to the calculated full volume of the tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11423,16 +11433,16 @@ class IHydroTankResults(IBaseTankResults):
 		"""
 		pass
 
-	def CalculatedPercentFulls(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedPercentFulls(self) -> List[Union[float, None]]:
+		"""The ratio of the fluid volume in the tank to the calculated full volume of the tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	def MaximumTransientGasPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Maximum gas pressure at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -11440,7 +11450,7 @@ class IHydroTankResults(IBaseTankResults):
 		pass
 
 	def MinimumTransientGasPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Minimum gas pressure at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -11448,7 +11458,7 @@ class IHydroTankResults(IBaseTankResults):
 		pass
 
 	def MaximumTransientGasVolume(self) -> Union[float, None]:
-		"""No Description
+		"""Maximum gas volume at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -11456,7 +11466,7 @@ class IHydroTankResults(IBaseTankResults):
 		pass
 
 	def MinimumTransientGasVolume(self) -> Union[float, None]:
-		"""No Description
+		"""Minimum gas volume at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -11464,7 +11474,7 @@ class IHydroTankResults(IBaseTankResults):
 		pass
 
 	def MaximumTransientWaterLevel(self) -> Union[float, None]:
-		"""No Description
+		"""Maximum water level at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -11472,7 +11482,7 @@ class IHydroTankResults(IBaseTankResults):
 		pass
 
 	def MinimumTransientWaterLevel(self) -> Union[float, None]:
-		"""No Description
+		"""Minimum water level at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Nullable: 
@@ -11493,7 +11503,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedGasVolumes(self) -> Dict[int,int]:
-		"""No Description
+		"""The calculated volume of gas in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Dict[int,int]: 
@@ -11502,7 +11512,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedGasVolumes(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""The calculated volume of gas in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11527,7 +11537,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""The calculated pressure in the hydropenumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Dict[int,int]: 
@@ -11536,7 +11546,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedPressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""The calculated pressure in the hydropenumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11561,7 +11571,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedLiquidVolumes(self) -> Dict[int,int]:
-		"""No Description
+		"""The calculated liquid volume in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Dict[int,int]: 
@@ -11570,7 +11580,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedLiquidVolumes(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""The calculated liquid volume in the hydropneumatic tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11595,7 +11605,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedPercentFulls(self) -> Dict[int,int]:
-		"""No Description
+		"""The ratio of the fluid volume in the tank to the calculated full volume of the tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Returns:
 			Dict[int,int]: 
@@ -11604,7 +11614,7 @@ class IHydroTanksResults(IBaseTanksResults):
 
 	@overload
 	def CalculatedPercentFulls(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""The ratio of the fluid volume in the tank to the calculated full volume of the tank. This result is based on the steady state Tank Calculation Model, however, if the tank is a Dipping Tube tank with a defined Variable Elevation Curve, this result is re-calculated to be representative of the dipping tube tank geometry. If the tank is simulated as a junction in steady state this result will be reported as N/A.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11628,7 +11638,7 @@ class IHydroTanksResults(IBaseTanksResults):
 		pass
 
 	def MaximumTransientGasPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Maximum gas pressure at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -11636,7 +11646,7 @@ class IHydroTanksResults(IBaseTanksResults):
 		pass
 
 	def MinimumTransientGasPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Minimum gas pressure at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -11644,7 +11654,7 @@ class IHydroTanksResults(IBaseTanksResults):
 		pass
 
 	def MaximumTransientGasVolumes(self) -> Dict[int,int]:
-		"""No Description
+		"""Maximum gas volume at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -11652,7 +11662,7 @@ class IHydroTanksResults(IBaseTanksResults):
 		pass
 
 	def MinimumTransientGasVolumes(self) -> Dict[int,int]:
-		"""No Description
+		"""Minimum gas volume at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -11660,7 +11670,7 @@ class IHydroTanksResults(IBaseTanksResults):
 		pass
 
 	def MaximumTransientWaterLevels(self) -> Dict[int,int]:
-		"""No Description
+		"""Maximum water level at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -11668,7 +11678,7 @@ class IHydroTanksResults(IBaseTanksResults):
 		pass
 
 	def MinimumTransientWaterLevels(self) -> Dict[int,int]:
-		"""No Description
+		"""Minimum water level at hydropneumatic tank over the course of the transient simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -11689,7 +11699,7 @@ class IHydropneumaticTankUnits(IBaseTankUnits):
 
 	@property
 	def VolumeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for volume
 
 		Returns:
 			IHydropneumaticTankUnits: 
@@ -11698,7 +11708,7 @@ class IHydropneumaticTankUnits(IBaseTankUnits):
 
 	@property
 	def DiameterUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for diameter
 
 		Returns:
 			IHydropneumaticTankUnits: 
@@ -11707,7 +11717,7 @@ class IHydropneumaticTankUnits(IBaseTankUnits):
 
 	@property
 	def GasExponentUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for gas exponent
 
 		Returns:
 			IHydropneumaticTankUnits: 
@@ -11716,7 +11726,7 @@ class IHydropneumaticTankUnits(IBaseTankUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for pressure
 
 		Returns:
 			IHydropneumaticTankUnits: 
@@ -11725,7 +11735,7 @@ class IHydropneumaticTankUnits(IBaseTankUnits):
 
 	@property
 	def LengthUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for length
 
 		Returns:
 			IHydropneumaticTankUnits: 
@@ -11734,7 +11744,7 @@ class IHydropneumaticTankUnits(IBaseTankUnits):
 
 	@property
 	def PercentUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for percent full
 
 		Returns:
 			IHydropneumaticTankUnits: 
@@ -11803,7 +11813,7 @@ class IHammerNodeResults(IBaseNodeResults):
 
 	@overload
 	def Pressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at node.
 
 		Returns:
 			Nullable: 
@@ -11812,7 +11822,7 @@ class IHammerNodeResults(IBaseNodeResults):
 
 	@overload
 	def Pressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11822,17 +11832,17 @@ class IHammerNodeResults(IBaseNodeResults):
 		"""
 		pass
 
-	def Pressures(self) -> array(Union[float, None]):
-		"""No Description
+	def Pressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at node.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def PressureHead(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure head at node.
 
 		Returns:
 			Nullable: 
@@ -11841,7 +11851,7 @@ class IHammerNodeResults(IBaseNodeResults):
 
 	@overload
 	def PressureHead(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure head at node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11851,11 +11861,11 @@ class IHammerNodeResults(IBaseNodeResults):
 		"""
 		pass
 
-	def PressureHeads(self) -> array(Union[float, None]):
-		"""No Description
+	def PressureHeads(self) -> List[Union[float, None]]:
+		"""Calculated pressure head at node.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -11873,7 +11883,7 @@ class IHammerNodesResults(IBaseNodesResults):
 
 	@overload
 	def Pressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at node.
 
 		Returns:
 			Dict[int,int]: 
@@ -11882,7 +11892,7 @@ class IHammerNodesResults(IBaseNodesResults):
 
 	@overload
 	def Pressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11907,7 +11917,7 @@ class IHammerNodesResults(IBaseNodesResults):
 
 	@overload
 	def PressureHeads(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure head at node.
 
 		Returns:
 			Dict[int,int]: 
@@ -11916,7 +11926,7 @@ class IHammerNodesResults(IBaseNodesResults):
 
 	@overload
 	def PressureHeads(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure head at node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -11953,7 +11963,7 @@ class IHammerNodeUnits(IBaseNodeUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for pressure
 
 		Returns:
 			IHammerNodeUnits: 
@@ -11962,7 +11972,7 @@ class IHammerNodeUnits(IBaseNodeUnits):
 
 	@property
 	def PressureHeadUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for pressure head
 
 		Returns:
 			IHammerNodeUnits: 
@@ -11995,7 +12005,7 @@ class IFlowPatterns(ICollection[IFlowPattern]):
 
 	@overload
 	def Add(self, time: float, flow: float) -> IFlowPattern:
-		"""No Description
+		"""Adds a new row to the collection (in-memory) with the provided time and flow values.
 
 		Args:
 			time(float): time
@@ -12067,7 +12077,7 @@ class IFlowPatternUnits(IElementUnits):
 
 	@property
 	def TimeUnit(self) -> IUnit:
-		"""No Description
+		"""The unit information for time in the collection.
 
 		Returns:
 			IFlowPatternUnits: 
@@ -12076,7 +12086,7 @@ class IFlowPatternUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The unit information for flow in the collection
 
 		Returns:
 			IFlowPatternUnits: 
@@ -12181,7 +12191,7 @@ class IHeadPatternUnits(IElementUnits):
 
 	@property
 	def TimeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for time in the collection
 
 		Returns:
 			IHeadPatternUnits: 
@@ -12190,7 +12200,7 @@ class IHeadPatternUnits(IElementUnits):
 
 	@property
 	def HeadUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for head in the collection
 
 		Returns:
 			IHeadPatternUnits: 
@@ -12211,7 +12221,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def Sinusoidal(self) -> bool:
-		"""No Description
+		"""If sinusoidal, then mean value, amplitude and phase are entered; otherwise, a table of values is required. A sinusoidal quantity X has the form: X = X0 + A sin( 2 * PI * t / T + Phase ).
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12224,7 +12234,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def HeadMeanValue(self) -> float:
-		"""No Description
+		"""The mean head value. Required only if sinusoidal data specified.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12237,7 +12247,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def HeadAmplitude(self) -> float:
-		"""No Description
+		"""The amplitude of the sinusoidal head curve. Required only if sinusoidal data specified.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12250,7 +12260,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def Phase(self) -> float:
-		"""No Description
+		"""Phase of the sinusoidal flow or head curve. Default option is 0 such that periodic component of head or flow is zero at time zero.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12263,7 +12273,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def Period(self) -> float:
-		"""No Description
+		"""Oscillation period of the sinusoidal flow or head curve (must be positive), or the period after which a tabular flow or head pattern repeats.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12276,7 +12286,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def FlowMeanValue(self) -> float:
-		"""No Description
+		"""The mean flow value. Required only if sinusoidal data specified.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12289,7 +12299,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def FlowAmplitude(self) -> float:
-		"""No Description
+		"""The amplitude of the sinusoidal flow curve. Required only if sinusoidal data specified.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12302,7 +12312,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def TransientParameter(self) -> TransientParameterType:
-		"""No Description
+		"""Specifies whether the periodic head/flow element is used to simulate a periodic head or periodic flow.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12315,7 +12325,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def FlowPatternCollection(self) -> IFlowPatternCollection:
-		"""No Description
+		"""A collection of time/flow pairs representing the transient flow pattern.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12324,7 +12334,7 @@ class IPeriodicHeadFlowInput(IHammerNodeInput):
 
 	@property
 	def HeadPatternCollection(self) -> IHeadPatternCollection:
-		"""No Description
+		"""A collection of time/head pairs representing the transient flow pattern.
 
 		Returns:
 			IPeriodicHeadFlowInput: 
@@ -12345,7 +12355,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def Sinusoidals(self) -> Dict[int,int]:
-		"""No Description
+		"""If sinusoidal, then mean value, amplitude and phase are entered; otherwise, a table of values is required. A sinusoidal quantity X has the form: X = X0 + A sin( 2 * PI * t / T + Phase ).
 
 		Returns:
 			Dict[int,int]: 
@@ -12366,7 +12376,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def HeadMeanValues(self) -> Dict[int,int]:
-		"""No Description
+		"""The mean head value. Required only if sinusoidal data specified.
 
 		Returns:
 			Dict[int,int]: 
@@ -12387,7 +12397,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def HeadAmplitudes(self) -> Dict[int,int]:
-		"""No Description
+		"""The amplitude of the sinusoidal head curve. Required only if sinusoidal data specified.
 
 		Returns:
 			Dict[int,int]: 
@@ -12408,7 +12418,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def Phases(self) -> Dict[int,int]:
-		"""No Description
+		"""Phase of the sinusoidal flow or head curve. Default option is 0 such that periodic component of head or flow is zero at time zero.
 
 		Returns:
 			Dict[int,int]: 
@@ -12429,7 +12439,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def Periods(self) -> Dict[int,int]:
-		"""No Description
+		"""Oscillation period of the sinusoidal flow or head curve (must be positive), or the period after which a tabular flow or head pattern repeats.
 
 		Returns:
 			Dict[int,int]: 
@@ -12450,7 +12460,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def FlowMeanValues(self) -> Dict[int,int]:
-		"""No Description
+		"""The mean flow value. Required only if sinusoidal data specified.
 
 		Returns:
 			Dict[int,int]: 
@@ -12471,7 +12481,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def FlowAmplitudes(self) -> Dict[int,int]:
-		"""No Description
+		"""The amplitude of the sinusoidal flow curve. Required only if sinusoidal data specified.
 
 		Returns:
 			Dict[int,int]: 
@@ -12492,7 +12502,7 @@ class IPeriodicHeadFlowsInput(IHammerNodesInput):
 
 	@overload
 	def TransientParameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies whether the periodic head/flow element is used to simulate a periodic head or periodic flow.
 
 		Returns:
 			Dict[int,int]: 
@@ -12525,7 +12535,7 @@ class IPeriodicHeadFlowResults(IHammerNodeResults):
 
 	@overload
 	def CalculatedDischarge(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Returns:
 			Nullable: 
@@ -12534,7 +12544,7 @@ class IPeriodicHeadFlowResults(IHammerNodeResults):
 
 	@overload
 	def CalculatedDischarge(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -12544,11 +12554,11 @@ class IPeriodicHeadFlowResults(IHammerNodeResults):
 		"""
 		pass
 
-	def CalculatedDischarges(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedDischarges(self) -> List[Union[float, None]]:
+		"""Calculated discharge from the node.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -12566,7 +12576,7 @@ class IPeriodicHeadFlowsResults(IHammerNodesResults):
 
 	@overload
 	def CalculatedDischarges(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Returns:
 			Dict[int,int]: 
@@ -12575,7 +12585,7 @@ class IPeriodicHeadFlowsResults(IHammerNodesResults):
 
 	@overload
 	def CalculatedDischarges(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -12612,7 +12622,7 @@ class IPeriodicHeadFlowUnits(IHammerNodeUnits):
 
 	@property
 	def LengthUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for mean head and head amplitude
 
 		Returns:
 			IPeriodicHeadFlowUnits: 
@@ -12621,7 +12631,7 @@ class IPeriodicHeadFlowUnits(IHammerNodeUnits):
 
 	@property
 	def AngleUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for phase
 
 		Returns:
 			IPeriodicHeadFlowUnits: 
@@ -12630,7 +12640,7 @@ class IPeriodicHeadFlowUnits(IHammerNodeUnits):
 
 	@property
 	def PeriodUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for period value.
 
 		Returns:
 			IPeriodicHeadFlowUnits: 
@@ -12639,7 +12649,7 @@ class IPeriodicHeadFlowUnits(IHammerNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for mean flow and flow amplitude.
 
 		Returns:
 			IPeriodicHeadFlowUnits: 
@@ -12684,7 +12694,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def InitialAirvolume(self) -> float:
-		"""No Description
+		"""Volume of air near the valve at initial time - default is zero. If volume is non-zero, then pressure must be zero.
 
 		Returns:
 			IAirValveInput: 
@@ -12697,7 +12707,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def SmallAirOutflowOrificeDiameter(self) -> float:
-		"""No Description
+		"""Refers to the discharge of air when the air volume is less than the transition volume (TV), or the air pressure is greater than the transition pressure (TP). This diameter is typically small enough for the injected air to be compressed.
 
 		Returns:
 			IAirValveInput: 
@@ -12710,7 +12720,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def TransitionVolume(self) -> float:
-		"""No Description
+		"""This is the local volume of air at the air valve below which the transient solver switches from using the large air outflow orifice to the small air outflow orifice (in order to minimize transients). This volume often corresponds to the volume of the body of the air valve.
 
 		Returns:
 			IAirValveInput: 
@@ -12723,7 +12733,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def LargeAirOutflowOrificeDiameter(self) -> float:
-		"""No Description
+		"""Refers to the discharge of air when the air volume is greater than or equal to the transition volume (TV), or the air pressure is less than or equal to the transition pressure (TP). This diameter is typically larger than the diameter when the volume is less than the TV or greater than the TP.
 
 		Returns:
 			IAirValveInput: 
@@ -12736,7 +12746,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def AirInflowOrificeDiameter(self) -> float:
-		"""No Description
+		"""Diameter of orifice through which air is injected into the pipeline. This diameter should be large enough to allow free entry of air into the pipeline.
 
 		Returns:
 			IAirValveInput: 
@@ -12749,7 +12759,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def AirOutflowOrificeDiameter(self) -> float:
-		"""No Description
+		"""Diameter of the orifice through which air is expelled from the pipeline.
 
 		Returns:
 			IAirValveInput: 
@@ -12762,7 +12772,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def TransitionPressure(self) -> float:
-		"""No Description
+		"""This is the local internal system air pressure at the air valve above which the transient solver will switch from using the large air outflow orifice to the small air outflow orifice (in order to minimize transients).
 
 		Returns:
 			IAirValveInput: 
@@ -12775,7 +12785,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def SmallAirFlowCurve(self) -> IAirFlowCurve:
-		"""No Description
+		"""Curve that defines discharge of air when the air volume is less than the transition volume (TV), or the air pressure is greater than the transition pressure (TP).
 
 		Returns:
 			IAirValveInput: 
@@ -12788,7 +12798,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def LargeAirFlowCurve(self) -> IAirFlowCurve:
-		"""No Description
+		"""Curve that defines discharge of air when the air volume is greater than or equal to the transition volume (TV), or the air pressure is less than or equal to the transition pressure (TP).
 
 		Returns:
 			IAirValveInput: 
@@ -12801,7 +12811,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def AirValveType(self) -> AirValveTypeEnum:
-		"""No Description
+		"""Select the type of Air Valve to simulate. Choices are Slow Closing, Double Acting, Triple Acting and Vacuum Breaker. The choice you make will only affect the transient engine.
 
 		Returns:
 			IAirValveInput: 
@@ -12814,7 +12824,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def AirValveTransitionType(self) -> AirValveTransitionType:
-		"""No Description
+		"""Users can select whether the transient solver switches from the large air outflow orifice to the small air outflow orifice based on a Transition Volume or a Transition Pressure.
 
 		Returns:
 			IAirValveInput: 
@@ -12827,7 +12837,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def TimeToClose(self) -> float:
-		"""No Description
+		"""For a slow-closing air valve, the valve starts to close linearly with respect to area once air begins to exit the pipe. If air subsequently re-enters, then the air valve opens fully again. For a valve with linear area change, the valve will close linearly over this time, starting at the beginning of the simulation if this value is greater than zero. If this value equals zero a valve with linear area change will close when reverse flow is first sensed and will remain closed for the remainder of the simulation. For an air valve, adiabatic compression (i.e., gas law exponent = 1.4) is assumed.
 
 		Returns:
 			IAirValveInput: 
@@ -12840,7 +12850,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def ReportPeriod(self) -> int:
-		"""No Description
+		"""Number of time steps between successive printouts of operation. By default, this printout is suppressed.
 
 		Returns:
 			IAirValveInput: 
@@ -12853,7 +12863,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def TreatAirValveAsJunction(self) -> bool:
-		"""No Description
+		"""Specifies whether or not to treat the air-valve as a junction element in steady state and EPS simulations. If false, the valve may allow part full flow subject to the prevailing hydraulic conditions.
 
 		Returns:
 			IAirValveInput: 
@@ -12866,7 +12876,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def InflowOrificeAirFlowCurve(self) -> IAirFlowCurve:
-		"""No Description
+		"""The curve that defines the rate of air inflow (a ?free air? rate, measured at atmospheric pressure) into the tank versus the differential pressure across the air valve.
 
 		Returns:
 			IAirValveInput: 
@@ -12879,7 +12889,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def OutflowOrificeAirFlowCurve(self) -> IAirFlowCurve:
-		"""No Description
+		"""The curve that defines the rate of air outflow (a ?free air? rate, measured at atmospheric pressure) out of the tank versus the differential pressure across the air valve.
 
 		Returns:
 			IAirValveInput: 
@@ -12892,7 +12902,7 @@ class IAirValveInput(IHammerNodeInput):
 
 	@property
 	def AirFlowCalculationMethod(self) -> AirFlowCalculationMethod:
-		"""No Description
+		"""Specify whether the air valve air flow rate is determined by user-entered curves of pressure vs. air flow rate, or whether it is calculated based on a user-entered orifice diameter (not applicable for a sealed hydropneumatic tank).
 
 		Returns:
 			IAirValveInput: 
@@ -12916,7 +12926,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def InitialAirVolumes(self) -> Dict[int,int]:
-		"""No Description
+		"""Volume of air near the valve at initial time - default is zero. If volume is non-zero, then pressure must be zero.
 
 		Returns:
 			Dict[int,int]: 
@@ -12924,7 +12934,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def SmallAirOutflowOrificeDiameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Refers to the discharge of air when the air volume is less than the transition volume (TV), or the air pressure is greater than the transition pressure (TP). This diameter is typically small enough for the injected air to be compressed.
 
 		Returns:
 			Dict[int,int]: 
@@ -12932,7 +12942,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def TransitionVolumes(self) -> Dict[int,int]:
-		"""No Description
+		"""This is the local volume of air at the air valve below which the transient solver switches from using the large air outflow orifice to the small air outflow orifice (in order to minimize transients). This volume often corresponds to the volume of the body of the air valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -12940,7 +12950,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def LargeAirOutflowOrificeDiameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Refers to the discharge of air when the air volume is greater than or equal to the transition volume (TV), or the air pressure is less than or equal to the transition pressure (TP). This diameter is typically larger than the diameter when the volume is less than the TV or greater than the TP.
 
 		Returns:
 			Dict[int,int]: 
@@ -12948,7 +12958,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def AirInflowOrificeDiameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Diameter of orifice through which air is injected into the pipeline. This diameter should be large enough to allow free entry of air into the pipeline.
 
 		Returns:
 			Dict[int,int]: 
@@ -12956,7 +12966,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def AirOutflowOrificeDiameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Diameter of the orifice through which air is expelled from the pipeline.
 
 		Returns:
 			Dict[int,int]: 
@@ -12964,7 +12974,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def TransitionPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""This is the local internal system air pressure at the air valve above which the transient solver will switch from using the large air outflow orifice to the small air outflow orifice (in order to minimize transients).
 
 		Returns:
 			Dict[int,int]: 
@@ -12972,7 +12982,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def SmallAirflowCurves(self) -> Dict[int,int]:
-		"""No Description
+		"""Curve that defines discharge of air when the air volume is less than the transition volume (TV), or the air pressure is greater than the transition pressure (TP).
 
 		Returns:
 			Dict[int,int]: 
@@ -12980,7 +12990,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def LargeAirFlowCurves(self) -> Dict[int,int]:
-		"""No Description
+		"""Curve that defines discharge of air when the air volume is greater than or equal to the transition volume (TV), or the air pressure is less than or equal to the transition pressure (TP).
 
 		Returns:
 			Dict[int,int]: 
@@ -12988,7 +12998,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def AirValveTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Select the type of Air Valve to simulate. Choices are Slow Closing, Double Acting, Triple Acting and Vacuum Breaker. The choice you make will only affect the transient engine.
 
 		Returns:
 			Dict[int,int]: 
@@ -12996,7 +13006,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def AirValveTransitionTypes(self) -> Dict[int,int]:
-		"""No Description
+		"""Users can select whether the transient solver switches from the large air outflow orifice to the small air outflow orifice based on a Transition Volume or a Transition Pressure.
 
 		Returns:
 			Dict[int,int]: 
@@ -13004,7 +13014,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def TimeToClose(self) -> Dict[int,int]:
-		"""No Description
+		"""For a slow-closing air valve, the valve starts to close linearly with respect to area once air begins to exit the pipe. If air subsequently re-enters, then the air valve opens fully again. For a valve with linear area change, the valve will close linearly over this time, starting at the beginning of the simulation if this value is greater than zero. If this value equals zero a valve with linear area change will close when reverse flow is first sensed and will remain closed for the remainder of the simulation. For an air valve, adiabatic compression (i.e., gas law exponent = 1.4) is assumed.
 
 		Returns:
 			Dict[int,int]: 
@@ -13012,7 +13022,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def ReportPeriods(self) -> Dict[int,int]:
-		"""No Description
+		"""Number of time steps between successive printouts of operation. By default, this printout is suppressed.
 
 		Returns:
 			Dict[int,int]: 
@@ -13020,7 +13030,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def TreatAirValvesAsJunctions(self) -> Dict[int,int]:
-		"""No Description
+		"""Specifies whether or not to treat the air-valve as a junction element in steady state and EPS simulations. If false, the valve may allow part full flow subject to the prevailing hydraulic conditions.
 
 		Returns:
 			Dict[int,int]: 
@@ -13028,7 +13038,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def InflowOrificeAirFlowCurves(self) -> Dict[int,int]:
-		"""No Description
+		"""The curve that defines the rate of air inflow (a ?free air? rate, measured at atmospheric pressure) into the tank versus the differential pressure across the air valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -13036,7 +13046,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def OutflowOrificeAirFlowCurves(self) -> Dict[int,int]:
-		"""No Description
+		"""The curve that defines the rate of air outflow (a ?free air? rate, measured at atmospheric pressure) out of the tank versus the differential pressure across the air valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -13044,7 +13054,7 @@ class IAirValvesInput(IHammerNodesInput):
 		pass
 
 	def AirFlowCalculationMethods(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify whether the air valve air flow rate is determined by user-entered curves of pressure vs. air flow rate, or whether it is calculated based on a user-entered orifice diameter (not applicable for a sealed hydropneumatic tank).
 
 		Returns:
 			Dict[int,int]: 
@@ -13089,7 +13099,7 @@ class IAirValveUnits(IHammerNodeUnits):
 
 	@property
 	def VolumeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for volume
 
 		Returns:
 			IAirValveUnits: 
@@ -13098,7 +13108,7 @@ class IAirValveUnits(IHammerNodeUnits):
 
 	@property
 	def DiameterUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for diameter
 
 		Returns:
 			IAirValveUnits: 
@@ -13107,7 +13117,7 @@ class IAirValveUnits(IHammerNodeUnits):
 
 	@property
 	def TimeTocloseUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for time to close
 
 		Returns:
 			IAirValveUnits: 
@@ -13152,7 +13162,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SavDiameter(self) -> float:
-		"""No Description
+		"""The valve's characteristics are determined by its Cv and type, so that the diameter is only used for descriptive purposes.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13165,7 +13175,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SavThresholdPressure(self) -> float:
-		"""No Description
+		"""Pressure below which the SAV opens.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13178,7 +13188,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def TimeForSAVToOpen(self) -> float:
-		"""No Description
+		"""Time for the SAV to open fully after being triggered.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13191,7 +13201,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def TimeSAVStaysFullyOpen(self) -> float:
-		"""No Description
+		"""Time that SAV remains fully open (i.e., time between the end of the opening phase and the start of the closing phase).
 
 		Returns:
 			ISurgeValveInput: 
@@ -13204,7 +13214,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def TimeForSAVToClose(self) -> float:
-		"""No Description
+		"""Time for the SAV to close fully, measured from the time that it was completely open.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13217,7 +13227,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SavDischargeCoefficient(self) -> float:
-		"""No Description
+		"""Discharge coefficient, Cv, is defined as: Flow / (Pressure Drop) ^ 0.5.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13230,7 +13240,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SrvDiameter(self) -> float:
-		"""No Description
+		"""The diameter of the SRV.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13243,7 +13253,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SrvThresholdPressure(self) -> float:
-		"""No Description
+		"""Pressure above which the SRV opens.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13256,7 +13266,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SrvSpringConstant(self) -> float:
-		"""No Description
+		"""Change in restoring force of the return spring per unit lift off seat. A possible value is 150 lb/in. (26.27 N/mm).
 
 		Returns:
 			ISurgeValveInput: 
@@ -13269,7 +13279,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def TimeForSRVToOpen(self) -> float:
-		"""No Description
+		"""Time for the SRV to open fully from fully closed position.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13282,7 +13292,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def TimeForSRVToClose(self) -> float:
-		"""No Description
+		"""Time for SRV to close fully from fully open opsition.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13295,7 +13305,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SrvDischargeCoefficient(self) -> float:
-		"""No Description
+		"""Discharge coefficient of SRV at fully opening. it is defined as: Flow / (Pressure Drop) ^ 0.5.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13308,7 +13318,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SavSrvType(self) -> SAV_SRVTypeEnum:
-		"""No Description
+		"""The type of SAV/SRV valve to simulate in the transient engine.%n-SAV (surge aniticipator valve)%n-SRV (surge relief valve)%n-SAV + SRV (SAV and SRV)
 
 		Returns:
 			ISurgeValveInput: 
@@ -13321,7 +13331,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SavType(self) -> SAVValveTypeEnum:
-		"""No Description
+		"""The type of SAV to simulate. Choices are Needle, Circular Gate, Globe, Ball and Butterfly. The choice you make will only affect the transient engine.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13334,7 +13344,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SavClosureTriggerType(self) -> SavClosureTriggerEnum:
-		"""No Description
+		"""The closure of an open/opening SAV is initiated by either Time (SAV stays fully open) or the Threshold  Pressure (SAV), but not both. When based on Pressure, the SAV will begin to close when the pressure rises back above the Threshold Pressure (SAV), which may occur before the SAV has fully opened.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13347,7 +13357,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SrvControlType(self) -> SRVControlTypeEnum:
-		"""No Description
+		"""The opening and closure of SRV is control by spring constant or time.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13360,7 +13370,7 @@ class ISurgeValveInput(IHammerNodeInput):
 
 	@property
 	def SrvValveType(self) -> SRVValveTypeEnum:
-		"""No Description
+		"""The type of SRV to simulate. Choices are Needle, Circular Gate, Globe, Ball and Butterfly. The choice you make will only affect the transient engine.
 
 		Returns:
 			ISurgeValveInput: 
@@ -13384,7 +13394,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SavDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""The valve's characteristics are determined by its Cv and type, so that the diameter is only used for descriptive purposes.
 
 		Returns:
 			Dict[int,int]: 
@@ -13392,7 +13402,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SavThresholdPressure(self) -> Dict[int,int]:
-		"""No Description
+		"""Pressure below which the SAV opens.
 
 		Returns:
 			Dict[int,int]: 
@@ -13400,7 +13410,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def TimeForSAVToOpen(self) -> Dict[int,int]:
-		"""No Description
+		"""Time for the SAV to open fully after being triggered.
 
 		Returns:
 			Dict[int,int]: 
@@ -13408,7 +13418,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def TimeSAVStaysFullyOpen(self) -> Dict[int,int]:
-		"""No Description
+		"""Time that SAV remains fully open (i.e., time between the end of the opening phase and the start of the closing phase).
 
 		Returns:
 			Dict[int,int]: 
@@ -13416,7 +13426,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def TimeForSAVToClose(self) -> Dict[int,int]:
-		"""No Description
+		"""Time for the SAV to close fully, measured from the time that it was completely open.
 
 		Returns:
 			Dict[int,int]: 
@@ -13424,7 +13434,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SavDischargeCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""Discharge coefficient, Cv, is defined as: Flow / (Pressure Drop) ^ 0.5.
 
 		Returns:
 			Dict[int,int]: 
@@ -13432,7 +13442,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SrvDiameter(self) -> Dict[int,int]:
-		"""No Description
+		"""The diameter of the SRV.
 
 		Returns:
 			Dict[int,int]: 
@@ -13440,7 +13450,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SrvThresholdPressure(self) -> Dict[int,int]:
-		"""No Description
+		"""Pressure above which the SRV opens.
 
 		Returns:
 			Dict[int,int]: 
@@ -13448,7 +13458,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SrvSpringConstant(self) -> Dict[int,int]:
-		"""No Description
+		"""Change in restoring force of the return spring per unit lift off seat. A possible value is 150 lb/in. (26.27 N/mm).
 
 		Returns:
 			Dict[int,int]: 
@@ -13456,7 +13466,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def TimeForSRVToOpen(self) -> Dict[int,int]:
-		"""No Description
+		"""Time for the SRV to open fully from fully closed position.
 
 		Returns:
 			Dict[int,int]: 
@@ -13464,7 +13474,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def TimeForSRVToClose(self) -> Dict[int,int]:
-		"""No Description
+		"""Time for SRV to close fully from fully open opsition.
 
 		Returns:
 			Dict[int,int]: 
@@ -13472,7 +13482,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SrvDischargeCoefficient(self) -> Dict[int,int]:
-		"""No Description
+		"""Discharge coefficient of SRV at fully opening. it is defined as: Flow / (Pressure Drop) ^ 0.5.
 
 		Returns:
 			Dict[int,int]: 
@@ -13480,7 +13490,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SavSrvType(self) -> Dict[int,int]:
-		"""No Description
+		"""The type of SAV/SRV valve to simulate in the transient engine.%n-SAV (surge aniticipator valve)%n-SRV (surge relief valve)%n-SAV + SRV (SAV and SRV)
 
 		Returns:
 			Dict[int,int]: 
@@ -13488,7 +13498,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SavType(self) -> Dict[int,int]:
-		"""No Description
+		"""The type of SAV to simulate. Choices are Needle, Circular Gate, Globe, Ball and Butterfly. The choice you make will only affect the transient engine.
 
 		Returns:
 			Dict[int,int]: 
@@ -13496,7 +13506,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SavClosureTriggerType(self) -> Dict[int,int]:
-		"""No Description
+		"""The closure of an open/opening SAV is initiated by either Time (SAV stays fully open) or the Threshold  Pressure (SAV), but not both. When based on Pressure, the SAV will begin to close when the pressure rises back above the Threshold Pressure (SAV), which may occur before the SAV has fully opened.
 
 		Returns:
 			Dict[int,int]: 
@@ -13504,7 +13514,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SrvControlType(self) -> Dict[int,int]:
-		"""No Description
+		"""The opening and closure of SRV is control by spring constant or time.
 
 		Returns:
 			Dict[int,int]: 
@@ -13512,7 +13522,7 @@ class ISurgeValvesInput(IHammerNodesInput):
 		pass
 
 	def SRVValveType(self) -> Dict[int,int]:
-		"""No Description
+		"""The type of SRV to simulate. Choices are Needle, Circular Gate, Globe, Ball and Butterfly. The choice you make will only affect the transient engine.
 
 		Returns:
 			Dict[int,int]: 
@@ -13557,7 +13567,7 @@ class ISurgeValveUnits(IHammerNodeUnits):
 
 	@property
 	def DiameterUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for Sav and Srv Diameters
 
 		Returns:
 			ISurgeValveUnits: 
@@ -13566,7 +13576,7 @@ class ISurgeValveUnits(IHammerNodeUnits):
 
 	@property
 	def TimeOpenUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for Sav/Srv opening and time to close
 
 		Returns:
 			ISurgeValveUnits: 
@@ -13575,7 +13585,7 @@ class ISurgeValveUnits(IHammerNodeUnits):
 
 	@property
 	def DischargeCoefficient(self) -> IUnit:
-		"""No Description
+		"""Unit information for Sav/Srv discharge coefficient
 
 		Returns:
 			ISurgeValveUnits: 
@@ -13584,7 +13594,7 @@ class ISurgeValveUnits(IHammerNodeUnits):
 
 	@property
 	def SpringConstantUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for spring constnat
 
 		Returns:
 			ISurgeValveUnits: 
@@ -13629,7 +13639,7 @@ class IBaseOrificeNodeInput(IHammerNodeInput):
 
 	@property
 	def OrificePressureDrop(self) -> float:
-		"""No Description
+		"""Pressure drop corresponding to the typical flow.
 
 		Returns:
 			IBaseOrificeNodeInput: 
@@ -13642,7 +13652,7 @@ class IBaseOrificeNodeInput(IHammerNodeInput):
 
 	@property
 	def OrificeFlow(self) -> float:
-		"""No Description
+		"""This is a typical (positive) flow through the orifice or valve.
 
 		Returns:
 			IBaseOrificeNodeInput: 
@@ -13666,7 +13676,7 @@ class IBaseOrificeNodesInput(IHammerNodesInput):
 		pass
 
 	def OrificePressureDrop(self) -> Dict[int,int]:
-		"""No Description
+		"""Pressure drop corresponding to the typical flow.
 
 		Returns:
 			Dict[int,int]: 
@@ -13674,7 +13684,7 @@ class IBaseOrificeNodesInput(IHammerNodesInput):
 		pass
 
 	def OrificeFlow(self) -> Dict[int,int]:
-		"""No Description
+		"""This is a typical (positive) flow through the orifice or valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -13719,7 +13729,7 @@ class IBaseOrificeNodeUnits(IHammerNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for orifice flow
 
 		Returns:
 			IBaseOrificeNodeUnits: 
@@ -13752,7 +13762,7 @@ class IPressureHeadFlows(ICollection[IPressureHeadFlow]):
 
 	@overload
 	def Add(self, pressureHead: float, flow: float) -> IPressureHeadFlow:
-		"""No Description
+		"""Adds a new row to the collection with the provided data.
 
 		Args:
 			pressureHead(float): pressureHead
@@ -13786,7 +13796,7 @@ class IPressureHeadFlow(ICollectionElement):
 
 	@property
 	def PressureHead(self) -> float:
-		"""No Description
+		"""Pressure head for this row
 
 		Returns:
 			IPressureHeadFlow: 
@@ -13799,7 +13809,7 @@ class IPressureHeadFlow(ICollectionElement):
 
 	@property
 	def Flow(self) -> float:
-		"""No Description
+		"""Flow for this row.
 
 		Returns:
 			IPressureHeadFlow: 
@@ -13824,7 +13834,7 @@ class IPressureHeadFlowUnits(IElementUnits):
 
 	@property
 	def PressureHeadUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for pressure head
 
 		Returns:
 			IPressureHeadFlowUnits: 
@@ -13833,7 +13843,7 @@ class IPressureHeadFlowUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			IPressureHeadFlowUnits: 
@@ -13854,7 +13864,7 @@ class IDischargeToAtmosphereNodeInput(IBaseOrificeNodeInput):
 
 	@property
 	def DischargeElementType(self) -> DischargeToAtmosphereTypeEnum:
-		"""No Description
+		"""The type of discharge element to simulate. Choices are Orifice, Valve or Rating Curve.
 
 		Returns:
 			IDischargeToAtmosphereNodeInput: 
@@ -13867,7 +13877,7 @@ class IDischargeToAtmosphereNodeInput(IBaseOrificeNodeInput):
 
 	@property
 	def InitialGaseVolume(self) -> float:
-		"""No Description
+		"""The accumulated air at the orifice at the beginning of the simulation.
 
 		Returns:
 			IDischargeToAtmosphereNodeInput: 
@@ -13880,7 +13890,7 @@ class IDischargeToAtmosphereNodeInput(IBaseOrificeNodeInput):
 
 	@property
 	def TimeToStartOperating(self) -> float:
-		"""No Description
+		"""Valve starts to operate after this time.
 
 		Returns:
 			IDischargeToAtmosphereNodeInput: 
@@ -13893,7 +13903,7 @@ class IDischargeToAtmosphereNodeInput(IBaseOrificeNodeInput):
 
 	@property
 	def TimeToFullyOpenOrClose(self) -> float:
-		"""No Description
+		"""Time to close (or open, if zero initial flow) the valve.
 
 		Returns:
 			IDischargeToAtmosphereNodeInput: 
@@ -13906,7 +13916,7 @@ class IDischargeToAtmosphereNodeInput(IBaseOrificeNodeInput):
 
 	@property
 	def PressureHeadFlowCollection(self) -> IPressureHeadFlowCollection:
-		"""No Description
+		"""Specify a collection of Pressure Head vs. Flow points.
 
 		Returns:
 			IDischargeToAtmosphereNodeInput: 
@@ -13915,7 +13925,7 @@ class IDischargeToAtmosphereNodeInput(IBaseOrificeNodeInput):
 
 	@property
 	def InitialStatus(self) -> ValveTypeInitialStatusEnum:
-		"""No Description
+		"""If the Discharge Element is a valve, then this field specifies whether the valve is initially open or closed.
 
 		Returns:
 			IDischargeToAtmosphereNodeInput: 
@@ -13928,7 +13938,7 @@ class IDischargeToAtmosphereNodeInput(IBaseOrificeNodeInput):
 
 	@property
 	def ReportPeriod(self) -> int:
-		"""No Description
+		"""Number of time steps between successive printouts of operation. By default, this printout is suppressed.
 
 		Returns:
 			IDischargeToAtmosphereNodeInput: 
@@ -13952,7 +13962,7 @@ class IDischargeToAtmosphereNodesInput(IBaseOrificeNodesInput):
 		pass
 
 	def DischargeElementType(self) -> Dict[int,int]:
-		"""No Description
+		"""The type of discharge element to simulate. Choices are Orifice, Valve or Rating Curve.
 
 		Returns:
 			Dict[int,int]: 
@@ -13960,7 +13970,7 @@ class IDischargeToAtmosphereNodesInput(IBaseOrificeNodesInput):
 		pass
 
 	def InitialGasVolume(self) -> Dict[int,int]:
-		"""No Description
+		"""The accumulated air at the orifice at the beginning of the simulation.
 
 		Returns:
 			Dict[int,int]: 
@@ -13968,7 +13978,7 @@ class IDischargeToAtmosphereNodesInput(IBaseOrificeNodesInput):
 		pass
 
 	def TimeToStartOpening(self) -> Dict[int,int]:
-		"""No Description
+		"""Valve starts to operate after this time.
 
 		Returns:
 			Dict[int,int]: 
@@ -13976,7 +13986,7 @@ class IDischargeToAtmosphereNodesInput(IBaseOrificeNodesInput):
 		pass
 
 	def TimeToFullyOpenOrClose(self) -> Dict[int,int]:
-		"""No Description
+		"""Time to close (or open, if zero initial flow) the valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -13984,7 +13994,7 @@ class IDischargeToAtmosphereNodesInput(IBaseOrificeNodesInput):
 		pass
 
 	def InitialStatus(self) -> Dict[int,int]:
-		"""No Description
+		"""If the Discharge Element is a valve, then this field specifies whether the valve is initially open or closed.
 
 		Returns:
 			Dict[int,int]: 
@@ -13992,7 +14002,7 @@ class IDischargeToAtmosphereNodesInput(IBaseOrificeNodesInput):
 		pass
 
 	def ReportPeriod(self) -> Dict[int,int]:
-		"""No Description
+		"""Number of time steps between successive printouts of operation. By default, this printout is suppressed.
 
 		Returns:
 			Dict[int,int]: 
@@ -14013,7 +14023,7 @@ class IDischargeToAtmosphereNodeResults(IBaseOrificeNodeResults):
 
 	@overload
 	def CalculatedDischarge(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Returns:
 			Nullable: 
@@ -14022,7 +14032,7 @@ class IDischargeToAtmosphereNodeResults(IBaseOrificeNodeResults):
 
 	@overload
 	def CalculatedDischarge(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -14032,11 +14042,11 @@ class IDischargeToAtmosphereNodeResults(IBaseOrificeNodeResults):
 		"""
 		pass
 
-	def CalculatedDischarges(self) -> array(Union[float, None]):
-		"""No Description
+	def CalculatedDischarges(self) -> List[Union[float, None]]:
+		"""Calculated discharge from the node.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -14054,7 +14064,7 @@ class IDischargeToAtmosphereNodesResults(IBaseOrificeNodesResults):
 
 	@overload
 	def CalculatedDischarge(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Returns:
 			Dict[int,int]: 
@@ -14063,7 +14073,7 @@ class IDischargeToAtmosphereNodesResults(IBaseOrificeNodesResults):
 
 	@overload
 	def CalculatedDischarge(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated discharge from the node.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -14100,7 +14110,7 @@ class IDischargeToAtmosphereUnits(IBaseOrificeNodeUnits):
 
 	@property
 	def VolumeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for gase volume
 
 		Returns:
 			IDischargeToAtmosphereUnits: 
@@ -14109,7 +14119,7 @@ class IDischargeToAtmosphereUnits(IBaseOrificeNodeUnits):
 
 	@property
 	def TimeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for time to open or close
 
 		Returns:
 			IDischargeToAtmosphereUnits: 
@@ -14118,7 +14128,7 @@ class IDischargeToAtmosphereUnits(IBaseOrificeNodeUnits):
 
 	@property
 	def DischargeUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for discharge
 
 		Returns:
 			IDischargeToAtmosphereUnits: 
@@ -14163,7 +14173,7 @@ class IRuptureDiskInput(IBaseOrificeNodeInput):
 
 	@property
 	def PressureThreshold(self) -> float:
-		"""No Description
+		"""The pressure above which the rupture disk breaks to vent the liquid to atmosphere.
 
 		Returns:
 			IRuptureDiskInput: 
@@ -14187,7 +14197,7 @@ class IRuptureDisksInput(IBaseOrificeNodesInput):
 		pass
 
 	def PressureThreshold(self) -> Dict[int,int]:
-		"""No Description
+		"""The pressure above which the rupture disk breaks to vent the liquid to atmosphere.
 
 		Returns:
 			Dict[int,int]: 
@@ -14268,7 +14278,7 @@ class IBaseNodesResults(IElementsResults, IWaterQualityElementsResults):
 
 	@overload
 	def HydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the hydraulic grade for all nodes at the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -14277,7 +14287,7 @@ class IBaseNodesResults(IElementsResults, IWaterQualityElementsResults):
 
 	@overload
 	def HydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Gets the hydraulic grade for all nodes at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -14314,7 +14324,7 @@ class IPhysicalNodeElementInput(IPointNodeInput):
 
 	@property
 	def Elevation(self) -> float:
-		"""No Description
+		"""Elevation at centroid of junctions, valves, and pumps; the ground elevation at tanks; the hydraulic grade at reservoirs.
 
 		Returns:
 			IPhysicalNodeElementInput: 
@@ -14339,7 +14349,7 @@ class IPhysicalNodeElementsInput(IPointNodesInput):
 
 	@overload
 	def Elevations(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets elevations for all base nodes.
 
 		Returns:
 			Dict[int,int]: 
@@ -14396,7 +14406,7 @@ class IBaseNodeResults(IElementResults, IWaterQualityResults):
 
 	@overload
 	def HydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at node at current time step.
 
 		Returns:
 			Nullable: 
@@ -14405,7 +14415,7 @@ class IBaseNodeResults(IElementResults, IWaterQualityResults):
 
 	@overload
 	def HydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at node at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -14415,11 +14425,11 @@ class IBaseNodeResults(IElementResults, IWaterQualityResults):
 		"""
 		pass
 
-	def HydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def HydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at node across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -14437,7 +14447,7 @@ class IBaseNodeUnits(IGeometryUnits, IWaterQualityResultsUnits):
 
 	@property
 	def ElevationUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for elevation.
 
 		Returns:
 			IBaseNodeUnits: 
@@ -14446,7 +14456,7 @@ class IBaseNodeUnits(IGeometryUnits, IWaterQualityResultsUnits):
 
 	@property
 	def InitialAgeUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for initial age.
 
 		Returns:
 			IBaseNodeUnits: 
@@ -14455,7 +14465,7 @@ class IBaseNodeUnits(IGeometryUnits, IWaterQualityResultsUnits):
 
 	@property
 	def InitialConcentrationUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for initial concentration.
 
 		Returns:
 			IBaseNodeUnits: 
@@ -14464,7 +14474,7 @@ class IBaseNodeUnits(IGeometryUnits, IWaterQualityResultsUnits):
 
 	@property
 	def InitialTraceUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for initial trace.
 
 		Returns:
 			IBaseNodeUnits: 
@@ -14473,7 +14483,9 @@ class IBaseNodeUnits(IGeometryUnits, IWaterQualityResultsUnits):
 
 	@property
 	def BaseConcentrationUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information depending on the assigned source type.
+            If the source type is concentration, flow paced booster or setpoint booster, returns The formatter information for base concentration.
+            If the source type is mass booster, returns the formatter name for base mass rate.
 
 		Returns:
 			IBaseNodeUnits: 
@@ -14482,7 +14494,7 @@ class IBaseNodeUnits(IGeometryUnits, IWaterQualityResultsUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for hydraulic grade.
 
 		Returns:
 			IBaseNodeUnits: 
@@ -14527,7 +14539,7 @@ class IReservoirsResults(IBaseNodesResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Net flow out at the current time step across all reservoirs.
 
 		Returns:
 			Dict[int,int]: 
@@ -14536,7 +14548,7 @@ class IReservoirsResults(IBaseNodesResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Net flow out at the given time step across all reservoirs.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -14573,7 +14585,7 @@ class IReservoirResults(IBaseNodeResults):
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Net flow out of the element at the current time step.
 
 		Returns:
 			Nullable: 
@@ -14582,7 +14594,7 @@ class IReservoirResults(IBaseNodeResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Net flow out of the element at the given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -14592,11 +14604,11 @@ class IReservoirResults(IBaseNodeResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Net flow out of the element across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -14638,7 +14650,7 @@ class IReservoirUnits(IBaseNodeUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter name for flow.
 
 		Returns:
 			IReservoirUnits: 
@@ -14659,7 +14671,7 @@ class ITapInput(IPointNodeInput):
 
 	@property
 	def AssociatedElement(self) -> IPipe:
-		"""No Description
+		"""Specify the pipe which the current node is associated.
 
 		Returns:
 			ITapInput: 
@@ -14684,7 +14696,7 @@ class ITapsInput(IPointNodesInput):
 
 	@overload
 	def AssociatedElements(self) -> Dict[int,int]:
-		"""No Description
+		"""Gets the geometry of all nodes of this type.
 
 		Returns:
 			Dict[int,int]: 
@@ -14741,7 +14753,7 @@ class IIsolationValveElementInput(IPhysicalNodeElementInput):
 
 	@property
 	def ReferencedPipe(self) -> IPipe:
-		"""No Description
+		"""The pipe the isolation valve references
 
 		Returns:
 			IIsolationValveElementInput: 
@@ -14754,7 +14766,7 @@ class IIsolationValveElementInput(IPhysicalNodeElementInput):
 
 	@property
 	def ValveDiameter(self) -> float:
-		"""No Description
+		"""Inside diameter of the valve. Used to calculate the velocity through the valve and a corresponding minor loss when a minor loss coefficient is entered.
 
 		Returns:
 			IIsolationValveElementInput: 
@@ -14767,7 +14779,7 @@ class IIsolationValveElementInput(IPhysicalNodeElementInput):
 
 	@property
 	def MinorLossCoefficient(self) -> float:
-		"""No Description
+		"""K value in the minor headloss equation.
 
 		Returns:
 			IIsolationValveElementInput: 
@@ -14780,7 +14792,7 @@ class IIsolationValveElementInput(IPhysicalNodeElementInput):
 
 	@property
 	def IsOperable(self) -> bool:
-		"""No Description
+		"""If true, valve can be used in identifying segments.
 
 		Returns:
 			IIsolationValveElementInput: 
@@ -14793,7 +14805,7 @@ class IIsolationValveElementInput(IPhysicalNodeElementInput):
 
 	@property
 	def InitialStatus(self) -> IsolationValveInitialSetting:
-		"""No Description
+		"""Set whether the valve is initially open or closed.
 
 		Returns:
 			IIsolationValveElementInput: 
@@ -14806,7 +14818,7 @@ class IIsolationValveElementInput(IPhysicalNodeElementInput):
 
 	@property
 	def InstallationYear(self) -> int:
-		"""No Description
+		"""Specify the install year of the element.  It does not affect the calculations.
 
 		Returns:
 			IIsolationValveElementInput: 
@@ -14831,7 +14843,7 @@ class IIsolationValveElementsInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def ReferencedPipes(self) -> Dict[int,int]:
-		"""No Description
+		"""The pipe the isolation valve references
 
 		Returns:
 			Dict[int,int]: 
@@ -14852,7 +14864,7 @@ class IIsolationValveElementsInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def ValveDiameters(self) -> Dict[int,int]:
-		"""No Description
+		"""Inside diameter of the valve. Used to calculate the velocity through the valve and a corresponding minor loss when a minor loss coefficient is entered.
 
 		Returns:
 			Dict[int,int]: 
@@ -14873,7 +14885,7 @@ class IIsolationValveElementsInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def MinorLossCoefficients(self) -> Dict[int,int]:
-		"""No Description
+		"""K value in the minor headloss equation.
 
 		Returns:
 			Dict[int,int]: 
@@ -14894,7 +14906,7 @@ class IIsolationValveElementsInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def IsOperables(self) -> Dict[int,int]:
-		"""No Description
+		"""If true, valve can be used in identifying segments.
 
 		Returns:
 			Dict[int,int]: 
@@ -14915,7 +14927,7 @@ class IIsolationValveElementsInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def InitialStatuses(self) -> Dict[int,int]:
-		"""No Description
+		"""Set whether the valve is initially open or closed.
 
 		Returns:
 			Dict[int,int]: 
@@ -14936,7 +14948,7 @@ class IIsolationValveElementsInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def InstallationYears(self) -> Dict[int,int]:
-		"""No Description
+		"""Specify the install year of the element.  It does not affect the calculations.
 
 		Returns:
 			Dict[int,int]: 
@@ -14969,7 +14981,7 @@ class IIsolatioNValveElementResults(IElementResults):
 
 	@overload
 	def HydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Hydraulic Grade at valve location on pipe.
 
 		Returns:
 			Nullable: 
@@ -14978,7 +14990,7 @@ class IIsolatioNValveElementResults(IElementResults):
 
 	@overload
 	def HydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Hydraulic Grade at valve location on pipe.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -14988,17 +15000,17 @@ class IIsolatioNValveElementResults(IElementResults):
 		"""
 		pass
 
-	def HydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def HydraulicGrades(self) -> List[Union[float, None]]:
+		"""Hydraulic Grade at valve location on pipe.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Pressure(self) -> Union[float, None]:
-		"""No Description
+		"""Pressure at valve location on pipe.
 
 		Returns:
 			Nullable: 
@@ -15007,7 +15019,7 @@ class IIsolatioNValveElementResults(IElementResults):
 
 	@overload
 	def Pressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Pressure at valve location on pipe.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15017,17 +15029,17 @@ class IIsolatioNValveElementResults(IElementResults):
 		"""
 		pass
 
-	def Pressures(self) -> array(Union[float, None]):
-		"""No Description
+	def Pressures(self) -> List[Union[float, None]]:
+		"""Pressure at valve location on pipe.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Flow(self) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through isolation valve.
 
 		Returns:
 			Nullable: 
@@ -15036,7 +15048,7 @@ class IIsolatioNValveElementResults(IElementResults):
 
 	@overload
 	def Flow(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Magnitude of flow through isolation valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15046,17 +15058,17 @@ class IIsolatioNValveElementResults(IElementResults):
 		"""
 		pass
 
-	def Flows(self) -> array(Union[float, None]):
-		"""No Description
+	def Flows(self) -> List[Union[float, None]]:
+		"""Magnitude of flow through isolation valve.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Velocity(self) -> Union[float, None]:
-		"""No Description
+		"""Velocity through the isolation valve.
 
 		Returns:
 			Nullable: 
@@ -15065,7 +15077,7 @@ class IIsolatioNValveElementResults(IElementResults):
 
 	@overload
 	def Velocity(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Velocity through the isolation valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15075,16 +15087,16 @@ class IIsolatioNValveElementResults(IElementResults):
 		"""
 		pass
 
-	def Velocities(self) -> array(Union[float, None]):
-		"""No Description
+	def Velocities(self) -> List[Union[float, None]]:
+		"""Velocity through the isolation valve.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	def DistanceFromEndPoint(self) -> Union[float, None]:
-		"""No Description
+		"""Presents the active Distance From End Point for the current isolation valve.
 
 		Returns:
 			Nullable: 
@@ -15093,7 +15105,7 @@ class IIsolatioNValveElementResults(IElementResults):
 
 	@overload
 	def IsClosed(self) -> Union[bool, None]:
-		"""No Description
+		"""True if current isolation valve is closed during the current time step.
 
 		Returns:
 			Nullable: 
@@ -15102,7 +15114,7 @@ class IIsolatioNValveElementResults(IElementResults):
 
 	@overload
 	def IsClosed(self, timeStepIndex: int) -> Union[bool, None]:
-		"""No Description
+		"""True if current isolation valve is closed during the current time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15112,11 +15124,11 @@ class IIsolatioNValveElementResults(IElementResults):
 		"""
 		pass
 
-	def IsCloseds(self) -> array(Union[bool, None]):
-		"""No Description
+	def IsCloseds(self) -> List[Union[bool, None]]:
+		"""True if current isolation valve is closed during the current time step.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -15134,7 +15146,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def HydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Hydraulic Grade at valve location on pipe.
 
 		Returns:
 			Dict[int,int]: 
@@ -15143,7 +15155,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def HydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Hydraulic Grade at valve location on pipe.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15168,7 +15180,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def Pressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Pressure at valve location on pipe.
 
 		Returns:
 			Dict[int,int]: 
@@ -15177,7 +15189,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def Pressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Pressure at valve location on pipe.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15202,7 +15214,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def Flows(self) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through isolation valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -15211,7 +15223,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def Flows(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Magnitude of flow through isolation valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15236,7 +15248,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def Velocities(self) -> Dict[int,int]:
-		"""No Description
+		"""Velocity through the isolation valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -15245,7 +15257,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def Velocities(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Velocity through the isolation valve.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15270,7 +15282,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def DistanceFromEndPoints(self) -> Dict[int,int]:
-		"""No Description
+		"""Presents the active Distance From End Point for the current isolation valve.
 
 		Returns:
 			Dict[int,int]: 
@@ -15291,7 +15303,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def IsCloseds(self) -> Dict[int,int]:
-		"""No Description
+		"""True if current isolation valve is closed during the current time step.
 
 		Returns:
 			Dict[int,int]: 
@@ -15300,7 +15312,7 @@ class IIsolationValveElementsResults(IElementsResults):
 
 	@overload
 	def IsCloseds(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""True if current isolation valve is closed during the current time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15427,7 +15439,7 @@ class ISpotElevationInput(IPointNodeInput):
 
 	@property
 	def Elevation(self) -> float:
-		"""No Description
+		"""The elevation of this spot.
 
 		Returns:
 			ISpotElevationInput: 
@@ -15452,7 +15464,7 @@ class ISpotElevationsInput(IPointNodesInput):
 
 	@overload
 	def Elevations(self) -> Dict[int,int]:
-		"""No Description
+		"""The spot elevations.
 
 		Returns:
 			Dict[int,int]: 
@@ -15485,7 +15497,7 @@ class ISpotElevationResults(IElementResults):
 
 	@overload
 	def EnhancedHydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Interpolated hydraulic grade at this location.
 
 		Returns:
 			Nullable: 
@@ -15494,7 +15506,7 @@ class ISpotElevationResults(IElementResults):
 
 	@overload
 	def EnhancedHydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Interpolated hydraulic grade at this location at the given time step
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15504,17 +15516,17 @@ class ISpotElevationResults(IElementResults):
 		"""
 		pass
 
-	def EnhancedHydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def EnhancedHydraulicGrades(self) -> List[Union[float, None]]:
+		"""Interpolated hydraulic grade at this location across all time steps
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def EnhancedPressure(self) -> Union[float, None]:
-		"""No Description
+		"""Pressure based on the interpolated hydraulic grade.
 
 		Returns:
 			Nullable: 
@@ -15523,7 +15535,7 @@ class ISpotElevationResults(IElementResults):
 
 	@overload
 	def EnhancedPressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Pressure based on the interpolated hydraulic grade.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15533,11 +15545,11 @@ class ISpotElevationResults(IElementResults):
 		"""
 		pass
 
-	def EnhancedPressures(self) -> array(Union[float, None]):
-		"""No Description
+	def EnhancedPressures(self) -> List[Union[float, None]]:
+		"""Pressure based on the interpolated hydraulic grade.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -15555,7 +15567,7 @@ class ISpotElevationsResults(IElementsResults):
 
 	@overload
 	def EnhancedHydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Interpolated hydraulic grade at this location.
 
 		Returns:
 			Dict[int,int]: 
@@ -15564,7 +15576,7 @@ class ISpotElevationsResults(IElementsResults):
 
 	@overload
 	def EnhancedHydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Interpolated hydraulic grade at this location.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15589,7 +15601,7 @@ class ISpotElevationsResults(IElementsResults):
 
 	@overload
 	def EnhancedPressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Pressure based on the interpolated hydraulic grade.
 
 		Returns:
 			Dict[int,int]: 
@@ -15598,7 +15610,7 @@ class ISpotElevationsResults(IElementsResults):
 
 	@overload
 	def EnhancedPressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Pressure based on the interpolated hydraulic grade.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15635,7 +15647,7 @@ class ISpotElevationUnits(IGeometryUnits):
 
 	@property
 	def ElevationUnit(self) -> IUnit:
-		"""No Description
+		"""the unit information for elevation
 
 		Returns:
 			ISpotElevationUnits: 
@@ -15644,7 +15656,7 @@ class ISpotElevationUnits(IGeometryUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""The unit information for hydraulic grade
 
 		Returns:
 			ISpotElevationUnits: 
@@ -15653,7 +15665,7 @@ class ISpotElevationUnits(IGeometryUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""The unit information for pressure
 
 		Returns:
 			ISpotElevationUnits: 
@@ -15698,7 +15710,8 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 
 	@property
 	def DemandPattern(self) -> IPattern:
-		"""No Description
+		"""Choose the EPS pattern that will apply to this load. Each load in the table can have a different EPS pattern.
+            The multipliers defined in the pattern will be applied against the baseline load.
 
 		Returns:
 			ICustomerMeterInput: 
@@ -15711,7 +15724,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 
 	@property
 	def BaseDemand(self) -> float:
-		"""No Description
+		"""Enter the baseline flow rate for the load.
 
 		Returns:
 			ICustomerMeterInput: 
@@ -15724,7 +15737,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 
 	@property
 	def StartDemandDistribution(self) -> float:
-		"""No Description
+		"""The percentage of customer demand that should be distributed to the start node of the associated pipe.
 
 		Returns:
 			ICustomerMeterInput: 
@@ -15737,7 +15750,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 
 	@property
 	def AssociatedElement(self) -> IWaterElement:
-		"""No Description
+		"""The demand node or pipe the customer meter is associated with.
 
 		Returns:
 			ICustomerMeterInput: 
@@ -15750,7 +15763,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 
 	@property
 	def UnitDemand(self) -> IUnitDemandLoad:
-		"""No Description
+		"""Enter unit demands
 
 		Returns:
 			ICustomerMeterInput: 
@@ -15763,7 +15776,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 
 	@property
 	def UnitDemandPattern(self) -> IPattern:
-		"""No Description
+		"""Choose the demand pattern to be applied to unit demands.
 
 		Returns:
 			ICustomerMeterInput: 
@@ -15776,7 +15789,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 
 	@property
 	def NumberOfUnitDemands(self) -> float:
-		"""No Description
+		"""Enter the number of unit demands.
 
 		Returns:
 			ICustomerMeterInput: 
@@ -15801,7 +15814,7 @@ class ICustomerMetersInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def DemandPatterns(self) -> Dict[int,int]:
-		"""No Description
+		"""Demand patterns for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -15822,7 +15835,7 @@ class ICustomerMetersInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def BaseDemands(self) -> Dict[int,int]:
-		"""No Description
+		"""Base demand loads for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -15843,7 +15856,7 @@ class ICustomerMetersInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def StartDemandDistributions(self) -> Dict[int,int]:
-		"""No Description
+		"""Start demand distributions for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -15864,7 +15877,7 @@ class ICustomerMetersInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def AssociatedElements(self) -> Dict[int,int]:
-		"""No Description
+		"""Associated elements for all customer meters
 
 		Returns:
 			Dict[int,int]: 
@@ -15885,7 +15898,7 @@ class ICustomerMetersInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def UnitDemands(self) -> Dict[int,int]:
-		"""No Description
+		"""Unit demands for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -15906,7 +15919,7 @@ class ICustomerMetersInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def UnitDemandPatterns(self) -> Dict[int,int]:
-		"""No Description
+		"""Unit demand patterns for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -15927,7 +15940,7 @@ class ICustomerMetersInput(IPhysicalNodeElementsInput):
 
 	@overload
 	def NumberOfUnitDemands(self) -> Dict[int,int]:
-		"""No Description
+		"""Number of unit demands for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -15960,7 +15973,7 @@ class ICustomerMeterResults(IElementResults):
 
 	@overload
 	def HydraulicGrade(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at node at current time step.
 
 		Returns:
 			Nullable: 
@@ -15969,7 +15982,7 @@ class ICustomerMeterResults(IElementResults):
 
 	@overload
 	def HydraulicGrade(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated hydraulic grade at node at given time step.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -15979,17 +15992,17 @@ class ICustomerMeterResults(IElementResults):
 		"""
 		pass
 
-	def HydraulicGrades(self) -> array(Union[float, None]):
-		"""No Description
+	def HydraulicGrades(self) -> List[Union[float, None]]:
+		"""Calculated hydraulic grade at node across all time steps.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
 	@overload
 	def Pressure(self) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at customer meter for current time step. This result is only computed when the calculation option 'Calculate Customer Results?' is set to true.
 
 		Returns:
 			Nullable: 
@@ -15998,7 +16011,7 @@ class ICustomerMeterResults(IElementResults):
 
 	@overload
 	def Pressure(self, timeStepIndex: int) -> Union[float, None]:
-		"""No Description
+		"""Calculated pressure at customer meter at given time step. This result is only computed when the calculation option 'Calculate Customer Results?' is set to true.
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -16008,11 +16021,11 @@ class ICustomerMeterResults(IElementResults):
 		"""
 		pass
 
-	def Pressures(self) -> array(Union[float, None]):
-		"""No Description
+	def Pressures(self) -> List[Union[float, None]]:
+		"""Calculated pressure at customer meter across all time steps. This result is only computed when the calculation option 'Calculate Customer Results?' is set to true.
 
 		Returns:
-			array(Nullable): 
+			List[Nullable]: 
 		"""
 		pass
 
@@ -16030,7 +16043,7 @@ class ICustomerMetersResults(IElementsResults):
 
 	@overload
 	def HydraulicGrades(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at node at current time step for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -16039,7 +16052,7 @@ class ICustomerMetersResults(IElementsResults):
 
 	@overload
 	def HydraulicGrades(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated hydraulic grade at node at given time step for all customer meters
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -16064,7 +16077,7 @@ class ICustomerMetersResults(IElementsResults):
 
 	@overload
 	def Pressures(self) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at customer meter for current time step for all customer meters.
 
 		Returns:
 			Dict[int,int]: 
@@ -16073,7 +16086,7 @@ class ICustomerMetersResults(IElementsResults):
 
 	@overload
 	def Pressures(self, timeStepIndex: int) -> Dict[int,int]:
-		"""No Description
+		"""Calculated pressure at customer meter for given time step for all customer meters
 
 		Args:
 			timeStepIndex(int): timeStepIndex
@@ -16110,7 +16123,7 @@ class ICustomerMeterUnits(IGeometryUnits):
 
 	@property
 	def ElevationUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for elevation.
 
 		Returns:
 			ICustomerMeterUnits: 
@@ -16119,7 +16132,7 @@ class ICustomerMeterUnits(IGeometryUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for hydraulic grade.
 
 		Returns:
 			ICustomerMeterUnits: 
@@ -16128,7 +16141,7 @@ class ICustomerMeterUnits(IGeometryUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter information for pressure.
 
 		Returns:
 			ICustomerMeterUnits: 
@@ -16173,7 +16186,7 @@ class ISCADAElementInput(IPointNodeInput):
 
 	@property
 	def TargetElement(self) -> IWaterElement:
-		"""No Description
+		"""The Domain Element the SCADA Signal targets.
 
 		Returns:
 			ISCADAElementInput: 
@@ -16186,7 +16199,7 @@ class ISCADAElementInput(IPointNodeInput):
 
 	@property
 	def RealtimeSignal(self) -> ISCADASignal:
-		"""No Description
+		"""The signal returning the real-time value for the selected attribute.
 
 		Returns:
 			ISCADAElementInput: 
@@ -16199,7 +16212,7 @@ class ISCADAElementInput(IPointNodeInput):
 
 	@property
 	def HistoricalSignal(self) -> ISCADASignal:
-		"""No Description
+		"""The signal returning historical value(s) for the selected attribute.
 
 		Returns:
 			ISCADAElementInput: 
@@ -16212,7 +16225,8 @@ class ISCADAElementInput(IPointNodeInput):
 
 	@property
 	def TargetAttribute(self) -> SCADATargetAttribute:
-		"""No Description
+		"""The target attribute for the SCADA element
+            Must align with the target element.
 
 		Returns:
 			ISCADAElementInput: 
@@ -16237,7 +16251,7 @@ class ISCADAElementsInput(IPointNodesInput):
 
 	@overload
 	def TargetElements(self) -> Dict[int,int]:
-		"""No Description
+		"""The domain elements the SCADA elements target.
 
 		Returns:
 			Dict[int,int]: 
@@ -16258,7 +16272,7 @@ class ISCADAElementsInput(IPointNodesInput):
 
 	@overload
 	def RealtimeSignals(self) -> Dict[int,int]:
-		"""No Description
+		"""The assigned real-time signals
 
 		Returns:
 			Dict[int,int]: 
@@ -16279,7 +16293,7 @@ class ISCADAElementsInput(IPointNodesInput):
 
 	@overload
 	def HistoricalSignals(self) -> Dict[int,int]:
-		"""No Description
+		"""The assigned historical signals
 
 		Returns:
 			Dict[int,int]: 
@@ -16408,7 +16422,7 @@ class IPumpStationInput(IBasePolygonInput):
 
 	@property
 	def Pumps(self) -> IPumpStationPumpIDsCollection:
-		"""No Description
+		"""The list of pumps associated with this pump station
 
 		Returns:
 			IPumpStationInput: 
@@ -16441,11 +16455,11 @@ class IPumpStationPumpIDs(ICollection[IPumpStationPumpID]):
 
 	@overload
 	def Add(self, pump: IPump, pumpDefinition: IPumpDefinition) -> IPumpStationPumpID:
-		"""No Description
+		"""Adds a pump to the pump station.
 
 		Args:
-			pump(IPump): pump
-			pumpDefinition(IPumpDefinition): pumpDefinition
+			pump(IPump): The pump to associate with the pump station.
+			pumpDefinition(IPumpDefinition): The pump definition to use with this pump.
 
 		Returns:
 			IPumpStationPumpID: 
@@ -16475,7 +16489,7 @@ class IPumpStationPumpID(ICollectionElement):
 
 	@property
 	def Pump(self) -> IElement:
-		"""No Description
+		"""The pump associated to the pump station
 
 		Returns:
 			IPumpStationPumpID: 
@@ -16488,7 +16502,7 @@ class IPumpStationPumpID(ICollectionElement):
 
 	@property
 	def PumpDefinition(self) -> IPumpDefinition:
-		"""No Description
+		"""The pump definition applied to this pump
 
 		Returns:
 			IPumpStationPumpID: 

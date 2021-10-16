@@ -1,11 +1,12 @@
 from OpenFlows.Domain.ModelingElements.Collections import ICollectionElements, ICollection, ICollectionElement
-from typing import overload, Generic
+from typing import overload, Generic, Iterator
 from OpenFlows.Units import IUnit
-from OpenFlows.Domain.ModelingElements import IElementUnits, IElement, TElementManagerType, TElementType, TUnitsType
+from OpenFlows.Domain.ModelingElements import IElementUnits, IElement, TElementManagerType, TElementType, TUnitsType, IModelingElementBase, IModelingElementsBase, IElements, IElementManager
 from enum import Enum
 from datetime import datetime
 from OpenFlows.Domain.ModelingElements.Components import IComponentElements, IComponentElement, IModelComponents
 from Haestad.Support.Units import PopulationUnit, AreaUnit
+from Haestad.Support.Support import IEditLabeled, ILabeled
 from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterElement, IPipe, IPump, IThrottleControlValve, IGeneralPurposeValve, IFlowControlValve, IPressureSustainingValve, IPressureBreakingValve, IPressureReducingValve, IReservoir, IJunction, IHydrant, ITank
 
 
@@ -94,7 +95,7 @@ class IAirFlowPressures(ICollection[IAirFlowPressure]):
 
 	@overload
 	def Add(self, flow: float, pressure: float) -> IAirFlowPressure:
-		"""No Description
+		"""Adds a new row to the collection with the provided flow and pressure values.
 
 		Args:
 			flow(float): flow
@@ -166,7 +167,7 @@ class IAirFlowPressureUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			IAirFlowPressureUnits: 
@@ -175,7 +176,7 @@ class IAirFlowPressureUnits(IElementUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for pressure
 
 		Returns:
 			IAirFlowPressureUnits: 
@@ -241,7 +242,7 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 
 	@property
 	def ControlType(self) -> ControlTypeEnum:
-		"""No Description
+		"""Defines the type of control - Logical or Simple.  Logical allows for use of an Else action.
 
 		Returns:
 			IControl: 
@@ -254,7 +255,7 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 
 	@property
 	def Condition(self) -> IControlCondition:
-		"""No Description
+		"""A condition on which to act when this control is used.
 
 		Returns:
 			IControl: 
@@ -267,7 +268,7 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 
 	@property
 	def Action(self) -> IControlAction:
-		"""No Description
+		"""The action to execute when the condition is filled.
 
 		Returns:
 			IControl: 
@@ -280,7 +281,7 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 
 	@property
 	def LogicalControl(self) -> ILogicalControl:
-		"""No Description
+		"""Logical control properties
 
 		Returns:
 			IControl: 
@@ -289,7 +290,7 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 
 	@property
 	def DefineDescription(self) -> bool:
-		"""No Description
+		"""Determines whether the control description is automatically generated or user defined.
 
 		Returns:
 			IControl: 
@@ -302,7 +303,7 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 
 	@property
 	def Description(self) -> str:
-		"""No Description
+		"""The description of the control.  If not user defined, returns Summary.
 
 		Returns:
 			IControl: 
@@ -315,7 +316,7 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 
 	@property
 	def Summary(self) -> str:
-		"""No Description
+		"""The control statement in a readable format.
 
 		Returns:
 			IControl: 
@@ -336,7 +337,7 @@ class ILogicalControl:
 
 	@property
 	def IsLogicalControl(self) -> bool:
-		"""No Description
+		"""Determines if the current control is a logical control.
 
 		Returns:
 			ILogicalControl: 
@@ -345,7 +346,7 @@ class ILogicalControl:
 
 	@property
 	def HasPriority(self) -> bool:
-		"""No Description
+		"""If set to true, can set a custom priority.
 
 		Returns:
 			ILogicalControl: 
@@ -358,7 +359,7 @@ class ILogicalControl:
 
 	@property
 	def Priority(self) -> ControlPriorityEnum:
-		"""No Description
+		"""The priority of the control.
 
 		Returns:
 			ILogicalControl: 
@@ -371,7 +372,7 @@ class ILogicalControl:
 
 	@property
 	def HasElse(self) -> bool:
-		"""No Description
+		"""Set to true to use an else action
 
 		Returns:
 			ILogicalControl: 
@@ -384,7 +385,7 @@ class ILogicalControl:
 
 	@property
 	def ElseAction(self) -> IControlAction:
-		"""No Description
+		"""If a logical control and condition resolves to false, executes this action.
 
 		Returns:
 			ILogicalControl: 
@@ -421,7 +422,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def ConditionType(self) -> ConditionTypeEnum:
-		"""No Description
+		"""The type of condition - simple or composite
 
 		Returns:
 			IControlCondition: 
@@ -434,7 +435,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def SimpleConditionType(self) -> SimpleConditionType:
-		"""No Description
+		"""The type of simple condition to define.
 
 		Returns:
 			IControlCondition: 
@@ -447,7 +448,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def ElementCondition(self) -> IElementControlConditionInput:
-		"""No Description
+		"""Element-based condition
 
 		Returns:
 			IControlCondition: 
@@ -456,7 +457,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def SystemDemandCondition(self) -> ISystemDemandConditionInput:
-		"""No Description
+		"""System demand based condition
 
 		Returns:
 			IControlCondition: 
@@ -465,7 +466,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def ClockTimeCondition(self) -> IClockTimeConditionInput:
-		"""No Description
+		"""Clock time based condition
 
 		Returns:
 			IControlCondition: 
@@ -474,7 +475,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def TimeFromStartCondition(self) -> ITimeFromStartConditionInput:
-		"""No Description
+		"""Time from start based condition
 
 		Returns:
 			IControlCondition: 
@@ -483,7 +484,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def CompositeConditionCollection(self) -> ICompositeConditionCollection:
-		"""No Description
+		"""The list of conditions making up a composite condition.
 
 		Returns:
 			IControlCondition: 
@@ -492,7 +493,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def IsUserDefinedDescriptionFormat(self) -> bool:
-		"""No Description
+		"""Determines whether the condition description is automatically generated or user defined.
 
 		Returns:
 			IControlCondition: 
@@ -505,7 +506,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def Description(self) -> str:
-		"""No Description
+		"""The description of the condition.  If not user defined, returns Summary.
 
 		Returns:
 			IControlCondition: 
@@ -518,7 +519,7 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 
 	@property
 	def Summary(self) -> str:
-		"""No Description
+		"""The condition statement in a readable format.
 
 		Returns:
 			IControlCondition: 
@@ -539,7 +540,7 @@ class IControlSimpleConditionInput:
 
 	@property
 	def SimpleConditionType(self) -> SimpleConditionType:
-		"""No Description
+		"""The type of simple condition to define.
 
 		Returns:
 			IControlSimpleConditionInput: 
@@ -548,7 +549,7 @@ class IControlSimpleConditionInput:
 
 	@property
 	def Comparison(self) -> ConditionComparisonOperator:
-		"""No Description
+		"""Defines how the condition is compared to return true.
 
 		Returns:
 			IControlSimpleConditionInput: 
@@ -573,7 +574,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def IsElementCondition(self) -> bool:
-		"""No Description
+		"""True if the ConditionType is set to Element.
 
 		Returns:
 			IElementControlConditionInput: 
@@ -582,7 +583,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def Element(self) -> IWaterElement:
-		"""No Description
+		"""The element to associate with this condition.
 
 		Returns:
 			IElementControlConditionInput: 
@@ -595,7 +596,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def Node(self) -> INodeConditionInput:
-		"""No Description
+		"""The node condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -604,7 +605,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def Tank(self) -> ITankConditionInput:
-		"""No Description
+		"""The tank condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -613,7 +614,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def Pump(self) -> IPumpConditionInput:
-		"""No Description
+		"""The pump condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -622,7 +623,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def Pipe(self) -> IPipeConditionInput:
-		"""No Description
+		"""The pipe condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -631,7 +632,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def PressureValve(self) -> IPressureValveConditionInput:
-		"""No Description
+		"""The pressure valve condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -640,7 +641,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def FCV(self) -> IFlowControLValveConditionInput:
-		"""No Description
+		"""The FCV condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -649,7 +650,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def GPV(self) -> IGeneralPurposeValveConditionInput:
-		"""No Description
+		"""The GPV condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -658,7 +659,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def TCV(self) -> IThrottleControlValveConditionInput:
-		"""No Description
+		"""The TCV condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -667,7 +668,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def HydroTank(self) -> IHydroTankConditionInput:
-		"""No Description
+		"""The hydro-tank condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -676,7 +677,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def SurgeTank(self) -> ISurgeTankConditionInput:
-		"""No Description
+		"""The surge tank condition settings
 
 		Returns:
 			IElementControlConditionInput: 
@@ -697,7 +698,7 @@ class IElementConditionInput:
 
 	@property
 	def Element(self) -> IWaterElement:
-		"""No Description
+		"""The element assigned to the condition.
 
 		Returns:
 			IElementConditionInput: 
@@ -718,7 +719,7 @@ class INodeConditionInput(IElementConditionInput):
 
 	@property
 	def NodeAttribute(self) -> NodeAttributeEnum:
-		"""No Description
+		"""The node attribute for this condition.
 
 		Returns:
 			INodeConditionInput: 
@@ -731,7 +732,7 @@ class INodeConditionInput(IElementConditionInput):
 
 	@property
 	def Demand(self) -> float:
-		"""No Description
+		"""Demand
 
 		Returns:
 			INodeConditionInput: 
@@ -744,7 +745,7 @@ class INodeConditionInput(IElementConditionInput):
 
 	@property
 	def HydraulicGrade(self) -> float:
-		"""No Description
+		"""Hydraulic Grade
 
 		Returns:
 			INodeConditionInput: 
@@ -757,7 +758,7 @@ class INodeConditionInput(IElementConditionInput):
 
 	@property
 	def Pressure(self) -> float:
-		"""No Description
+		"""Pressure
 
 		Returns:
 			INodeConditionInput: 
@@ -782,7 +783,7 @@ class ITankConditionInput:
 
 	@property
 	def TankAttribute(self) -> TankAttributeEnum:
-		"""No Description
+		"""The tank attribute for this condition.
 
 		Returns:
 			ITankConditionInput: 
@@ -795,7 +796,7 @@ class ITankConditionInput:
 
 	@property
 	def Demand(self) -> float:
-		"""No Description
+		"""Demand
 
 		Returns:
 			ITankConditionInput: 
@@ -808,7 +809,7 @@ class ITankConditionInput:
 
 	@property
 	def HydraulicGrade(self) -> float:
-		"""No Description
+		"""Hydraulic Grade
 
 		Returns:
 			ITankConditionInput: 
@@ -821,7 +822,7 @@ class ITankConditionInput:
 
 	@property
 	def Pressure(self) -> float:
-		"""No Description
+		"""Pressure
 
 		Returns:
 			ITankConditionInput: 
@@ -834,7 +835,7 @@ class ITankConditionInput:
 
 	@property
 	def Level(self) -> float:
-		"""No Description
+		"""Tank Level
 
 		Returns:
 			ITankConditionInput: 
@@ -847,7 +848,7 @@ class ITankConditionInput:
 
 	@property
 	def TimeToDrain(self) -> float:
-		"""No Description
+		"""Time to drain
 
 		Returns:
 			ITankConditionInput: 
@@ -860,7 +861,7 @@ class ITankConditionInput:
 
 	@property
 	def TimeToFill(self) -> float:
-		"""No Description
+		"""Time to fill
 
 		Returns:
 			ITankConditionInput: 
@@ -873,7 +874,7 @@ class ITankConditionInput:
 
 	@property
 	def PercentFull(self) -> float:
-		"""No Description
+		"""Percent full.
 
 		Returns:
 			ITankConditionInput: 
@@ -898,7 +899,7 @@ class IPumpConditionInput(IElementConditionInput):
 
 	@property
 	def PumpAttribute(self) -> ControlConditionPumpAttribute:
-		"""No Description
+		"""The pump attribute for this condition.
 
 		Returns:
 			IPumpConditionInput: 
@@ -911,7 +912,7 @@ class IPumpConditionInput(IElementConditionInput):
 
 	@property
 	def Discharge(self) -> float:
-		"""No Description
+		"""Discharge
 
 		Returns:
 			IPumpConditionInput: 
@@ -924,7 +925,7 @@ class IPumpConditionInput(IElementConditionInput):
 
 	@property
 	def PumpSetting(self) -> float:
-		"""No Description
+		"""Relative Speed Factor
 
 		Returns:
 			IPumpConditionInput: 
@@ -937,7 +938,7 @@ class IPumpConditionInput(IElementConditionInput):
 
 	@property
 	def PumpStatus(self) -> PumpStatus:
-		"""No Description
+		"""Pump status
 
 		Returns:
 			IPumpConditionInput: 
@@ -962,7 +963,7 @@ class IPipeConditionInput(IElementConditionInput):
 
 	@property
 	def PipeAttribute(self) -> ControlConditionPipeAttribute:
-		"""No Description
+		"""The pipe attribute for this condition
 
 		Returns:
 			IPipeConditionInput: 
@@ -975,7 +976,7 @@ class IPipeConditionInput(IElementConditionInput):
 
 	@property
 	def Discharge(self) -> float:
-		"""No Description
+		"""Discharge
 
 		Returns:
 			IPipeConditionInput: 
@@ -988,7 +989,7 @@ class IPipeConditionInput(IElementConditionInput):
 
 	@property
 	def PipeStatus(self) -> PipeStatus:
-		"""No Description
+		"""Pipe status
 
 		Returns:
 			IPipeConditionInput: 
@@ -1013,7 +1014,7 @@ class IPressureValveConditionInput(IElementConditionInput):
 
 	@property
 	def PressureValveAttribute(self) -> ControlConditionPressureValveAttributeEnum:
-		"""No Description
+		"""The pressure valve attribute for this condition
 
 		Returns:
 			IPressureValveConditionInput: 
@@ -1026,7 +1027,7 @@ class IPressureValveConditionInput(IElementConditionInput):
 
 	@property
 	def Discharge(self) -> float:
-		"""No Description
+		"""Dishcarge
 
 		Returns:
 			IPressureValveConditionInput: 
@@ -1039,7 +1040,7 @@ class IPressureValveConditionInput(IElementConditionInput):
 
 	@property
 	def HeadlossCoefficient(self) -> float:
-		"""No Description
+		"""Headloss coefficient
 
 		Returns:
 			IPressureValveConditionInput: 
@@ -1052,7 +1053,7 @@ class IPressureValveConditionInput(IElementConditionInput):
 
 	@property
 	def ValveStatus(self) -> ControlConditionValveStatus:
-		"""No Description
+		"""Valve status
 
 		Returns:
 			IPressureValveConditionInput: 
@@ -1077,7 +1078,7 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 
 	@property
 	def FCVAttribute(self) -> ControlConditionFCVAttributeEnum:
-		"""No Description
+		"""The FCV attribute for this condition.
 
 		Returns:
 			IFlowControLValveConditionInput: 
@@ -1090,7 +1091,7 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 
 	@property
 	def Discharge(self) -> float:
-		"""No Description
+		"""Discharge
 
 		Returns:
 			IFlowControLValveConditionInput: 
@@ -1103,7 +1104,7 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 
 	@property
 	def HeadlossCoefficient(self) -> float:
-		"""No Description
+		"""Headloss coefficient
 
 		Returns:
 			IFlowControLValveConditionInput: 
@@ -1116,7 +1117,7 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 
 	@property
 	def FCVStatus(self) -> FCVStatusEnum:
-		"""No Description
+		"""FCV status
 
 		Returns:
 			IFlowControLValveConditionInput: 
@@ -1141,7 +1142,7 @@ class IGeneralPurposeValveConditionInput(IElementConditionInput):
 
 	@property
 	def GPVAttribute(self) -> ControlConditionGPVAttributeEnum:
-		"""No Description
+		"""GPV attribute for this condition.
 
 		Returns:
 			IGeneralPurposeValveConditionInput: 
@@ -1154,7 +1155,7 @@ class IGeneralPurposeValveConditionInput(IElementConditionInput):
 
 	@property
 	def Discharge(self) -> float:
-		"""No Description
+		"""Discharge
 
 		Returns:
 			IGeneralPurposeValveConditionInput: 
@@ -1167,7 +1168,7 @@ class IGeneralPurposeValveConditionInput(IElementConditionInput):
 
 	@property
 	def GPVStatus(self) -> ControlConditionGPVStatusEnum:
-		"""No Description
+		"""GPV status
 
 		Returns:
 			IGeneralPurposeValveConditionInput: 
@@ -1192,7 +1193,7 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 
 	@property
 	def TCVAttribute(self) -> ControlConditionTCVAttributeEnum:
-		"""No Description
+		"""The TCV attribute for this condition.
 
 		Returns:
 			IThrottleControlValveConditionInput: 
@@ -1205,7 +1206,7 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 
 	@property
 	def Discharge(self) -> float:
-		"""No Description
+		"""Discharge
 
 		Returns:
 			IThrottleControlValveConditionInput: 
@@ -1218,7 +1219,7 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 
 	@property
 	def HeadlossCoefficient(self) -> float:
-		"""No Description
+		"""Setting
 
 		Returns:
 			IThrottleControlValveConditionInput: 
@@ -1231,7 +1232,7 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 
 	@property
 	def TCVStatus(self) -> TCVStatusEnum:
-		"""No Description
+		"""TCV status
 
 		Returns:
 			IThrottleControlValveConditionInput: 
@@ -1256,7 +1257,7 @@ class IHydroTankConditionInput(IElementConditionInput):
 
 	@property
 	def HydroTankAttribute(self) -> HydroTankAttributeEnum:
-		"""No Description
+		"""The HydroTank attribute for this condition.
 
 		Returns:
 			IHydroTankConditionInput: 
@@ -1269,7 +1270,7 @@ class IHydroTankConditionInput(IElementConditionInput):
 
 	@property
 	def HydraulicGrade(self) -> float:
-		"""No Description
+		"""Hydraulic Grade
 
 		Returns:
 			IHydroTankConditionInput: 
@@ -1282,7 +1283,7 @@ class IHydroTankConditionInput(IElementConditionInput):
 
 	@property
 	def Pressure(self) -> float:
-		"""No Description
+		"""Pressure
 
 		Returns:
 			IHydroTankConditionInput: 
@@ -1307,7 +1308,7 @@ class ISurgeTankConditionInput(IElementConditionInput):
 
 	@property
 	def SurgeTankAttribute(self) -> SurgeTankAttributeEnum:
-		"""No Description
+		"""The surge tank attribute for this condition.
 
 		Returns:
 			ISurgeTankConditionInput: 
@@ -1320,7 +1321,7 @@ class ISurgeTankConditionInput(IElementConditionInput):
 
 	@property
 	def Demand(self) -> float:
-		"""No Description
+		"""Demand
 
 		Returns:
 			ISurgeTankConditionInput: 
@@ -1333,7 +1334,7 @@ class ISurgeTankConditionInput(IElementConditionInput):
 
 	@property
 	def HydraulicGrade(self) -> float:
-		"""No Description
+		"""Hydraulic Grade
 
 		Returns:
 			ISurgeTankConditionInput: 
@@ -1346,7 +1347,7 @@ class ISurgeTankConditionInput(IElementConditionInput):
 
 	@property
 	def Pressure(self) -> float:
-		"""No Description
+		"""Pressure
 
 		Returns:
 			ISurgeTankConditionInput: 
@@ -1371,7 +1372,7 @@ class ISystemDemandConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def IsSystemDemandCondition(self) -> bool:
-		"""No Description
+		"""True if the ConditionType is set to system demand
 
 		Returns:
 			ISystemDemandConditionInput: 
@@ -1380,7 +1381,7 @@ class ISystemDemandConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def SystemDemand(self) -> float:
-		"""No Description
+		"""The system demand to compare against to trigger the condition
 
 		Returns:
 			ISystemDemandConditionInput: 
@@ -1405,7 +1406,7 @@ class IClockTimeConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def IsClockTimeCondition(self) -> bool:
-		"""No Description
+		"""True if the ConditionType is set to clock time.
 
 		Returns:
 			IClockTimeConditionInput: 
@@ -1414,7 +1415,7 @@ class IClockTimeConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def ClockTime(self) -> datetime:
-		"""No Description
+		"""The clock time to use to trigger the condition
 
 		Returns:
 			IClockTimeConditionInput: 
@@ -1439,7 +1440,7 @@ class ITimeFromStartConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def IsTimeFromStartCondition(self) -> bool:
-		"""No Description
+		"""True if the ConditionType is set to time from start
 
 		Returns:
 			ITimeFromStartConditionInput: 
@@ -1448,7 +1449,7 @@ class ITimeFromStartConditionInput(IControlSimpleConditionInput):
 
 	@property
 	def TimeFromStart(self) -> float:
-		"""No Description
+		"""The time from start to trigger the condition.
 
 		Returns:
 			ITimeFromStartConditionInput: 
@@ -1485,7 +1486,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def DemandUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for demand attribute
 
 		Returns:
 			IControlConditionUnits: 
@@ -1494,7 +1495,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for HGL
 
 		Returns:
 			IControlConditionUnits: 
@@ -1503,7 +1504,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for pressure
 
 		Returns:
 			IControlConditionUnits: 
@@ -1512,7 +1513,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def LevelUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for tank level
 
 		Returns:
 			IControlConditionUnits: 
@@ -1521,7 +1522,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def TimeToFillUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for tank time to fill
 
 		Returns:
 			IControlConditionUnits: 
@@ -1530,7 +1531,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def TimeToDrainUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for tank time to drain
 
 		Returns:
 			IControlConditionUnits: 
@@ -1539,7 +1540,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def PercentFullUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for tank percent full
 
 		Returns:
 			IControlConditionUnits: 
@@ -1548,7 +1549,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def DischargeUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for discharge
 
 		Returns:
 			IControlConditionUnits: 
@@ -1557,7 +1558,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def HeadlossCoefficientUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for headloss coefficient
 
 		Returns:
 			IControlConditionUnits: 
@@ -1566,7 +1567,7 @@ class IControlConditionUnits(IElementUnits):
 
 	@property
 	def TimeFromStartUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for time from start
 
 		Returns:
 			IControlConditionUnits: 
@@ -1587,7 +1588,8 @@ class ICompositeCondition(ICollectionElement):
 
 	@property
 	def LogicalOperator(self) -> LogicalOperatorEnum:
-		"""No Description
+		"""If the first row of the composite conditions collection, always returns If.
+            If not the first row, then use AND or OR.
 
 		Returns:
 			ICompositeCondition: 
@@ -1600,7 +1602,7 @@ class ICompositeCondition(ICollectionElement):
 
 	@property
 	def Condition(self) -> IControlCondition:
-		"""No Description
+		"""The condition for this row.
 
 		Returns:
 			ICompositeCondition: 
@@ -1625,14 +1627,14 @@ class ICompositeConditions(ICollection[ICompositeCondition]):
 
 	@overload
 	def Add(self, logicalOperator: LogicalOperatorEnum, condition: IControlCondition) -> ICompositeCondition:
-		"""No Description
+		"""Adds a condition to the collection
 
 		Args:
-			logicalOperator(LogicalOperatorEnum): logicalOperator
-			condition(IControlCondition): condition
+			logicalOperator(LogicalOperatorEnum): If the first row, can be IF.  Otherwise, must be AND or OR.
+			condition(IControlCondition): The condition to use for the row.
 
 		Returns:
-			ICompositeCondition: 
+			ICompositeCondition: The composite condition created with the assigned parameters.
 		"""
 		pass
 
@@ -1671,7 +1673,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def ActionType(self) -> ControlActionTypeEnum:
-		"""No Description
+		"""The type of action - simple or composite
 
 		Returns:
 			IControlAction: 
@@ -1684,7 +1686,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def Element(self) -> IWaterElement:
-		"""No Description
+		"""The element assigned to the action.
 
 		Returns:
 			IControlAction: 
@@ -1697,7 +1699,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def Pipe(self) -> IPipeActionInput:
-		"""No Description
+		"""The pipe action properties
 
 		Returns:
 			IControlAction: 
@@ -1706,7 +1708,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def Pump(self) -> IPumpActionInput:
-		"""No Description
+		"""The pump action properties
 
 		Returns:
 			IControlAction: 
@@ -1715,7 +1717,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def TCV(self) -> IThrottleControlValveActionInput:
-		"""No Description
+		"""The TCV action properties
 
 		Returns:
 			IControlAction: 
@@ -1724,7 +1726,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def GPV(self) -> IGeneralPurposeValveActionInput:
-		"""No Description
+		"""The GPV action properties
 
 		Returns:
 			IControlAction: 
@@ -1733,7 +1735,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def FCV(self) -> IFlowControlValveActionInput:
-		"""No Description
+		"""The FCV action properties
 
 		Returns:
 			IControlAction: 
@@ -1742,7 +1744,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def PressureValve(self) -> IPressureValveActionInput:
-		"""No Description
+		"""The pressure valve action properties
 
 		Returns:
 			IControlAction: 
@@ -1751,7 +1753,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def CompositeActionCollection(self) -> ICompositeActionCollection:
-		"""No Description
+		"""The list of actions making up a composite action.
 
 		Returns:
 			IControlAction: 
@@ -1760,7 +1762,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def DefineDescription(self) -> bool:
-		"""No Description
+		"""Determines whether the action description is automatically generated or user defined.
 
 		Returns:
 			IControlAction: 
@@ -1773,7 +1775,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def Description(self) -> str:
-		"""No Description
+		"""The description of the action.  If not user defined, returns Summary.
 
 		Returns:
 			IControlAction: 
@@ -1786,7 +1788,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 
 	@property
 	def Summary(self) -> str:
-		"""No Description
+		"""The action statement in a readable format.
 
 		Returns:
 			IControlAction: 
@@ -1807,7 +1809,7 @@ class IElementActionInput:
 
 	@property
 	def Element(self) -> IWaterElement:
-		"""No Description
+		"""The assigned element for the action
 
 		Returns:
 			IElementActionInput: 
@@ -1828,7 +1830,7 @@ class IPipeActionInput(IElementActionInput):
 
 	@property
 	def IsPipeAction(self) -> bool:
-		"""No Description
+		"""True if a pipe is assigned as the action element
 
 		Returns:
 			IPipeActionInput: 
@@ -1837,7 +1839,7 @@ class IPipeActionInput(IElementActionInput):
 
 	@property
 	def PipeAttribute(self) -> ControlActionPipeAttribute:
-		"""No Description
+		"""The pipe attribute to use for the action
 
 		Returns:
 			IPipeActionInput: 
@@ -1850,7 +1852,7 @@ class IPipeActionInput(IElementActionInput):
 
 	@property
 	def PipeStatus(self) -> ControlActionPipeStatus:
-		"""No Description
+		"""The pipe status to set.
 
 		Returns:
 			IPipeActionInput: 
@@ -1875,7 +1877,7 @@ class IPumpActionInput(IElementActionInput):
 
 	@property
 	def IsPumpAction(self) -> bool:
-		"""No Description
+		"""True if a pump is assigned as the action element
 
 		Returns:
 			IPumpActionInput: 
@@ -1884,7 +1886,7 @@ class IPumpActionInput(IElementActionInput):
 
 	@property
 	def PumpAttribute(self) -> ControlActionPumpAttribute:
-		"""No Description
+		"""the pump attribute to use for the action
 
 		Returns:
 			IPumpActionInput: 
@@ -1897,7 +1899,7 @@ class IPumpActionInput(IElementActionInput):
 
 	@property
 	def PumpStatus(self) -> ControlActionPumpStatus:
-		"""No Description
+		"""The pump status to use
 
 		Returns:
 			IPumpActionInput: 
@@ -1910,7 +1912,7 @@ class IPumpActionInput(IElementActionInput):
 
 	@property
 	def RelativeSpeedFactor(self) -> float:
-		"""No Description
+		"""The relative speed factor to use.
 
 		Returns:
 			IPumpActionInput: 
@@ -1923,7 +1925,7 @@ class IPumpActionInput(IElementActionInput):
 
 	@property
 	def TargetPressure(self) -> float:
-		"""No Description
+		"""The target pressure to set.
 
 		Returns:
 			IPumpActionInput: 
@@ -1936,7 +1938,7 @@ class IPumpActionInput(IElementActionInput):
 
 	@property
 	def TargetHead(self) -> float:
-		"""No Description
+		"""the target head to set.
 
 		Returns:
 			IPumpActionInput: 
@@ -1961,7 +1963,7 @@ class IThrottleControlValveActionInput(IElementActionInput):
 
 	@property
 	def IsTCVAction(self) -> bool:
-		"""No Description
+		"""True if a TCV is assigned as the action element.
 
 		Returns:
 			IThrottleControlValveActionInput: 
@@ -1970,7 +1972,7 @@ class IThrottleControlValveActionInput(IElementActionInput):
 
 	@property
 	def TCVAttribute(self) -> ControlActionTCVAttribute:
-		"""No Description
+		"""The TCV attribute to use for this action
 
 		Returns:
 			IThrottleControlValveActionInput: 
@@ -1983,7 +1985,7 @@ class IThrottleControlValveActionInput(IElementActionInput):
 
 	@property
 	def TCVStatus(self) -> ControlActionTCVStatus:
-		"""No Description
+		"""The TCV status to use
 
 		Returns:
 			IThrottleControlValveActionInput: 
@@ -1996,7 +1998,7 @@ class IThrottleControlValveActionInput(IElementActionInput):
 
 	@property
 	def HeadlossCoefficient(self) -> float:
-		"""No Description
+		"""The headloss coefficient to use.
 
 		Returns:
 			IThrottleControlValveActionInput: 
@@ -2021,7 +2023,7 @@ class IGeneralPurposeValveActionInput(IElementActionInput):
 
 	@property
 	def IsGPVAction(self) -> bool:
-		"""No Description
+		"""True if a GPV is assigned as the action element.
 
 		Returns:
 			IGeneralPurposeValveActionInput: 
@@ -2030,7 +2032,7 @@ class IGeneralPurposeValveActionInput(IElementActionInput):
 
 	@property
 	def GPVAttribute(self) -> ControlActionGPVAttribute:
-		"""No Description
+		"""The GPV attribute to use.
 
 		Returns:
 			IGeneralPurposeValveActionInput: 
@@ -2043,7 +2045,7 @@ class IGeneralPurposeValveActionInput(IElementActionInput):
 
 	@property
 	def GPVStatus(self) -> ControlActionGPVStatus:
-		"""No Description
+		"""The GPV status.
 
 		Returns:
 			IGeneralPurposeValveActionInput: 
@@ -2068,7 +2070,7 @@ class IFlowControlValveActionInput(IElementActionInput):
 
 	@property
 	def IsFCVAction(self) -> bool:
-		"""No Description
+		"""True if an FCV is assigned as the action element
 
 		Returns:
 			IFlowControlValveActionInput: 
@@ -2077,7 +2079,7 @@ class IFlowControlValveActionInput(IElementActionInput):
 
 	@property
 	def FCVAttribute(self) -> ControlActionFCVAttribute:
-		"""No Description
+		"""The FCv attribute to use.
 
 		Returns:
 			IFlowControlValveActionInput: 
@@ -2090,7 +2092,7 @@ class IFlowControlValveActionInput(IElementActionInput):
 
 	@property
 	def Discharge(self) -> float:
-		"""No Description
+		"""The discharge to use
 
 		Returns:
 			IFlowControlValveActionInput: 
@@ -2103,7 +2105,7 @@ class IFlowControlValveActionInput(IElementActionInput):
 
 	@property
 	def FCVStatus(self) -> ControlActionFCVStatus:
-		"""No Description
+		"""The FCV status to use.
 
 		Returns:
 			IFlowControlValveActionInput: 
@@ -2128,7 +2130,7 @@ class IPressureValveActionInput(IElementActionInput):
 
 	@property
 	def IsPressureValveAction(self) -> bool:
-		"""No Description
+		"""True if a PRV, PBV or PSV is assigned as the action element.
 
 		Returns:
 			IPressureValveActionInput: 
@@ -2137,7 +2139,7 @@ class IPressureValveActionInput(IElementActionInput):
 
 	@property
 	def PressureValveAttribute(self) -> ControlActionPressureValveAttribute:
-		"""No Description
+		"""the pressure valve attribue to use.
 
 		Returns:
 			IPressureValveActionInput: 
@@ -2150,7 +2152,7 @@ class IPressureValveActionInput(IElementActionInput):
 
 	@property
 	def HydraulicGrade(self) -> float:
-		"""No Description
+		"""The hGL to set.
 
 		Returns:
 			IPressureValveActionInput: 
@@ -2163,7 +2165,7 @@ class IPressureValveActionInput(IElementActionInput):
 
 	@property
 	def Pressure(self) -> float:
-		"""No Description
+		"""The pressure to set.
 
 		Returns:
 			IPressureValveActionInput: 
@@ -2176,7 +2178,7 @@ class IPressureValveActionInput(IElementActionInput):
 
 	@property
 	def PressureValveStatus(self) -> ControlActionPressureValveStatus:
-		"""No Description
+		"""The status to set.
 
 		Returns:
 			IPressureValveActionInput: 
@@ -2213,7 +2215,7 @@ class IControlActionUnits(IElementUnits):
 
 	@property
 	def RelativeSpeedFactorUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for relative speed factor
 
 		Returns:
 			IControlActionUnits: 
@@ -2222,7 +2224,7 @@ class IControlActionUnits(IElementUnits):
 
 	@property
 	def TargetPressureUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for target pressure
 
 		Returns:
 			IControlActionUnits: 
@@ -2231,7 +2233,7 @@ class IControlActionUnits(IElementUnits):
 
 	@property
 	def TargetHeadUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for target head
 
 		Returns:
 			IControlActionUnits: 
@@ -2240,7 +2242,7 @@ class IControlActionUnits(IElementUnits):
 
 	@property
 	def HeadlossCoefficientUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for headloss coefficient
 
 		Returns:
 			IControlActionUnits: 
@@ -2249,7 +2251,7 @@ class IControlActionUnits(IElementUnits):
 
 	@property
 	def DischargeUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for discharge
 
 		Returns:
 			IControlActionUnits: 
@@ -2258,7 +2260,7 @@ class IControlActionUnits(IElementUnits):
 
 	@property
 	def HydraulicGradeUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for hydraulic grade
 
 		Returns:
 			IControlActionUnits: 
@@ -2267,7 +2269,7 @@ class IControlActionUnits(IElementUnits):
 
 	@property
 	def PressureUnit(self) -> IUnit:
-		"""No Description
+		"""Formatter for pressure
 
 		Returns:
 			IControlActionUnits: 
@@ -2288,7 +2290,7 @@ class ICompositeAction(ICollectionElement):
 
 	@property
 	def Action(self) -> IControlAction:
-		"""No Description
+		"""The action for this row.
 
 		Returns:
 			ICompositeAction: 
@@ -2313,13 +2315,13 @@ class ICompositeActions(ICollection[ICompositeAction]):
 
 	@overload
 	def Add(self, action: IControlAction) -> ICompositeAction:
-		"""No Description
+		"""Adds an action to the composite action collection.
 
 		Args:
-			action(IControlAction): action
+			action(IControlAction): The action to add.
 
 		Returns:
-			ICompositeAction: 
+			ICompositeAction: Represents the new row added to the collection
 		"""
 		pass
 
@@ -2544,7 +2546,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, reservoir: IReservoir, attribute: NodeAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
-		"""No Description
+		"""Create a condition for a reservoir using the attribute value.
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2561,7 +2563,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, junction: IJunction, attribute: NodeAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
-		"""No Description
+		"""Create a condition for the junction
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2578,7 +2580,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, hydrant: IHydrant, attribute: NodeAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
-		"""No Description
+		"""Create a condition for the hydrant.
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2595,7 +2597,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, tank: ITank, attribute: TankAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
-		"""No Description
+		"""Create a condition for the tank using the attribute and value.
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2612,7 +2614,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, pump: IPump, attribute: PumpConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
-		"""No Description
+		"""Create a condition for the pump
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2629,7 +2631,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, pump: IPump, status: PumpStatus) -> IControlCondition:
-		"""No Description
+		"""Create a condition for the pump using its status.
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2644,7 +2646,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, pipe: IPipe, op: ConditionComparisonOperator, value: float) -> IControlCondition:
-		"""No Description
+		"""Create a condition for the pipe
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2675,7 +2677,7 @@ class ControlExtensionMethods:
 	@staticmethod
 	@overload
 	def CreateCondition(conditions: IControlConditions, psv: IPressureSustainingValve, attribute: PressureValveConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
-		"""No Description
+		"""Create a condition for the psv
 
 		Args:
 			conditions(IControlConditions): conditions
@@ -2865,14 +2867,14 @@ class ControlExtensionMethods:
 
 	@staticmethod
 	def CreateControl(controls: IControls, controlStatement: str) -> IControl:
-		"""No Description
+		"""Creates a logical control using a readable string
 
 		Args:
-			controls(IControls): controls
-			controlStatement(str): controlStatement
+			controls(IControls): The controls manager
+			controlStatement(str): The string in a readable format representing the logical control to create.
 
 		Returns:
-			IControl: 
+			IControl: If the control statement is in the appropriate format, a non-null control.  Otherwise, null.
 		"""
 		pass
 
@@ -2890,13 +2892,13 @@ class SCADASignalExtensions:
 
 	@staticmethod
 	def CreateFormulaSignal(scadaSignals: ISCADASignals, label: str, signalLabel: str, formula: str) -> ISCADASignal:
-		"""No Description
+		"""Creates a new derived SCADA signal based on a formula.
 
 		Args:
-			scadaSignals(ISCADASignals): scadaSignals
-			label(str): label
-			signalLabel(str): signalLabel
-			formula(str): formula
+			scadaSignals(ISCADASignals): The SCADA signals manager for a specific data source
+			label(str): The label of the new derived signal
+			signalLabel(str): The label of the signal in the data source.
+			formula(str): The formula to use for the derived signal
 
 		Returns:
 			ISCADASignal: 
@@ -2905,15 +2907,15 @@ class SCADASignalExtensions:
 
 	@staticmethod
 	def CreateSignal(scadaSignals: ISCADASignals, label: str, signalLabel: str) -> ISCADASignal:
-		"""No Description
+		"""Creates a new SCADA signal.
 
 		Args:
-			scadaSignals(ISCADASignals): scadaSignals
-			label(str): label
-			signalLabel(str): signalLabel
+			scadaSignals(ISCADASignals): The SCADA signals manager for a specific data source
+			label(str): The custom label of the signal.
+			signalLabel(str): The label of the signal in the data source.
 
 		Returns:
-			ISCADASignal: 
+			ISCADASignal: A new SCADA signal
 		"""
 		pass
 
@@ -2931,7 +2933,7 @@ class IWaterComponent(IElement):
 
 	@property
 	def ElementType(self) -> WaterComponentType:
-		"""No Description
+		"""The type of support element
 
 		Returns:
 			IWaterComponent: 
@@ -3000,7 +3002,7 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 
 	@property
 	def PatternCategory(self) -> PatternCategory:
-		"""No Description
+		"""The type of pattern this represents
 
 		Returns:
 			IPattern: 
@@ -3013,7 +3015,7 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 
 	@property
 	def PatternFormat(self) -> PatternFormat:
-		"""No Description
+		"""The format of the pattern - stepwise or continuous
 
 		Returns:
 			IPattern: 
@@ -3026,7 +3028,7 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 
 	@property
 	def PatternStartTime(self) -> datetime:
-		"""No Description
+		"""The first time step in the pattern. The start time format is a standard 24-hour clock.
 
 		Returns:
 			IPattern: 
@@ -3039,7 +3041,7 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 
 	@property
 	def PatternStartingMultiplier(self) -> float:
-		"""No Description
+		"""The multiplier value of the first time step point in your pattern. Any real number can be used for this multiplier (it does not have to be 1.0).
 
 		Returns:
 			IPattern: 
@@ -3052,7 +3054,7 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 
 	@property
 	def PatternCurve(self) -> IPatternCurveCollection:
-		"""No Description
+		"""The pattern curve for this pattern.
 
 		Returns:
 			IPattern: 
@@ -3061,7 +3063,7 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 
 	@property
 	def DailyMultipliers(self) -> IDailyMultipliers:
-		"""No Description
+		"""The daily multipliers for this pattern.
 
 		Returns:
 			IPattern: 
@@ -3070,7 +3072,7 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 
 	@property
 	def MonthlyMultipliers(self) -> IMonthlyMultipliers:
-		"""No Description
+		"""The monthly multipliers for this pattern.
 
 		Returns:
 			IPattern: 
@@ -3091,7 +3093,7 @@ class IPatternUnits(IPatternMultiplierUnits):
 
 	@property
 	def TimeFromStartUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter name for time from start
 
 		Returns:
 			IPatternUnits: 
@@ -3112,7 +3114,7 @@ class IPatternMultiplierUnits(IElementUnits):
 
 	@property
 	def MultiplierUnit(self) -> IUnit:
-		"""No Description
+		"""The formatter name for multiplier
 
 		Returns:
 			IPatternMultiplierUnits: 
@@ -3157,11 +3159,11 @@ class IPatternCurve(ICollection[IPatternCurveElement]):
 
 	@overload
 	def Add(self, timeFromStart: float, multiplier: float) -> IPatternCurveElement:
-		"""No Description
+		"""Adds a new row to the collection using the parameter provided.
 
 		Args:
-			timeFromStart(float): timeFromStart
-			multiplier(float): multiplier
+			timeFromStart(float): The amount of time from the Start Time of the pattern to the time step point being defined.
+			multiplier(float): The multiplier value associated with the time step point.
 
 		Returns:
 			IPatternCurveElement: 
@@ -3191,7 +3193,7 @@ class IPatternCurveElement(ICollectionElement):
 
 	@property
 	def TimeFromStart(self) -> float:
-		"""No Description
+		"""The amount of time from the Start Time of the pattern to the time step point being defined.
 
 		Returns:
 			IPatternCurveElement: 
@@ -3204,7 +3206,7 @@ class IPatternCurveElement(ICollectionElement):
 
 	@property
 	def Multiplier(self) -> float:
-		"""No Description
+		"""The multiplier value associated with the time step point.
 
 		Returns:
 			IPatternCurveElement: 
@@ -3229,7 +3231,7 @@ class IDailyMultipliers:
 
 	@property
 	def Sunday(self) -> float:
-		"""No Description
+		"""Sunday multiplier
 
 		Returns:
 			IDailyMultipliers: 
@@ -3242,7 +3244,7 @@ class IDailyMultipliers:
 
 	@property
 	def Monday(self) -> float:
-		"""No Description
+		"""Monday multiplier
 
 		Returns:
 			IDailyMultipliers: 
@@ -3255,7 +3257,7 @@ class IDailyMultipliers:
 
 	@property
 	def Tuesday(self) -> float:
-		"""No Description
+		"""Tuesday multiplier
 
 		Returns:
 			IDailyMultipliers: 
@@ -3268,7 +3270,7 @@ class IDailyMultipliers:
 
 	@property
 	def Wednesday(self) -> float:
-		"""No Description
+		"""Wednesday multiplier
 
 		Returns:
 			IDailyMultipliers: 
@@ -3281,7 +3283,7 @@ class IDailyMultipliers:
 
 	@property
 	def Thursday(self) -> float:
-		"""No Description
+		"""Thursday multiplier
 
 		Returns:
 			IDailyMultipliers: 
@@ -3294,7 +3296,7 @@ class IDailyMultipliers:
 
 	@property
 	def Friday(self) -> float:
-		"""No Description
+		"""Friday multiplier
 
 		Returns:
 			IDailyMultipliers: 
@@ -3307,7 +3309,7 @@ class IDailyMultipliers:
 
 	@property
 	def Saturday(self) -> float:
-		"""No Description
+		"""Saturday multiplier
 
 		Returns:
 			IDailyMultipliers: 
@@ -3332,7 +3334,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def January(self) -> float:
-		"""No Description
+		"""January multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3345,7 +3347,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def February(self) -> float:
-		"""No Description
+		"""February multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3358,7 +3360,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def March(self) -> float:
-		"""No Description
+		"""March multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3371,7 +3373,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def April(self) -> float:
-		"""No Description
+		"""April multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3384,7 +3386,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def May(self) -> float:
-		"""No Description
+		"""May multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3397,7 +3399,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def June(self) -> float:
-		"""No Description
+		"""June multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3410,7 +3412,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def July(self) -> float:
-		"""No Description
+		"""July multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3423,7 +3425,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def August(self) -> float:
-		"""No Description
+		"""August multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3436,7 +3438,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def September(self) -> float:
-		"""No Description
+		"""September multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3449,7 +3451,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def October(self) -> float:
-		"""No Description
+		"""October multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3462,7 +3464,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def November(self) -> float:
-		"""No Description
+		"""November multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3475,7 +3477,7 @@ class IMonthlyMultipliers:
 
 	@property
 	def December(self) -> float:
-		"""No Description
+		"""December multiplier
 
 		Returns:
 			IMonthlyMultipliers: 
@@ -3512,7 +3514,7 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 
 	@property
 	def Head(self) -> IPumpDefinitionHead:
-		"""No Description
+		"""The pump definition head settings.
 
 		Returns:
 			IPumpDefinition: 
@@ -3521,7 +3523,7 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 
 	@property
 	def Efficiency(self) -> IPumpDefinitionEfficiency:
-		"""No Description
+		"""The efficiency settings for the pump definition
 
 		Returns:
 			IPumpDefinition: 
@@ -3530,7 +3532,7 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 
 	@property
 	def NPSH(self) -> IPumpDefinitionNPSH:
-		"""No Description
+		"""The NPSH settings for the pump definition
 
 		Returns:
 			IPumpDefinition: 
@@ -3539,7 +3541,7 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 
 	@property
 	def Motor(self) -> IPumpDefinitionMotor:
-		"""No Description
+		"""The motor settings for the pump definition
 
 		Returns:
 			IPumpDefinition: 
@@ -3560,7 +3562,7 @@ class IPumpDefinitionUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			IPumpDefinitionUnits: 
@@ -3569,7 +3571,7 @@ class IPumpDefinitionUnits(IElementUnits):
 
 	@property
 	def HeadUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for head
 
 		Returns:
 			IPumpDefinitionUnits: 
@@ -3578,7 +3580,7 @@ class IPumpDefinitionUnits(IElementUnits):
 
 	@property
 	def PowerUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for power
 
 		Returns:
 			IPumpDefinitionUnits: 
@@ -3587,7 +3589,7 @@ class IPumpDefinitionUnits(IElementUnits):
 
 	@property
 	def EfficiencyUnit(self) -> IUnit:
-		"""No Description
+		"""The field formatter information for efficiency
 
 		Returns:
 			IPumpDefinitionUnits: 
@@ -3596,7 +3598,7 @@ class IPumpDefinitionUnits(IElementUnits):
 
 	@property
 	def SpeedUnit(self) -> IUnit:
-		"""No Description
+		"""The unit information for speed.
 
 		Returns:
 			IPumpDefinitionUnits: 
@@ -3617,7 +3619,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def PumpDefinitionType(self) -> PumpDefinitionType:
-		"""No Description
+		"""DepthFlowVariableSpeed
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3630,7 +3632,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def ConstantPower(self) -> float:
-		"""No Description
+		"""This is available only for constant-power pumps.
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3643,7 +3645,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def DesignFlow(self) -> float:
-		"""No Description
+		"""The pump definition's design flow.
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3656,7 +3658,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def DesignHead(self) -> float:
-		"""No Description
+		"""The pump definitions design head.
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3669,7 +3671,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def ShutoffHead(self) -> float:
-		"""No Description
+		"""The pump definition's shutoff head
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3682,7 +3684,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def MaxOperatingHead(self) -> float:
-		"""No Description
+		"""The pump definition's maximum operating head
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3695,7 +3697,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def MaxOperatingFlow(self) -> float:
-		"""No Description
+		"""The pump definition's maximum operating flow
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3708,7 +3710,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def MaxExtendedFlow(self) -> float:
-		"""No Description
+		"""The pump definition's max extended flow
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3721,7 +3723,7 @@ class IPumpDefinitionHead:
 
 	@property
 	def PumpCurve(self) -> IPumpCurveCollection:
-		"""No Description
+		"""Gets the pump curve collection
 
 		Returns:
 			IPumpDefinitionHead: 
@@ -3754,7 +3756,7 @@ class IPumpCurve(ICollection[IPumpCurveElement]):
 
 	@overload
 	def Add(self, flow: float, head: float) -> IPumpCurveElement:
-		"""No Description
+		"""Adds a new row to the pump curve.
 
 		Args:
 			flow(float): flow
@@ -3788,7 +3790,7 @@ class IPumpCurveElement(ICollectionElement):
 
 	@property
 	def Flow(self) -> float:
-		"""No Description
+		"""The flow for this row.
 
 		Returns:
 			IPumpCurveElement: 
@@ -3801,7 +3803,7 @@ class IPumpCurveElement(ICollectionElement):
 
 	@property
 	def Head(self) -> float:
-		"""No Description
+		"""The head for this row.
 
 		Returns:
 			IPumpCurveElement: 
@@ -3826,7 +3828,7 @@ class IPumpCurveUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The field formatter for flow
 
 		Returns:
 			IPumpCurveUnits: 
@@ -3835,7 +3837,7 @@ class IPumpCurveUnits(IElementUnits):
 
 	@property
 	def HeadUnit(self) -> IUnit:
-		"""No Description
+		"""The field formatter for head.
 
 		Returns:
 			IPumpCurveUnits: 
@@ -3856,7 +3858,7 @@ class IPumpDefinitionEfficiency:
 
 	@property
 	def PumpEfficiencyType(self) -> PumpEfficiencyTypeEnum:
-		"""No Description
+		"""The type of efficiency to use for this pump definition
 
 		Returns:
 			IPumpDefinitionEfficiency: 
@@ -3869,7 +3871,7 @@ class IPumpDefinitionEfficiency:
 
 	@property
 	def BEPFlow(self) -> float:
-		"""No Description
+		"""The BEP Flow for this pump definition
 
 		Returns:
 			IPumpDefinitionEfficiency: 
@@ -3882,7 +3884,7 @@ class IPumpDefinitionEfficiency:
 
 	@property
 	def BEPEfficiency(self) -> float:
-		"""No Description
+		"""The BEP efficiency for this pump definition.
 
 		Returns:
 			IPumpDefinitionEfficiency: 
@@ -3895,7 +3897,7 @@ class IPumpDefinitionEfficiency:
 
 	@property
 	def DefineBEPMaximumFlow(self) -> bool:
-		"""No Description
+		"""If true, set a user defined BEP maximum flow.
 
 		Returns:
 			IPumpDefinitionEfficiency: 
@@ -3908,7 +3910,7 @@ class IPumpDefinitionEfficiency:
 
 	@property
 	def UserDefinedBEPMaximumFlow(self) -> float:
-		"""No Description
+		"""The user defined maximum BEP flow for this pump definition.
 
 		Returns:
 			IPumpDefinitionEfficiency: 
@@ -3921,7 +3923,7 @@ class IPumpDefinitionEfficiency:
 
 	@property
 	def ConstantEfficiency(self) -> float:
-		"""No Description
+		"""The constant efficiency for the pump definition.
 
 		Returns:
 			IPumpDefinitionEfficiency: 
@@ -3934,7 +3936,7 @@ class IPumpDefinitionEfficiency:
 
 	@property
 	def FlowEfficiencyCurve(self) -> IFlowEfficiencyCollection:
-		"""No Description
+		"""The flow-efficiency curve for this pump definition
 
 		Returns:
 			IPumpDefinitionEfficiency: 
@@ -3955,7 +3957,7 @@ class IFlowEfficiencyCurveElement(ICollectionElement):
 
 	@property
 	def Flow(self) -> float:
-		"""No Description
+		"""The flow in display units.
 
 		Returns:
 			IFlowEfficiencyCurveElement: 
@@ -3968,7 +3970,7 @@ class IFlowEfficiencyCurveElement(ICollectionElement):
 
 	@property
 	def Efficiency(self) -> float:
-		"""No Description
+		"""The efficiency in display units
 
 		Returns:
 			IFlowEfficiencyCurveElement: 
@@ -3993,11 +3995,11 @@ class IFlowEfficiencyCurve(ICollection[IFlowEfficiencyCurveElement]):
 
 	@overload
 	def Add(self, flow: float, efficiency: float) -> IFlowEfficiencyCurveElement:
-		"""No Description
+		"""Adds a new row to the pump efficiency curve
 
 		Args:
-			flow(float): flow
-			efficiency(float): efficiency
+			flow(float): The flow in display units
+			efficiency(float): The efficiency in display units
 
 		Returns:
 			IFlowEfficiencyCurveElement: 
@@ -4027,7 +4029,7 @@ class IFlowEfficiencyUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""The field formatter information for flow
 
 		Returns:
 			IFlowEfficiencyUnits: 
@@ -4036,7 +4038,7 @@ class IFlowEfficiencyUnits(IElementUnits):
 
 	@property
 	def EfficiencyUnit(self) -> IUnit:
-		"""No Description
+		"""The field formatter information for efficiency
 
 		Returns:
 			IFlowEfficiencyUnits: 
@@ -4069,7 +4071,7 @@ class IPumpDefinitionNPSH:
 
 	@property
 	def UseNPSHCurve(self) -> bool:
-		"""No Description
+		"""Sets whether the NPSH curve is used during calculations.
 
 		Returns:
 			IPumpDefinitionNPSH: 
@@ -4082,7 +4084,7 @@ class IPumpDefinitionNPSH:
 
 	@property
 	def NPSHCurveSafetyFactor(self) -> float:
-		"""No Description
+		"""The safety factor to use with the NPSH curve duration calculations.
 
 		Returns:
 			IPumpDefinitionNPSH: 
@@ -4095,7 +4097,7 @@ class IPumpDefinitionNPSH:
 
 	@property
 	def NPSHCurve(self) -> INPSHCurveCollection:
-		"""No Description
+		"""The NPSH curve collection
 
 		Returns:
 			IPumpDefinitionNPSH: 
@@ -4154,7 +4156,7 @@ class IFlowNPSHrCurve(ICollection[IFlowNPSHr]):
 
 	@overload
 	def Add(self, flow: float, NPSHr: float) -> IFlowNPSHr:
-		"""No Description
+		"""Adds a new row to the colletion with the given data.
 
 		Args:
 			flow(float): flow
@@ -4188,7 +4190,7 @@ class INPSHCurveUnits(IElementUnits):
 
 	@property
 	def FlowUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			INPSHCurveUnits: 
@@ -4197,7 +4199,7 @@ class INPSHCurveUnits(IElementUnits):
 
 	@property
 	def NPSHUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for NPSH
 
 		Returns:
 			INPSHCurveUnits: 
@@ -4230,7 +4232,7 @@ class IPumpDefinitionMotor:
 
 	@property
 	def IsVariableSpeedDrive(self) -> bool:
-		"""No Description
+		"""Sets if the pump definition's motor is variable speed.
 
 		Returns:
 			IPumpDefinitionMotor: 
@@ -4243,7 +4245,7 @@ class IPumpDefinitionMotor:
 
 	@property
 	def MotorEfficiency(self) -> float:
-		"""No Description
+		"""The efficiency of the constant speed motor
 
 		Returns:
 			IPumpDefinitionMotor: 
@@ -4256,7 +4258,7 @@ class IPumpDefinitionMotor:
 
 	@property
 	def SpeedEfficiencyCurve(self) -> ISpeedEfficiencyCurveCollection:
-		"""No Description
+		"""The variable speed efficiency curve for the pump definition
 
 		Returns:
 			IPumpDefinitionMotor: 
@@ -4315,7 +4317,7 @@ class ISpeedEfficiencyCurve(ICollection[ISpeedEfficiency]):
 
 	@overload
 	def Add(self, speed: float, efficiency: float) -> ISpeedEfficiency:
-		"""No Description
+		"""Adds a new row to the collection with the given data.
 
 		Args:
 			speed(float): speed
@@ -4349,7 +4351,7 @@ class ISpeedEfficiencyUnits(IElementUnits):
 
 	@property
 	def SpeedUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for speed
 
 		Returns:
 			ISpeedEfficiencyUnits: 
@@ -4358,7 +4360,7 @@ class ISpeedEfficiencyUnits(IElementUnits):
 
 	@property
 	def EfficiencyUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for efficiency
 
 		Returns:
 			ISpeedEfficiencyUnits: 
@@ -4557,7 +4559,7 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 
 	@property
 	def UnitDemand(self) -> float:
-		"""No Description
+		"""The unit load.
 
 		Returns:
 			IUnitDemandLoad: 
@@ -4570,7 +4572,7 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 
 	@property
 	def UnitDemandType(self) -> UnitDemandLoadTypeEnum:
-		"""No Description
+		"""The type of unit demand load
 
 		Returns:
 			IUnitDemandLoad: 
@@ -4583,7 +4585,7 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 
 	@property
 	def PopulationUnit(self) -> PopulationUnit:
-		"""No Description
+		"""The population unit to use for population unit demand load
 
 		Returns:
 			IUnitDemandLoad: 
@@ -4596,7 +4598,7 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 
 	@property
 	def AreaUnit(self) -> AreaUnit:
-		"""No Description
+		"""The area unit to use for area unit demand load
 
 		Returns:
 			IUnitDemandLoad: 
@@ -4609,7 +4611,7 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 
 	@property
 	def CountUnit(self) -> str:
-		"""No Description
+		"""A user defined unit for count unit demand loads
 
 		Returns:
 			IUnitDemandLoad: 
@@ -4622,7 +4624,7 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 
 	@property
 	def ReportPopulationEquivalent(self) -> bool:
-		"""No Description
+		"""Flag to specify the population equivalent of the unit demand load.
 
 		Returns:
 			IUnitDemandLoad: 
@@ -4635,7 +4637,7 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 
 	@property
 	def PopulationEquivalent(self) -> float:
-		"""No Description
+		"""The population density applicable only to area and count unit loads.
 
 		Returns:
 			IUnitDemandLoad: 
@@ -4684,7 +4686,7 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 
 	@property
 	def ScadaDatasourceID(self) -> int:
-		"""No Description
+		"""The SCADA data source that this signal is part of.
 
 		Returns:
 			ISCADASignal: 
@@ -4693,7 +4695,7 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 
 	@property
 	def SignalLabel(self) -> str:
-		"""No Description
+		"""The label of the SCADA signal
 
 		Returns:
 			ISCADASignal: 
@@ -4706,7 +4708,7 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 
 	@property
 	def IsDerived(self) -> bool:
-		"""No Description
+		"""Flag that this SCADA signal is a dervied signal where the value is based on other signals.
 
 		Returns:
 			ISCADASignal: 
@@ -4719,7 +4721,7 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 
 	@property
 	def Formula(self) -> str:
-		"""No Description
+		"""The formula to use for this derived signal
 
 		Returns:
 			ISCADASignal: 
@@ -4732,7 +4734,7 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 
 	@property
 	def TransformMethod(self) -> SCADASignalTransformMethod:
-		"""No Description
+		"""The transform method to use for this signal.  Only applies if it is derived.
 
 		Returns:
 			ISCADASignal: 
@@ -4769,7 +4771,7 @@ class IGPVHeadlossCurve(IWaterComponentBase[IGPVHeadlossCurves, IGPVHeadlossCurv
 
 	@property
 	def GPVHeadlossFlowCurve(self) -> IGPVFlowHeadlossCurveCollection:
-		"""No Description
+		"""The GPV flow-headloss curve collection
 
 		Returns:
 			IGPVHeadlossCurve: 
@@ -4852,7 +4854,7 @@ class IGPVFlowHeadlossCurve(ICollection[IGPVFlowHeadloss]):
 
 	@overload
 	def Add(self, flow: float, headloss: float) -> IGPVFlowHeadloss:
-		"""No Description
+		"""Adds a row to the collection with the given data.
 
 		Args:
 			flow(float): flow
@@ -4898,7 +4900,7 @@ class IGPVFlowHeadlossUnits(IElementUnits):
 
 	@property
 	def Flow(self) -> IUnit:
-		"""No Description
+		"""Unit information for flow
 
 		Returns:
 			IGPVFlowHeadlossUnits: 
@@ -4907,7 +4909,7 @@ class IGPVFlowHeadlossUnits(IElementUnits):
 
 	@property
 	def Headloss(self) -> IUnit:
-		"""No Description
+		"""Unit information for headloss
 
 		Returns:
 			IGPVFlowHeadlossUnits: 
@@ -4928,7 +4930,7 @@ class IValveCharacteristic(IWaterComponentBase[IValveCharacteristics, IValveChar
 
 	@property
 	def ValveCharacteristicsCurve(self) -> IValveCharacteristicsCurveCollection:
-		"""No Description
+		"""The valve characteristics curve
 
 		Returns:
 			IValveCharacteristic: 
@@ -5011,7 +5013,7 @@ class IRelativeClosureRelativeAreas(ICollection[IRelativeClosureRelativeArea]):
 
 	@overload
 	def Add(self, relativeClosure: float, relativeArea: float) -> IRelativeClosureRelativeArea:
-		"""No Description
+		"""Adds a new row to the collection with the given data.
 
 		Args:
 			relativeClosure(float): relativeClosure
@@ -5057,7 +5059,7 @@ class IRelativeClosureRelativeAreaUnits(IElementUnits):
 
 	@property
 	def ClosureUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for relative closure
 
 		Returns:
 			IRelativeClosureRelativeAreaUnits: 
@@ -5066,7 +5068,7 @@ class IRelativeClosureRelativeAreaUnits(IElementUnits):
 
 	@property
 	def AreaUnit(self) -> IUnit:
-		"""No Description
+		"""Unit information for relative area
 
 		Returns:
 			IRelativeClosureRelativeAreaUnits: 
@@ -5099,7 +5101,7 @@ class IMinorLossCoefficient(IWaterComponentBase[IMinorLossCoefficients, IMinorLo
 
 	@property
 	def MinorLossType(self) -> MinorLossTypeEnum:
-		"""No Description
+		"""The type of minor loss.
 
 		Returns:
 			IMinorLossCoefficient: 
@@ -5112,7 +5114,7 @@ class IMinorLossCoefficient(IWaterComponentBase[IMinorLossCoefficients, IMinorLo
 
 	@property
 	def MinorLoss(self) -> float:
-		"""No Description
+		"""the minor loss coefficient, typically from a shared library
 
 		Returns:
 			IMinorLossCoefficient: 
@@ -5137,7 +5139,7 @@ class IMinorLossCoefficientUnits(IElementUnits):
 
 	@property
 	def CoefficientUnit(self) -> IUnit:
-		"""No Description
+		"""Uni tinformation about the minor loss
 
 		Returns:
 			IMinorLossCoefficientUnits: 
@@ -5157,19 +5159,21 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 		pass
 
 	def SCADASignals(self, dataSourceID: int) -> ISCADASignals:
-		"""No Description
+		"""Gets the SCADA signals for the given ID
+            Any new signals added in this instance will
+            automatically be associated with this id.
 
 		Args:
-			dataSourceID(int): dataSourceID
+			dataSourceID(int): A valid, non-zero SCADA data source ID
 
 		Returns:
-			ISCADASignals: 
+			ISCADASignals: If the dataSourceID is valid, returns the manager, otherwise null
 		"""
 		pass
 
 	@property
 	def Zones(self) -> IZones:
-		"""No Description
+		"""The zones in the model.
 
 		Returns:
 			IWaterModelSupport: 
@@ -5178,7 +5182,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def Patterns(self) -> IPatterns:
-		"""No Description
+		"""The patterns in the model.
 
 		Returns:
 			IWaterModelSupport: 
@@ -5187,7 +5191,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def PumpDefinitions(self) -> IPumpDefinitions:
-		"""No Description
+		"""The pump definitions in the model.
 
 		Returns:
 			IWaterModelSupport: 
@@ -5196,7 +5200,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def Constituents(self) -> IConstituents:
-		"""No Description
+		"""The constituents in the model.
 
 		Returns:
 			IWaterModelSupport: 
@@ -5205,7 +5209,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def UnitDemandLoads(self) -> IUnitDemandLoads:
-		"""No Description
+		"""The unit demand loads in the model
 
 		Returns:
 			IWaterModelSupport: 
@@ -5214,7 +5218,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def Controls(self) -> IControls:
-		"""No Description
+		"""The controls in the model
 
 		Returns:
 			IWaterModelSupport: 
@@ -5223,7 +5227,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def ControlConditions(self) -> IControlConditions:
-		"""No Description
+		"""The control conditions in the model
 
 		Returns:
 			IWaterModelSupport: 
@@ -5232,7 +5236,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def ControlActions(self) -> IControlActions:
-		"""No Description
+		"""The control actions in the model
 
 		Returns:
 			IWaterModelSupport: 
@@ -5241,7 +5245,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def AirFlowCurves(self) -> IAirFlowCurves:
-		"""No Description
+		"""The air flow curves in the model
 
 		Returns:
 			IWaterModelSupport: 
@@ -5250,7 +5254,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def GPVHeadlossCurves(self) -> IGPVHeadlossCurves:
-		"""No Description
+		"""The GPV headloss curves in the model
 
 		Returns:
 			IWaterModelSupport: 
@@ -5259,7 +5263,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def ValveCharacteristics(self) -> IValveCharacteristics:
-		"""No Description
+		"""The valve characteristics in the model
 
 		Returns:
 			IWaterModelSupport: 
@@ -5268,7 +5272,7 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 
 	@property
 	def MinorLossCoefficients(self) -> IMinorLossCoefficients:
-		"""No Description
+		"""The minor loss coefficients in the model
 
 		Returns:
 			IWaterModelSupport: 

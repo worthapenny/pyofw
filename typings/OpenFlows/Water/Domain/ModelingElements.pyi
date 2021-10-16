@@ -1,6 +1,7 @@
-from OpenFlows.Domain.ModelingElements import IScenario, IScenarios, ISelectionSet, ISelectionSets
+from OpenFlows.Domain.ModelingElements import IScenario, IScenarios, ISelectionSet, ISelectionSets, IModelingElementBase, IElement, IModelingElementsBase, IElements, IElementManager
 from OpenFlows.Water.Domain.ModelingElements.CalculationOptions import IWaterScenarioOptions, IWaterScenarioOptionsUnits
 from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterElement
+from Haestad.Support.Support import IEditLabeled, ILabeled
 
 class IWaterScenario(IScenario[IWaterScenarios, IWaterScenario, IWaterScenarioOptions, IWaterScenarioOptionsUnits]):
 

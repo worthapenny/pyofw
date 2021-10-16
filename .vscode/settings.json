@@ -27,13 +27,20 @@
   "python.testing.unittestEnabled": true,
   "cSpell.words": [
     "Akshaya",
+    "asctime",
     "Chrsts",
     "Coeff",
+    "datefmt",
+    "levelname",
+    "msecs",
     "Niraula",
     "Orif",
     "pyofw",
     "Thres",
     "unmanaged",
-    "vspb"
+    "vspb",
+    "wtrc",
+    "wtrg",
+    "wtro"
   ]
 }

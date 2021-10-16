@@ -30,7 +30,7 @@ class SetupOpenFlowsWater:
             dlls_dir = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
 
         self.dlls_dir = dlls_dir
-        logging.debug(f"Assembly dire is set to: {self.dlls_dir}")
+        logging.debug(f"Assembly dir is set to: {self.dlls_dir}")
         if not os.path.exists(self.dlls_dir):
             raise ValueError(
                 f"Given dlls_dir location is not valid. Dir: {self.dlls_dir}")
@@ -43,6 +43,8 @@ class SetupOpenFlowsWater:
             success = success and self.open_session(app_type)
         except:
             success = False
+
+        logging.debug(f"{__class__.__name__} initialized")
         pass
 
     def load_assemblies(self, assemblies: List[str]) -> bool:

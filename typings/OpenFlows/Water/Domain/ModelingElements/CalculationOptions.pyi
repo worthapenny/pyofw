@@ -1,11 +1,12 @@
 from OpenFlows.Domain.ModelingElements.Collections import ICollectionElements, ICollection, ICollectionElement
-from OpenFlows.Domain.ModelingElements import IElementUnits, IScenarioOptions
+from OpenFlows.Domain.ModelingElements import IElementUnits, IScenarioOptions, IElement
 from OpenFlows.Water.Domain.ModelingElements import IWaterSelectionSet
 from OpenFlows.Water.Domain.ModelingElements.Components import IPattern, IUnitDemandLoad
 from OpenFlows.Water.Domain import AdjustmentOperationType, CalculationType, DemandAdjustmentsType, UnitDemandAdjustmentType, RoughnessAdjustmentType
-from typing import overload
+from typing import overload, Iterator
 from datetime import datetime
 from OpenFlows.Units import IUnit
+from Haestad.Support.Support import IEditLabeled, ILabeled
 
 class IActiveDemandAdjustmentsCollection(ICollectionElements[IActiveDemandAdjustments, IActiveDemandAdjustment, IElementUnits]):
 
@@ -33,7 +34,7 @@ class IActiveDemandAdjustments(ICollection[IActiveDemandAdjustment]):
 
 	@overload
 	def Add(self, scope: IWaterSelectionSet, demandPattern: IPattern, operation: AdjustmentOperationType, value: float) -> IActiveDemandAdjustment:
-		"""No Description
+		"""Adds a new demand adjustment and assigns the values.
 
 		Args:
 			scope(IWaterSelectionSet): scope
@@ -69,7 +70,7 @@ class IActiveDemandAdjustment(ICollectionElement):
 
 	@property
 	def Scope(self) -> IWaterSelectionSet:
-		"""No Description
+		"""If null, applies to appropriate elements in entire network
 
 		Returns:
 			IActiveDemandAdjustment: 
@@ -82,7 +83,7 @@ class IActiveDemandAdjustment(ICollectionElement):
 
 	@property
 	def DemandPattern(self) -> IPattern:
-		"""No Description
+		"""The pattern to use for the adjustment.
 
 		Returns:
 			IActiveDemandAdjustment: 
@@ -95,7 +96,7 @@ class IActiveDemandAdjustment(ICollectionElement):
 
 	@property
 	def Value(self) -> float:
-		"""No Description
+		"""The value to apply
 
 		Returns:
 			IActiveDemandAdjustment: 
@@ -108,7 +109,7 @@ class IActiveDemandAdjustment(ICollectionElement):
 
 	@property
 	def Operation(self) -> AdjustmentOperationType:
-		"""No Description
+		"""The operation to apply the value.
 
 		Returns:
 			IActiveDemandAdjustment: 
@@ -145,7 +146,7 @@ class IActiveRoughnessAdjustments(ICollection[IActiveRoughnessAdjustment]):
 
 	@overload
 	def Add(self, scope: IWaterSelectionSet, operation: AdjustmentOperationType, value: float) -> IActiveRoughnessAdjustment:
-		"""No Description
+		"""Adds a new roughness adjustment.
 
 		Args:
 			scope(IWaterSelectionSet): scope
@@ -180,7 +181,7 @@ class IActiveRoughnessAdjustment(ICollectionElement):
 
 	@property
 	def Scope(self) -> IWaterSelectionSet:
-		"""No Description
+		"""The scope of pipes to apply adjustments
 
 		Returns:
 			IActiveRoughnessAdjustment: 
@@ -193,7 +194,7 @@ class IActiveRoughnessAdjustment(ICollectionElement):
 
 	@property
 	def Value(self) -> float:
-		"""No Description
+		"""The value to use to apply the adjustment
 
 		Returns:
 			IActiveRoughnessAdjustment: 
@@ -206,7 +207,7 @@ class IActiveRoughnessAdjustment(ICollectionElement):
 
 	@property
 	def Operation(self) -> AdjustmentOperationType:
-		"""No Description
+		"""The operation to use to apply the adjustment
 
 		Returns:
 			IActiveRoughnessAdjustment: 
@@ -243,7 +244,7 @@ class IActiveUnitDemandAdjustments(ICollection[IActiveUnitDemandAdjustment]):
 
 	@overload
 	def Add(self, scope: IWaterSelectionSet, unitDemandLoad: IUnitDemandLoad, operation: AdjustmentOperationType, value: float) -> IActiveUnitDemandAdjustment:
-		"""No Description
+		"""Add a new unit demand adjustment.
 
 		Args:
 			scope(IWaterSelectionSet): scope
@@ -279,7 +280,7 @@ class IActiveUnitDemandAdjustment(ICollectionElement):
 
 	@property
 	def Scope(self) -> IWaterSelectionSet:
-		"""No Description
+		"""The scope to apply the adjustment to
 
 		Returns:
 			IActiveUnitDemandAdjustment: 
@@ -292,7 +293,7 @@ class IActiveUnitDemandAdjustment(ICollectionElement):
 
 	@property
 	def UnitLoadDemand(self) -> IUnitDemandLoad:
-		"""No Description
+		"""The unit load demand to use.
 
 		Returns:
 			IActiveUnitDemandAdjustment: 
@@ -305,7 +306,7 @@ class IActiveUnitDemandAdjustment(ICollectionElement):
 
 	@property
 	def Value(self) -> float:
-		"""No Description
+		"""The value to apply the adjustment
 
 		Returns:
 			IActiveUnitDemandAdjustment: 
@@ -318,7 +319,7 @@ class IActiveUnitDemandAdjustment(ICollectionElement):
 
 	@property
 	def Operation(self) -> AdjustmentOperationType:
-		"""No Description
+		"""How to apply the adjustment to the scope.
 
 		Returns:
 			IActiveUnitDemandAdjustment: 
@@ -343,7 +344,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def CalculationType(self) -> CalculationType:
-		"""No Description
+		"""The type of calculation to perform.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -356,7 +357,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def FrictionMethod(self) -> EpaNetEngine_FrictionMethodEnum:
-		"""No Description
+		"""The friction method to use on pipes.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -369,7 +370,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def SimulationStartDate(self) -> datetime:
-		"""No Description
+		"""The simulation start date.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -382,7 +383,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def TimeAnalysisType(self) -> EpaNetEngine_TimeAnalysisTypeEnum:
-		"""No Description
+		"""The analysis type - EPS or Steady-state.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -395,7 +396,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def StartTime(self) -> datetime:
-		"""No Description
+		"""The start time of the analysis.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -408,7 +409,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def Duration(self) -> float:
-		"""No Description
+		"""The length of the simulation.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -421,7 +422,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def HydraulicTimeStep(self) -> float:
-		"""No Description
+		"""The time step to use when calculating.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -434,7 +435,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def DemandAdjustments(self) -> DemandAdjustmentsType:
-		"""No Description
+		"""Select whether or not to apply adjustment factors to standard demands.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -447,7 +448,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def ActiveDemandAdjustments(self) -> IActiveDemandAdjustmentsCollection:
-		"""No Description
+		"""The collection of demand adjustment which are applied to the analysis.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -456,7 +457,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def UnitDemandAdjustments(self) -> UnitDemandAdjustmentType:
-		"""No Description
+		"""Select whether or not to apply adjustment factors to unit demands.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -469,7 +470,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def ActiveUnitLoadDemandAdjustments(self) -> IActiveUnitDemandAdjustmentCollection:
-		"""No Description
+		"""The collection of unit demand adjustments which are applied to the analysis.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -478,7 +479,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def RoughnessAdjustments(self) -> RoughnessAdjustmentType:
-		"""No Description
+		"""Select whether or not to apply adjustment factors to roughnesses.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -491,7 +492,7 @@ class IWaterScenarioOptions(IScenarioOptions[IWaterScenarioOptionsUnits]):
 
 	@property
 	def ActiveRoughnessAdjustments(self) -> IActiveRoughnessAdjustmentCollection:
-		"""No Description
+		"""The collection of pipe roughness adjustments which are applied to the analysis.
 
 		Returns:
 			IWaterScenarioOptions: 
@@ -512,7 +513,7 @@ class IWaterScenarioOptionsUnits(IElementUnits):
 
 	@property
 	def DurationUnit(self) -> IUnit:
-		"""No Description
+		"""The units and formatter information for duration
 
 		Returns:
 			IWaterScenarioOptionsUnits: 
@@ -521,7 +522,7 @@ class IWaterScenarioOptionsUnits(IElementUnits):
 
 	@property
 	def HydraulicTimeStepUnit(self) -> IUnit:
-		"""No Description
+		"""The units and formatter information for hydraulic time step
 
 		Returns:
 			IWaterScenarioOptionsUnits: 
