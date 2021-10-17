@@ -79,8 +79,8 @@ class SetupOpenFlowsWater:
         logging.debug(f"About to open up a model file: {wtg_filepath}")
 
         try:
-            from OpenFlows.Water.Python import OpenFlowsWaterPython as ofw
-            self.__IWaterModel = ofw.OpenModel(wtg_filepath)
+            from OpenFlows.Water import OpenFlowsWater
+            self.__IWaterModel = OpenFlowsWater.Open(wtg_filepath)
 
             logging.info(
                 f"Successfully opened up the model. Path: {wtg_filepath}")

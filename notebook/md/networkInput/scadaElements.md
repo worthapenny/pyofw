@@ -1,10 +1,9 @@
-## Tanks DataFrame (`ni.tank_df`)
+## SCADA Elements DataFrame (`ni.scada_element_df`)
 
-> ### Summary Map
-> | ITanksInput | | |
-> |--|--|--|
-> | IConventionalTanksInput |||
-> | | IBaseTanksInput ||
-> | | | IDemandNodesInput |
-> | | | See [Junctions / Hydrants]
-> | | IWaterQualityElementsInput ||
+> ### **Summary Map**
+>
+> | ISCADAElementsInput | |
+> |--|--|
+> | IPointNodesInput ||
+> | | IActiveElementsInput |
+> | | IElementsInput |

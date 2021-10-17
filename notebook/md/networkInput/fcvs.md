@@ -1,10 +1,16 @@
-## Tanks DataFrame (`ni.tank_df`)
+## FCVs (Flow Control Valves) DataFrame (`ni.fcv_df`)
 
-> ### Summary Map
-> | ITanksInput | | |
-> |--|--|--|
-> | IConventionalTanksInput |||
-> | | IBaseTanksInput ||
-> | | | IDemandNodesInput |
-> | | | See [Junctions / Hydrants]
-> | | IWaterQualityElementsInput ||
+> ### **Summary Map**
+>
+> | IFlowControlValvesInput | | |||
+> |--|--|--|--|--|
+> | IBaseValvesInput |||||
+> | | IBaseDirectedNodesInput ||||
+> | | | IPointNodesInput | ||
+> | | | | IActiveElementsInput ||
+> | | | | IElementsInput ||
+> | | | IWaterZoneableNetworkElementsInput ||||
+> | | | | IActiveElementsInput ||
+> | | | IWaterQualityElementsInput |||
+> | | | IPhysicalNodeElementsInput |||
+> | | | | IPointNodesInput ||

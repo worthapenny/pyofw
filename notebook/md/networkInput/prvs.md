@@ -1,10 +1,17 @@
-## Tanks DataFrame (`ni.tank_df`)
+## PRVs (Pressure Reducing Valves) DataFrame (`ni.prv_df`)
 
-> ### Summary Map
-> | ITanksInput | | |
-> |--|--|--|
-> | IConventionalTanksInput |||
-> | | IBaseTanksInput ||
-> | | | IDemandNodesInput |
-> | | | See [Junctions / Hydrants]
-> | | IWaterQualityElementsInput ||
+> ### **Summary Map**
+>
+> | IPressureReducingValvesInput |||||
+> |--|--|--|--|--|
+> | IPressureValvesInput |||||
+> | | IBaseValvesInput ||||
+> | | | IBaseDirectedNodesInput |||
+> | | | | IPointNodesInput ||
+> | | | | | IActiveElementsInput |
+> | | | | | IElementsInput |
+> | | | | IWaterZoneableNetworkElementsInput ||
+> | | | | | IActiveElementsInput |
+> | | | | IWaterQualityElementsInput ||
+> | | | | IPhysicalNodeElementsInput ||
+> | | | | | IPointNodesInput |

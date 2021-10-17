@@ -1,10 +1,9 @@
-## Tanks DataFrame (`ni.tank_df`)
+## Taps DataFrame (`ni.tap_df`)
 
-> ### Summary Map
-> | ITanksInput | | |
-> |--|--|--|
-> | IConventionalTanksInput |||
-> | | IBaseTanksInput ||
-> | | | IDemandNodesInput |
-> | | | See [Junctions / Hydrants]
-> | | IWaterQualityElementsInput ||
+> ### **Summary Map**
+>
+> | ITapsInput | |
+> |--|--|
+> | IPointNodesInput ||
+> | | IActiveElementsInput |
+> | | IElementsInput |

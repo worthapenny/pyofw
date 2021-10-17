@@ -1,10 +1,17 @@
-## Tanks DataFrame (`ni.tank_df`)
+## VSPBs (Variable Speed Pump Batteries) DataFrame (`ni.vspb_df`)
 
-> ### Summary Map
-> | ITanksInput | | |
-> |--|--|--|
-> | IConventionalTanksInput |||
-> | | IBaseTanksInput ||
-> | | | IDemandNodesInput |
-> | | | See [Junctions / Hydrants]
-> | | IWaterQualityElementsInput ||
+> ### **Summary Map**
+>
+> | IVSPBsInput | | |||
+> |--|--|--|--|--|
+> | | IBaseValvesInput ||||
+> | | | IBaseDirectedNodesInput |||
+> | | | | IPointNodeInput ||
+> | | | | | IActiveElementInput |
+> | | | | | IElementInput |
+> | | | | IWaterZoneableNetworkElementInput ||
+> | | | | | IActiveElementInput |
+> | | | | IWaterQualityElementInput ||
+> | | | | IWaterQualityNodesInput ||
+> | | | | IPhysicalNodeElementsInput ||
+> | | | | | IPointNodeInput |

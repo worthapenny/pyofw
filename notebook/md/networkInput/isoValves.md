@@ -1,10 +1,13 @@
-## Tanks DataFrame (`ni.tank_df`)
+## Isolation Valves DataFrame (`ni.iso_valve_df`)
 
-> ### Summary Map
-> | ITanksInput | | |
+> ### **Summary Map**
+>
+> | IIsolationValveElementsInput | | |
 > |--|--|--|
-> | IConventionalTanksInput |||
-> | | IBaseTanksInput ||
-> | | | IDemandNodesInput |
-> | | | See [Junctions / Hydrants]
-> | | IWaterQualityElementsInput ||
+> | | IPointNodesInput | |
+> | | | IActiveElementsInput |
+> | | | IElementsInput |
+> | | IPhysicalNodeElementsInput |||
+> | | | IPointNodesInput | |
+> | | | | IActiveElementsInput |
+> | | | | IElementsInput |

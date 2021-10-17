@@ -1,6 +1,7 @@
 ## Laterals DataFrame (`ni.laterals_df`)
 
-> ### Summary Map
+> ### **Summary Map**
+>
 > | ILateralsInput | | |
 > |--|--|--|
 > | IBaseLinksInput |||

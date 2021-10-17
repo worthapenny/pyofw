@@ -1,10 +1,15 @@
 ## Tanks DataFrame (`ni.tank_df`)
 
 > ### Summary Map
-> | ITanksInput | | |
-> |--|--|--|
-> | IConventionalTanksInput |||
-> | | IBaseTanksInput ||
-> | | | IDemandNodesInput |
-> | | | See [Junctions / Hydrants]
-> | | IWaterQualityElementsInput ||
+> | ITanksInput | | ||
+> |--|--|--|--|
+> | IBasePumpsInput ||||
+> | | IBaseDirectedNodesInput |||
+> | | | IPointNodesInput ||
+> | | | | IActiveElementsInput |
+> | | | | IElementsInput |
+> | | | IWaterZoneableNetworkElementsInput ||
+> | | | | IActiveElementsInput |
+> | | | IWaterQualityElementsInput ||
+> | | | IPhysicalNodeElementsInput ||
+> | | | | IPointNodesInput |

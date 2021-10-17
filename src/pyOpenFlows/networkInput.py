@@ -1,17 +1,131 @@
 from OpenFlows.Domain.ModelingElements.NetworkElements import IActiveElementsInput, IBaseLinksInput, IBasePolygonInput, IBasePolygonsInput, INetworkElements, IPointNodesInput
 from OpenFlows.Water.Domain import IWaterModel
-from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IBaseDirectedNodesInput, IBaseNodesInput, IBasePumpsInput, IBaseValvesInput, ICheckValveElementsInput, IConventionalTanksInput, ICustomerMetersInput, IDemandNodesInput, IFireFlowNodesInput, IFlowControlValvesInput, IGeneralPurposeValves, IGeneralPurposeValvesInput, IHydrantsInput, IHydroTanksInput, IIsolationValveElementsInput, IJunctionsInput, ILateralsInput, IPhysicalNodeElementsInput, IPipes, IPressureBreakingValves, IPressureBreakingValvesInput, IPressureSustainingValvesInput, IPressureValvesInput, IPumpStations, IPumpStationsInput, IPumps, IPumpsInput, IReservoirs, ISCADAElements, ISCADAElementsInput, ITanks, ITanksInput, ITaps, IThrottleControlValvesInput, IVSPBsInput, IWaterQualityNodesInput, IWaterZoneableNetworkElementsInput
+from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IBaseDirectedNodesInput, IBaseNodesInput, IBasePumpsInput, IBaseValvesInput, ICheckValveElementsInput, IConventionalTanksInput, ICustomerMetersInput, IDemandNodesInput, IFireFlowNodesInput, IFlowControlValvesInput, IGeneralPurposeValves, IGeneralPurposeValvesInput, IHydrantsInput, IHydroTanksInput, IIsolationValveElementsInput, IJunctionsInput, ILateralsInput, IPhysicalNodeElementsInput, IPipes, IPressureBreakingValves, IPressureBreakingValvesInput, IPressureSustainingValvesInput, IPressureValvesInput, IPumpStations, IPumpStationsInput, IPumps, IPumpsInput, IReservoirs, ISCADAElements, ISCADAElementsInput, ITanks, ITanksInput, ITaps, IThrottleControlValvesInput, IVSPBsInput, IWaterQualityElementsInput, IWaterQualityNodesInput, IWaterZoneableNetworkElementsInput
 import numpy as np
 import pandas as pd
+import networkx as nx
 from typing import Any, List, Type
 
 
 class NetworkInput:
+    # region Fields
     __waterModel: IWaterModel
+    # endregion
 
+    # region Constructor
     def __init__(self, water_model: IWaterModel) -> None:
         self.__waterModel = water_model
         pass
+    # endregion
+
+    # region Public Methods
+    def get_networkx_graph(self, laterals: bool = False) -> nx.Graph:
+        columns = ["Id", "Label"] if laterals else [
+            "Id", "Label", "Diameter", "IsActive"]
+
+        links_df = self.pipe_df[columns].copy()
+        if laterals:
+            links_df.append(self.lateral_df[columns])
+
+        graph: nx.Graph = nx.from_pandas_edgelist(
+            df=links_df,
+            source="StartNodeId",
+            target="StopNodeId",
+            edge_attr=columns)
+
+        return graph
+
+    # endregion // Public Methods
+
+    # region Public Properties (Network Elements DF)
+
+    @property
+    def pipe_df(self) -> pd.DataFrame:
+        return self.__get_pipe_input(self.__waterModel.Network.Pipes)
+
+    @property
+    def lateral_df(self) -> pd.DataFrame:
+        return self.__get_lateral_input(self.__waterModel.Network.Laterals)
+
+    @property
+    def junction_df(self) -> pd.DataFrame:
+        return self.__get_junction_input(self.__waterModel.Network.Junctions)
+
+    @property
+    def hydrant_df(self) -> pd.DataFrame:
+        return self.__get_hydrant_input(self.__waterModel.Network.Hydrants)
+
+    @property
+    def tank_df(self) -> pd.DataFrame:
+        return self.__get_tank_input(self.__waterModel.Network.Tanks)
+
+    @property
+    def reservoir_df(self) -> pd.DataFrame:
+        return self.__get_reservoir_input(self.__waterModel.Network.Reservoirs)
+
+    @property
+    def tap_df(self) -> pd.DataFrame:
+        return self.__get_tap_input(self.__waterModel.Network.Taps)
+
+    @property
+    def pump_df(self) -> pd.DataFrame:
+        return self.__get_pump_input(self.__waterModel.Network.Pumps)
+
+    @property
+    def pump_stn_df(self) -> pd.DataFrame:
+        return self.__get_pump_stn_input(self.__waterModel.Network.PumpStations)
+
+    @property
+    def customer_meter_df(self) -> pd.DataFrame:
+        return self.__get_customer_meter_input(self.__waterModel.Network.CustomerMeters)
+
+    @property
+    def scada_elem_df(self) -> pd.DataFrame:
+        return self.__get_scada_elem_input(self.__waterModel.Network.SCADAElements)
+
+    @property
+    def vspb_df(self) -> pd.DataFrame:
+        return self.__get_vspb_input(self.__waterModel.Network.VSPBs)
+
+    @property
+    def prv_df(self) -> pd.DataFrame:
+        return self.__get_prv_input(self.__waterModel.Network.PRVs)
+
+    @property
+    def psv_df(self) -> pd.DataFrame:
+        return self.__get_psv_input(self.__waterModel.Network.PSVs)
+
+    @property
+    def pbv_df(self) -> pd.DataFrame:
+        return self.__get_pbv_input(self.__waterModel.Network.PBVs)
+
+    @property
+    def fcv_df(self) -> pd.DataFrame:
+        return self.__get_fcv_input(self.__waterModel.Network.FCVs)
+
+    @property
+    def tcv_df(self) -> pd.DataFrame:
+        return self.__get_tcv_input(self.__waterModel.Network.TCVs)
+
+    @property
+    def gpv_df(self) -> pd.DataFrame:
+        return self.__get_gpv_input(self.__waterModel.Network.GPVs)
+
+    @property
+    def iso_valve_df(self) -> pd.DataFrame:
+        return self.__get_iso_valve_input(self.__waterModel.Network.IsolationValves)
+
+    @property
+    def hydro_tank_df(self) -> pd.DataFrame:
+        return self.__get_hydro_tank_input(self.__waterModel.Network.HydropneumaticTanks)
+
+    @property
+    def check_valve_df(self) -> pd.DataFrame:
+        return self.__get_check_valve_input(self.__waterModel.Network.CheckValves)
+
+    # endregion // Public Properties
+
+    # region Private methods
 
     def __dict_to_value(self, series: pd.Series, data_type: Type) -> pd.Series:
         series = series.apply(lambda d: d.Value)
@@ -70,7 +184,7 @@ class NetworkInput:
             lambda pts: [[p.X, p.Y] for p in pts]).tolist()
         return df
 
-    def __get_water_quality_node_input(self, elements: IWaterQualityNodesInput, df: pd.DataFrame) -> pd.DataFrame:
+    def __get_water_quality_node_input(self, elements: IWaterQualityElementsInput, df: pd.DataFrame) -> pd.DataFrame:
         df["InitAge"] = elements.InitialAge()
         df["InitAge"] = self.__dict_to_value(df["InitAge"], float)
 
@@ -119,7 +233,6 @@ class NetworkInput:
 
 
 # region Base Node / Link / Polygon Inputs
-
 
     def __get_base_node_input(self, elements: IBaseNodesInput) -> pd.DataFrame:
         df = self.__get_elements_input(elements)
@@ -634,89 +747,4 @@ class NetworkInput:
 
     # endregion
 
-# region Network Elements DF
-
-    @property
-    def pipe_df(self) -> pd.DataFrame:
-        return self.__get_pipe_input(self.__waterModel.Network.Pipes)
-
-    @property
-    def lateral_df(self) -> pd.DataFrame:
-        return self.__get_lateral_input(self.__waterModel.Network.Laterals)
-
-    @property
-    def junction_df(self) -> pd.DataFrame:
-        return self.__get_junction_input(self.__waterModel.Network.Junctions)
-
-    @property
-    def hydrant_df(self) -> pd.DataFrame:
-        return self.__get_hydrant_input(self.__waterModel.Network.Hydrants)
-
-    @property
-    def tank_df(self) -> pd.DataFrame:
-        return self.__get_tank_input(self.__waterModel.Network.Tanks)
-
-    @property
-    def reservoir_df(self) -> pd.DataFrame:
-        return self.__get_reservoir_input(self.__waterModel.Network.Reservoirs)
-
-    @property
-    def tap_df(self) -> pd.DataFrame:
-        return self.__get_tap_input(self.__waterModel.Network.Taps)
-
-    @property
-    def pump_df(self) -> pd.DataFrame:
-        return self.__get_pump_input(self.__waterModel.Network.Pumps)
-
-    @property
-    def pump_stn_df(self) -> pd.DataFrame:
-        return self.__get_pump_stn_input(self.__waterModel.Network.PumpStations)
-
-    @property
-    def customer_meter_df(self) -> pd.DataFrame:
-        return self.__get_customer_meter_input(self.__waterModel.Network.CustomerMeters)
-
-    @property
-    def scada_elem_df(self) -> pd.DataFrame:
-        return self.__get_scada_elem_input(self.__waterModel.Network.SCADAElements)
-
-    @property
-    def vspb_df(self) -> pd.DataFrame:
-        return self.__get_vspb_input(self.__waterModel.Network.VSPBs)
-
-    @property
-    def prv_df(self) -> pd.DataFrame:
-        return self.__get_prv_input(self.__waterModel.Network.PRVs)
-
-    @property
-    def psv_df(self) -> pd.DataFrame:
-        return self.__get_psv_input(self.__waterModel.Network.PSVs)
-
-    @property
-    def pbv_df(self) -> pd.DataFrame:
-        return self.__get_pbv_input(self.__waterModel.Network.PBVs)
-
-    @property
-    def fcv_df(self) -> pd.DataFrame:
-        return self.__get_fcv_input(self.__waterModel.Network.FCVs)
-
-    @property
-    def tcv_df(self) -> pd.DataFrame:
-        return self.__get_tcv_input(self.__waterModel.Network.TCVs)
-
-    @property
-    def gpv_df(self) -> pd.DataFrame:
-        return self.__get_gpv_input(self.__waterModel.Network.GPVs)
-
-    @property
-    def iso_valve_df(self) -> pd.DataFrame:
-        return self.__get_iso_valve_input(self.__waterModel.Network.IsolationValves)
-
-    @property
-    def hydro_tank_df(self) -> pd.DataFrame:
-        return self.__get_hydro_tank_input(self.__waterModel.Network.HydropneumaticTanks)
-
-    @property
-    def check_valve_df(self) -> pd.DataFrame:
-        return self.__get_check_valve_input(self.__waterModel.Network.CheckValves)
-# endregion
+    # endregion // private methods
