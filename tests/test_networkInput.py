@@ -1,12 +1,6 @@
 from typing import Any
 import unittest
-import sys
-import clr
-
 from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
-
-# assembly_path = r"D:\Development\Perforce\Aspen\Products\WaterGEMS\Output\_Starter\x64\Debug"
-# sys.path.insert(0, ".")
 
 
 class TestNetworkInput(unittest.TestCase):
@@ -18,31 +12,19 @@ class TestNetworkInput(unittest.TestCase):
     # region Setup and Teardown
     @classmethod
     def setUpClass(cls):
-        # sys.path.append(assembly_path)
-        # clr.AddReference("OpenFlows.Water.Python")
-        # clr.AddReference("OpenFlows.Water")
-        # clr.AddReference("OpenFlows")
 
         from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
         cls.setup_water = SetupOpenFlowsWater()
 
-        # from OpenFlows.Water.Python import OpenFlowsWaterPython as ofw
         from OpenFlows.Water.Domain import IWaterModel
         from pyOpenFlows.networkInput import NetworkInput
 
-        # ofw.StartWaterGEMSSession()
-        # cls.wm: IWaterModel = ofw.OpenModel(cls.water_model_path)
-        # cls.assertFalse(cls.wm, None)
-
         cls.wm: IWaterModel = cls.setup_water.open_model(cls.water_model_path)
-
         cls.ni: NetworkInput = NetworkInput(cls.wm)
         pass
 
     @classmethod
     def tearDownClass(cls):
-        # from OpenFlows.Water.Python import OpenFlowsWaterPython as ofw
-        # ofw.EndSession()
         cls.wm.Close()
         cls.setup_water.end()
 
@@ -51,7 +33,7 @@ class TestNetworkInput(unittest.TestCase):
     # region Tests
 
     def test_pipe_df(self):
-        df = self.ni.pipe_df
+        df = TestNetworkInput.ni.pipe_df
         columns = ['Label', 'Id', 'IsActive', 'StartNode', 'StartNodeId', 'StopNode', 'StopNodeId',
                    'IsUDLength', 'Length', 'Geometry', 'InstallYr', 'Status', 'Diameter',
                    'Material', 'FrictionCoeff']
@@ -62,7 +44,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_lateral_df(self):
-        df = self.ni.lateral_df
+        df = TestNetworkInput.ni.lateral_df
         columns = ['Label', 'Id', 'IsActive', 'StartNode', 'StartNodeId', 'StopNode', 'StopNodeId',
                    'IsUDLength', 'Length', 'Geometry']
         self.assertTrue(set(columns).issubset(df.columns))
@@ -72,7 +54,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_junction_df(self):
-        df = self.ni.junction_df
+        df = TestNetworkInput.ni.junction_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y']
         self.assertTrue(set(columns).issubset(df.columns))
@@ -82,7 +64,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_hydrant_df(self):
-        df = self.ni.hydrant_df
+        df = TestNetworkInput.ni.hydrant_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y']
         self.assertTrue(set(columns).issubset(df.columns))
@@ -92,7 +74,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_tank_df(self):
-        df = self.ni.tank_df
+        df = TestNetworkInput.ni.tank_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel',
                    'InitAge', 'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'SectionType',
                    'ActiveVolFull', 'Diameter', 'AvgArea', 'BaseElev', 'MinLevel',
@@ -105,7 +87,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_reservoir_df(self):
-        df = self.ni.reservoir_df
+        df = TestNetworkInput.ni.reservoir_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y']
         self.assertTrue(set(columns).issubset(df.columns))
@@ -115,7 +97,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_tap_df(self):
-        df = self.ni.tap_df
+        df = TestNetworkInput.ni.tap_df
         columns = ['Label', 'Id', 'Geometry',
                    'X', 'Y', 'AssocElem', 'AssocElemId']
         self.assertTrue(set(columns).issubset(df.columns))
@@ -125,7 +107,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_pump_df(self):
-        df = self.ni.pump_df
+        df = TestNetworkInput.ni.pump_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'InitSpeedFactor']
@@ -136,7 +118,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_customer_meter_df(self):
-        df = self.ni.customer_meter_df
+        df = TestNetworkInput.ni.customer_meter_df
         columns = ['Label', 'Id', 'Geometry', 'X', 'Y', 'Demand', 'Pattern', 'PatternId',
                    'StartDemandDist', 'AssocElem', 'AssocElemId', 'UnitDemand',
                    'UnitDmdPattern', 'UnitDmdPatternId', 'NumUnitDmd']
@@ -147,7 +129,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_scada_elem_df(self):
-        df = self.ni.scada_elem_df
+        df = TestNetworkInput.ni.scada_elem_df
         columns = ['Label', 'Id', 'Geometry', 'X', 'Y', 'TgtElem', 'TgtElemId', 'HistSignal',
                    'HistSignalId']
         self.assertTrue(set(columns).issubset(df.columns))
@@ -157,7 +139,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_pump_stn_df(self):
-        df = self.ni.pump_stn_df
+        df = TestNetworkInput.ni.pump_stn_df
         columns = ['Label', 'Id', 'IsActive', 'Geometry']
         self.assertTrue(set(columns).issubset(df.columns))
 
@@ -166,7 +148,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_vspb_df(self):
-        df = self.ni.vspb_df
+        df = TestNetworkInput.ni.vspb_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'InitSpeedFactor', 'InitStatus', 'PumpDefinition', 'PumpDefinitionId',
@@ -180,7 +162,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_prv_df(self):
-        df = self.ni.prv_df
+        df = TestNetworkInput.ni.prv_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
@@ -193,7 +175,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_psv_df(self):
-        df = self.ni.psv_df
+        df = TestNetworkInput.ni.psv_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
@@ -206,7 +188,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_pbv_df(self):
-        df = self.ni.pbv_df
+        df = TestNetworkInput.ni.pbv_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
@@ -218,7 +200,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_fcv_df(self):
-        df = self.ni.fcv_df
+        df = TestNetworkInput.ni.fcv_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
@@ -230,7 +212,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_tcv_df(self):
-        df = self.ni.tcv_df
+        df = TestNetworkInput.ni.tcv_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
@@ -242,7 +224,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_gpv_df(self):
-        df = self.ni.gpv_df
+        df = TestNetworkInput.ni.gpv_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
@@ -254,7 +236,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_iso_valve_df(self):
-        df = self.ni.iso_valve_df
+        df = TestNetworkInput.ni.iso_valve_df
         columns = ['Label', 'Id', 'Geometry', 'X', 'Y', 'RefPipe', 'RefPipeId', 'Diameter',
                    'MinorLossCoeff', 'IsOperable', 'InitStatus', 'InstallYr']
         self.assertTrue(set(columns).issubset(df.columns))
@@ -264,7 +246,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_hydro_tank_df(self):
-        df = self.ni.hydro_tank_df
+        df = TestNetworkInput.ni.hydro_tank_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InitGasVol',
                    'InletOrifDia', 'RatioOfLosses', 'GasLawExponent', 'HasBladder',
@@ -278,7 +260,7 @@ class TestNetworkInput(unittest.TestCase):
         self.assertEqual(df_shape[1], df.shape[1])
 
     def test_check_valve_df(self):
-        df = self.ni.check_valve_df
+        df = TestNetworkInput.ni.check_valve_df
         columns = ['Label', 'Id', 'Elevation', 'IsActive', 'Zone', 'ZoneId', 'ZoneLabel', 'InitAge',
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr', 'AtY',
                    'FlowDirection', 'InitTypFlow', 'ThresPressure']

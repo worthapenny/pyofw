@@ -16,9 +16,7 @@ class SetupOpenFlowsWater:
     dlls_dir: str
     __IWaterModel: Any
     assemblies: List[str] = [
-        "OpenFlows",
         "OpenFlows.Water",
-        "OpenFlows.Water.Python",
     ]
 
     def __init__(self, app_type: AppType = AppType.WaterGEMS, dlls_dir: str = "") -> None:
@@ -64,13 +62,14 @@ class SetupOpenFlowsWater:
     def open_session(self, app_type: AppType = AppType.WaterGEMS) -> bool:
         success = True
         try:
-            from OpenFlows.Water.Python import OpenFlowsWaterPython as ofw
+            from OpenFlows.Water import OpenFlowsWater, WaterProductLicenseType
+
             if app_type == AppType.WaterGEMS:
-                ofw.StartWaterGEMSSession()
+                OpenFlowsWater.StartSession(WaterProductLicenseType.WaterGEMS)
             elif app_type == AppType.WaterCAD:
-                ofw.StartWaterCADSession()
+                OpenFlowsWater.StartSession(WaterProductLicenseType.WaterCAD)
             elif app_type == AppType.WaterOPS:
-                ofw.StartWaterOPSSession()
+                OpenFlowsWater.StartSession(WaterProductLicenseType.WaterOPS)
         except:
             success = False
 
