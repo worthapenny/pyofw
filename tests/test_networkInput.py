@@ -1,6 +1,7 @@
 from typing import Any
 import unittest
 from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
+import logging
 
 
 class TestNetworkInput(unittest.TestCase):
@@ -12,6 +13,12 @@ class TestNetworkInput(unittest.TestCase):
     # region Setup and Teardown
     @classmethod
     def setUpClass(cls):
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(asctime)s.%(msecs)03d %(levelname)s [%(filename)s]:\t%(message)s",
+            datefmt="%d %H:%M:%S",
+        )
+        logging.info("")
 
         from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
         cls.setup_water = SetupOpenFlowsWater()

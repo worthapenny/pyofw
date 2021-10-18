@@ -1,6 +1,7 @@
 from pyOpenFlows import support
 import pandas as pd
 import unittest
+import logging
 
 
 class TestSetupOpenFlows(unittest.TestCase):
@@ -9,6 +10,12 @@ class TestSetupOpenFlows(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(asctime)s.%(msecs)03d %(levelname)s [%(filename)s]:\t%(message)s",
+            datefmt="%d %H:%M:%S",
+        )
+        logging.info("")
         pass
 
     @classmethod

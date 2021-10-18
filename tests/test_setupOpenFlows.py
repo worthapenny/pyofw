@@ -2,6 +2,7 @@ from typing import Any
 
 from pyOpenFlows.setupOpenFlows import AppType, SetupOpenFlowsWater
 import unittest
+import logging
 
 
 class TestSetupOpenFlows(unittest.TestCase):
@@ -17,6 +18,13 @@ class TestSetupOpenFlows(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(asctime)s.%(msecs)03d %(levelname)s [%(filename)s]:\t%(message)s",
+            datefmt="%d %H:%M:%S",
+        )
+        logging.info("")
+
         cls.setup_wtrg = None
         cls.setup_wtro = None
         pass
