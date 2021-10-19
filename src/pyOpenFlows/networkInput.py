@@ -16,6 +16,12 @@ class NetworkInput:
     def __init__(self, water_model: IWaterModel) -> None:
         self.__waterModel = water_model
         pass
+
+    def __repr__(self) -> str:
+        line1 = f"{__class__.__name__}: {self.__waterModel}."
+        line2 = f"Pipe Count: {self.__waterModel.Network.Pipes.Count}"
+        line3 = f"Junction Count: {self.__waterModel.Network.Junctions.Count}"
+        return f"{line1} {line2} {line3}."
     # endregion
 
     # region Public Methods

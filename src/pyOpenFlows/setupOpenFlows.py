@@ -15,10 +15,12 @@ class AppType(Enum):
 class SetupOpenFlowsWater:
     dlls_dir: str
     __IWaterModel: Any
+    __app_type: AppType
     assemblies: List[str] = [
         "OpenFlows.Water",
     ]
 
+    # region Constructor
     def __init__(self, app_type: AppType = AppType.WaterGEMS, dlls_dir: str = "") -> None:
 
         # TODO: point to installation location
@@ -27,6 +29,7 @@ class SetupOpenFlowsWater:
         if not dlls_dir:
             dlls_dir = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
 
+        self.__app_type = app_type
         self.dlls_dir = dlls_dir
         logging.debug(f"Assembly dir is set to: {self.dlls_dir}")
         if not os.path.exists(self.dlls_dir):
@@ -44,6 +47,11 @@ class SetupOpenFlowsWater:
 
         logging.debug(f"{__class__.__name__} initialized")
         pass
+
+    def __repr__(self) -> str:
+        return f"{__class__.__name__}: {self.__app_type} assemblies from {self.dlls_dir}"
+
+    # endregion
 
     def load_assemblies(self, assemblies: List[str]) -> bool:
         success = True
