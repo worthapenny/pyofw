@@ -11,6 +11,9 @@ def package_files(directory):
     return paths
 
 
+with open("requirements.txt", "r") as fr:
+    install_requires = fr.read().splitlines()
+
 stub_files = package_files(pathlib.Path(__file__).parent.joinpath("typings"))
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -38,11 +41,7 @@ setuptools.setup(
     package_data={"": stub_files},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
-    install_requires=[
-        "pandas",
-        "pythonnet",
-        "pyproj"
-    ],
+    install_requires=install_requires,
     extras_require={
         "dev": [
             "pytest>=3.7",

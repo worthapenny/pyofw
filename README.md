@@ -7,7 +7,7 @@ Python package for OpenFlowsWater module from Bentley that mainly contains the s
 Bentley's WaterObjects.NET API contains a mixed mode (managed/unmanaged)
 assemblies as a result, a python configuration file has to placed where the python.exe is location (in your environment). The contents of the file can be copied from below or use from [here](/misc/python.exe.config).
 
->Note: Filename is important. For "python.exe" create "python.exe.config"
+>**Note:** Filename is important. For "python.exe" create "python.exe.config"
 
 ```xml
 <?xml version="1.0"?>

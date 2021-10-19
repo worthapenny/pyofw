@@ -145,7 +145,7 @@ class NetworkInput:
     def __get_elements_input(self, elements: INetworkElements) -> pd.DataFrame:
         df = pd.DataFrame()
         df["Label"] = elements.Labels()
-        df["Id"] = df["Label"].apply(lambda d: d.Key).astype(np.int64)
+        df["Id"] = df["Label"].apply(lambda d: d.Key).astype(pd.Int64Dtype())
         df["Label"] = df["Label"].apply(lambda d: d.Value).astype("string")
         return df
 
@@ -203,7 +203,8 @@ class NetworkInput:
 
     def __get_installation_year_input(self, elements: Any, df: pd.DataFrame) -> pd.DataFrame:
         df["InstallYr"] = elements.InstallationYears()
-        df["InstallYr"] = self.__dict_to_value(df["InstallYr"], np.int64)
+        df["InstallYr"] = self.__dict_to_value(
+            df["InstallYr"], pd.Int64Dtype())
         return df
 
     def __get_minor_loss_node_input(self, elements: Any, df: pd.DataFrame) -> pd.DataFrame:
@@ -226,7 +227,8 @@ class NetworkInput:
 
     def __get_hammer_valve_type_input(self, elements: Any, df: pd.DataFrame) -> pd.DataFrame:
         df["ValveType"] = elements.ValveTypes()
-        df["ValveType"] = self.__dict_to_value(df["ValveType"], np.int64)
+        df["ValveType"] = self.__dict_to_value(
+            df["ValveType"], pd.Int64Dtype())
         return df
 
     def __get_demand_node_input(self, elements: IDemandNodesInput) -> pd.DataFrame:
@@ -239,6 +241,7 @@ class NetworkInput:
 
 
 # region Base Node / Link / Polygon Inputs
+
 
     def __get_base_node_input(self, elements: IBaseNodesInput) -> pd.DataFrame:
         df = self.__get_elements_input(elements)
@@ -257,12 +260,12 @@ class NetworkInput:
         df["StartNode"] = elements.StartNodes()
         df["StartNode"] = self.__dict_to_value(df["StartNode"], None)
         df["StartNodeId"] = df["StartNode"].apply(
-            lambda n: n.Id).astype(np.int64)
+            lambda n: n.Id).astype(pd.Int64Dtype())
 
         df["StopNode"] = elements.StopNodes()
         df["StopNode"] = self.__dict_to_value(df["StopNode"], None)
         df["StopNodeId"] = df["StopNode"].apply(
-            lambda n: n.Id).astype(np.int64)
+            lambda n: n.Id).astype(pd.Int64Dtype())
 
         df["IsUDLength"] = elements.IsUserDefinedLengths()
         df["IsUDLength"] = self.__dict_to_value(df["IsUDLength"], bool)
@@ -289,7 +292,7 @@ class NetworkInput:
         df["AssocElem"] = elements.AssociatedElements()
         df["AssocElem"] = self.__dict_to_value(df["AssocElem"], None)
         df["AssocElemId"] = df["AssocElem"].apply(
-            lambda n: n.Id).astype(np.int64)
+            lambda n: n.Id if n else None).astype(pd.Int64Dtype())
         return df
 
     # region Base Elements Input
@@ -535,7 +538,8 @@ class NetworkInput:
             df["InitSpeedFactor"], float)
 
         df["InitStatus"] = elements.InitialStatus()
-        df["InitStatus"] = self.__dict_to_value(df["InitStatus"], np.int64)
+        df["InitStatus"] = self.__dict_to_value(
+            df["InitStatus"], pd.Int64Dtype())
 
         # TODO: double check the fields
         return df
@@ -551,13 +555,13 @@ class NetworkInput:
         df["PumpDefinition"] = self.__dict_to_value(
             df["PumpDefinition"], None)
         df["PumpDefinitionId"] = df["PumpDefinition"].apply(
-            lambda p: p.Id).astype(np.int64)
+            lambda p: p.Id if p else None).astype(pd.Int64Dtype())
 
         df["ControlNode"] = elements.ControlNodes()
         df["ControlNode"] = self.__dict_to_value(
             df["ControlNode"], None)
         df["ControlNodeId"] = df["ControlNode"].apply(
-            lambda p: p.Id).astype(np.int64)
+            lambda p: p.Id if p else None).astype(pd.Int64Dtype())
 
         df["TgtHGL"] = elements.TargetHydraulicGrades()
         df["TgtHGL"] = self.__dict_to_value(
@@ -569,13 +573,13 @@ class NetworkInput:
 
         df["NumLagPumps"] = elements.NumberOfLagPumps()
         df["NumLagPumps"] = self.__dict_to_value(
-            df["NumLagPumps"], np.int64)
+            df["NumLagPumps"], pd.Int64Dtype())
 
         df["CtrlNodeSucSide"] = elements.ControlNodeOnSuctionSide()
         df["CtrlNodeSucSide"] = self.__dict_to_value(
             df["CtrlNodeSucSide"], None)
         df["CtrlNodeSucSideId"] = df["CtrlNodeSucSide"].apply(
-            lambda p: p.Id).astype(np.int64)
+            lambda p: p.Id if p else None).astype(pd.Int64Dtype())
 
         df["TgtFlow"] = elements.TargetFlows()
         df["TgtFlow"] = self.__dict_to_value(
@@ -600,13 +604,15 @@ class NetworkInput:
     def __get_customer_meter_input(self, elements: ICustomerMetersInput) -> pd.DataFrame:
         df = self.__get_elements_input(elements)
         df = self.__get_point_node_input(elements, df)
+        df = self.__get_physical_elevation_input(elements, df)
 
         df["Demand"] = elements.BaseDemands()
         df["Demand"] = self.__dict_to_value(df["Demand"], float)
 
         df["Pattern"] = elements.DemandPatterns()
         df["Pattern"] = self.__dict_to_value(df["Pattern"], None)
-        df["PatternId"] = df["Pattern"].apply(lambda p: p.Id).astype(np.int64)
+        df["PatternId"] = df["Pattern"].apply(
+            lambda p: p.Id if p else None).astype(pd.Int64Dtype())
 
         df["StartDemandDist"] = elements.StartDemandDistributions()
         df["StartDemandDist"] = self.__dict_to_value(
@@ -615,7 +621,7 @@ class NetworkInput:
         df["AssocElem"] = elements.AssociatedElements()
         df["AssocElem"] = self.__dict_to_value(df["AssocElem"], None)
         df["AssocElemId"] = df["AssocElem"].apply(
-            lambda c: c.Id).astype(np.int64)
+            lambda c: c.Id if c else None).astype(pd.Int64Dtype())
 
         df["UnitDemand"] = elements.UnitDemands()
         df["UnitDemand"] = self.__dict_to_value(df["UnitDemand"], float)
@@ -623,7 +629,7 @@ class NetworkInput:
         df["UnitDmdPattern"] = elements.UnitDemandPatterns()
         df["UnitDmdPattern"] = self.__dict_to_value(df["UnitDmdPattern"], None)
         df["UnitDmdPatternId"] = df["UnitDmdPattern"].apply(
-            lambda p: p.Id).astype(np.int64)
+            lambda p: p.Id if p else None).astype(pd.Int64Dtype())
 
         df["NumUnitDmd"] = elements.UnitDemands()
         df["NumUnitDmd"] = self.__dict_to_value(df["NumUnitDmd"], float)
@@ -639,12 +645,13 @@ class NetworkInput:
 
         df["TgtElem"] = elements.TargetElements()
         df["TgtElem"] = self.__dict_to_value(df["TgtElem"], None)
-        df["TgtElemId"] = df["TgtElem"].apply(lambda e: e.Id).astype(np.int64)
+        df["TgtElemId"] = df["TgtElem"].apply(
+            lambda e: e.Id if e else None).astype(pd.Int64Dtype())
 
         df["HistSignal"] = elements.HistoricalSignals()
         df["HistSignal"] = self.__dict_to_value(df["HistSignal"], None)
         df["HistSignalId"] = df["HistSignal"].apply(
-            lambda s: s.Id).astype(np.int64)
+            lambda s: s.Id if s else None).astype(pd.Int64Dtype())
         return df
     # endregion
 
@@ -712,7 +719,8 @@ class NetworkInput:
 
         df["RefPipe"] = elements.ReferencedPipes()
         df["RefPipe"] = self.__dict_to_value(df["RefPipe"], None)
-        df["RefPipeId"] = df["RefPipe"].apply(lambda p: p.Id).astype(np.int64)
+        df["RefPipeId"] = df["RefPipe"].apply(
+            lambda p: p.Id if p else None).astype(pd.Int64Dtype())
 
         df["Diameter"] = elements.ValveDiameters()
         df["Diameter"] = self.__dict_to_value(df["Diameter"], float)
