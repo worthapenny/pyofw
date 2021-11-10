@@ -1,12 +1,12 @@
 from typing import Any
 import unittest
-from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
+from pyOpenFlows.openFlowsWaterConfig import OpenFlowsWaterConfig
 import logging
 
 
 class TestNetworkInput(unittest.TestCase):
     water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-    setup_water: SetupOpenFlowsWater
+    setup_water: OpenFlowsWaterConfig
     wm: Any
     ni: Any
 
@@ -20,8 +20,8 @@ class TestNetworkInput(unittest.TestCase):
         )
         logging.info("")
 
-        from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
-        cls.setup_water = SetupOpenFlowsWater()
+        from pyOpenFlows.openFlowsWaterConfig import OpenFlowsWaterConfig
+        cls.setup_water = OpenFlowsWaterConfig()
 
         from OpenFlows.Water.Domain import IWaterModel
         from pyOpenFlows.networkInput import NetworkInput
@@ -33,7 +33,7 @@ class TestNetworkInput(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.wm.Close()
-        cls.setup_water.end()
+        cls.setup_water.end_session()
 
     # endregion
 

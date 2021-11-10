@@ -1,11 +1,12 @@
+from typing import List
 import setuptools
 import os
 import pathlib
 
 
-def package_files(directory):
-    paths = []
-    for (path, directories, filenames) in os.walk(directory):
+def package_files(directory: str) -> List[str]:
+    paths: List[str] = []
+    for (path, _, filenames) in os.walk(directory):
         for filename in filenames:
             paths.append(os.path.join('..', path, filename))
     return paths
@@ -21,7 +22,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyofw",
-    version="0.0.2",
+    version="0.0.3",
     author="Akshaya Niraula",
     author_email="Akshaya.Niraula@gmail.com",
     description="Bentley OpenFlows API stub files plus a few py files",

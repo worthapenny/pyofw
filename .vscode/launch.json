@@ -5,13 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: Module",
+      "name": "Py: Module",
       "type": "python",
       "request": "launch",
       "module": "pyofw"
     },
     {
-      "name": "Python: Current File",
+      "name": "Py: Current File",
       "type": "python",
       "request": "launch",
       "program": "${file}",

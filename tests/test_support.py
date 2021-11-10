@@ -4,7 +4,7 @@ import unittest
 import logging
 
 
-class TestSetupOpenFlows(unittest.TestCase):
+class TestSupport(unittest.TestCase):
 
     # region Setup and Teardown
 

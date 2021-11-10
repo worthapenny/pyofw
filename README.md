@@ -31,7 +31,7 @@ pip install pyofw
 ## Usage
 
 ```python
-from pyOpenFlows.setupOpenFlows import SetupOpenFlowsWater
+from pyOpenFlows.openFlowsWaterConfig import OpenFlowsWaterConfig
 
 # if logging is desired
 import logging
@@ -45,7 +45,7 @@ log = logging.getLogger(__name__)
 
 
 # Default setup is for WaterGEMS,
-setup = SetupOpenFlowsWater()
+ofw_config = OpenFlowsWaterConfig()
 # Above class loads the OpenFlow* assemblies
 # as well as opens up the session where licensing
 # information are checked

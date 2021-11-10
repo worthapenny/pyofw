@@ -12,7 +12,11 @@ class AppType(Enum):
     WaterOPS = 3
 
 
-class SetupOpenFlowsWater:
+class OpenFlowsWaterConfig:
+    wtrg_install_dir = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
+    wtrc_install_dir = r"C:\Program Files (x86)\Bentley\WaterCAD\x64"
+    wops_install_dir = r"C:\Program Files\Bentley\WaterOPS"
+
     dlls_dir: str
     __IWaterModel: Any
     __app_type: AppType
@@ -23,11 +27,12 @@ class SetupOpenFlowsWater:
     # region Constructor
     def __init__(self, app_type: AppType = AppType.WaterGEMS, dlls_dir: str = "") -> None:
 
-        # TODO: point to installation location
-        if not dlls_dir:
-            dlls_dir = r"D:\Development\Perforce\Aspen\Products\WaterGEMS\Output\_Starter\x64\Debug"
-        if not dlls_dir:
-            dlls_dir = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
+        if not dlls_dir and os.path.exists(self.wtrg_install_dir):
+            dlls_dir = self.wtrg_install_dir
+        if not dlls_dir and os.path.exists(self.wtrc_install_dir):
+            dlls_dir = self.wtrc_install_dir
+        if not dlls_dir and os.path.extsep(self.wops_install_dir):
+            dlls_dir = self.wops_install_dir
 
         self.__app_type = app_type
         self.dlls_dir = dlls_dir
@@ -45,7 +50,7 @@ class SetupOpenFlowsWater:
         except:
             success = False
 
-        logging.debug(f"{__class__.__name__} initialized")
+        logging.debug(f"{__class__.__name__} initialized. Success: {success}")
         pass
 
     def __repr__(self) -> str:
@@ -56,15 +61,21 @@ class SetupOpenFlowsWater:
     def load_assemblies(self, assemblies: List[str]) -> bool:
         success = True
         for assembly in assemblies:
+            added = None
             try:
-                clr.AddReference(assembly)
+                added = clr.AddReference(assembly)
                 logging.debug(f"Assembly loaded: {assembly}")
             except:
-                logging.critical(f"FAILED to load the assembly: {assembly}")
+                logging.exception(
+                    f"FAILED to load the assembly: {assembly}. \nERROR: {added}")
                 success = success & False
+        if success:
+            logging.info(
+                f"Assemblies loaded successfully: Count = {len(assemblies)}")
+        else:
+            logging.error(
+                f"Assemblies load was NOT successful. See previous error")
 
-        logging.info(
-            f"Assemblies loaded successfully: Count = {len(assemblies)}")
         return success
 
     def open_session(self, app_type: AppType = AppType.WaterGEMS) -> bool:
@@ -78,7 +89,10 @@ class SetupOpenFlowsWater:
                 OpenFlowsWater.StartSession(WaterProductLicenseType.WaterCAD)
             elif app_type == AppType.WaterOPS:
                 OpenFlowsWater.StartSession(WaterProductLicenseType.WaterOPS)
+
+            logging.debug(f"Session for {app_type} started")
         except:
+            logging.exception(f"while starting the {app_type} session")
             success = False
 
         return success
@@ -97,13 +111,14 @@ class SetupOpenFlowsWater:
                 f"Failed to open up the hydraulic model. Path: {wtg_filepath}")
         return self.__IWaterModel
 
-    def end(self, close_session: bool = True) -> None:
+    def end_session(self, end_session: bool = True) -> None:
+
         if self.__IWaterModel:
             logging.debug("About to close the model...")
             self.__IWaterModel.Close()
             logging.info("Closed the model.")
 
-        if close_session:
-            from OpenFlows.Water.Python import OpenFlowsWaterPython as ofw
-            ofw.EndSession()
+        if end_session:
+            from OpenFlows.Water import OpenFlowsWater
+            OpenFlowsWater.EndSession()
             logging.info("Session ended. See you soon.")
