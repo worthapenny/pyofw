@@ -20,12 +20,11 @@ stub_files = package_files(app_path.joinpath("typings"))
 
 # For some odd reasons I guess, the requirements.txt is not seen during the build
 install_requires = [
-    "networkx>=2.5",
-    "pandas>=1.3.3",
-    "pythonnet>=2.5.2",
-    "numpy>=1.21.2",
-    "pyproj>=3.2.1",
-    "clr>=1.0.3",
+    "networkx",
+    "pandas",
+    "pythonnet",
+    "numpy",
+    "pyproj",
 ]
 
 

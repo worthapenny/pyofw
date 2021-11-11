@@ -56,3 +56,20 @@ if copy_typings_from_assembly_crawler_dir:
     copy_dir(open_flows_path, local_typings_path)
     copy_dir(haestad_path, local_typings_path)
     copy_dir(system_path, local_typings_path)
+
+# 2 update the MANIFEST.in file
+# ..\pyofw> check-manifest --create (to create the MANIFEST.in file)
+
+
+# Publish to pypi
+# https://www.youtube.com/watch?v=GIF3LaRqgXo&t=798s
+
+# 3) Prepare the installer
+# CD to root directory i.e. pyofw
+# ..\pyofw> python setup.py bdist_wheel sdist
+# above will produce *.whl file and *.tar.gz file inside dist folder
+
+
+# 4) Push to PyPI
+# if needed: pip install twine
+# twine upload dist/*
