@@ -6,6 +6,9 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
+# syntax
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+
 name: Build Python Package
 
 on:
@@ -14,7 +17,7 @@ on:
 jobs:
   deploy:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2

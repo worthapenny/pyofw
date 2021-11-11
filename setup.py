@@ -12,12 +12,24 @@ def package_files(directory: str) -> List[str]:
     return paths
 
 
-with open("requirements.txt", "r") as fr:
-    install_requires = fr.read().splitlines()
+app_path = pathlib.Path(__file__).parent
+stub_files = package_files(app_path.joinpath("typings"))
 
-stub_files = package_files(pathlib.Path(__file__).parent.joinpath("typings"))
+# with open(app_path.joinpath("requirements.txt"), "r", encoding="utf-8") as fr:
+#     install_requires = fr.read().splitlines()
 
-with open("README.md", "r", encoding="utf-8") as fh:
+# For some odd reasons I guess, the requirements.txt is not seen during the build
+install_requires = [
+    "networkx>=2.5",
+    "pandas>=1.3.3",
+    "pythonnet>=2.5.2",
+    "numpy>=1.21.2",
+    "pyproj>=3.2.1",
+    "clr>=1.0.3",
+]
+
+
+with open(app_path.joinpath("README.md"), "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
