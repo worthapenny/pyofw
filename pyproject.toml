@@ -2,7 +2,11 @@
 requires = [
     "setuptools>=42",
     "wheel",
-    "pandas",
-    "pythonnet"
+    "networkx>=2.5",
+    "pandas>=1.3.3",
+    "pythonnet>=2.5.2",
+    "numpy>=1.21.2",
+    "pyproj>=3.2.1",
+    "clr>=1.0.3",
 ]
 build-backend = "setuptools.build_meta"
