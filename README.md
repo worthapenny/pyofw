@@ -2,6 +2,8 @@
 
 Python package for OpenFlowsWater module from Bentley that mainly contains the stub (*.pyi) files and a few py files to get started.
 
+[![Build Python Package](https://github.com/worthapenny/pyofw/actions/workflows/python-build.yml/badge.svg)](https://github.com/worthapenny/pyofw/actions/workflows/python-build.yml)
+
 ## Must Create python.exe.config File
 
 Bentley's WaterObjects.NET API contains a mixed mode (managed/unmanaged)
