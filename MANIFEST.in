@@ -2,3 +2,4 @@ include *.in
 include *.py
 include *.txt
 recursive-include src *.pyi
+recursive-include src *.py
