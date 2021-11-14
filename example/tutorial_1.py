@@ -12,7 +12,8 @@ log = logging.getLogger(__name__)
 
 
 # Default setup is for WaterGEMS,
-ofw_config = OpenFlowsWaterConfig()
+ofw_config = OpenFlowsWaterConfig(
+    dlls_dir=OpenFlowsWaterConfig.wtrc_install_dir)
 # Above class loads the OpenFlow* assemblies
 # as well as opens up the session where licensing
 # information are checked
@@ -24,7 +25,8 @@ ofw_config = OpenFlowsWaterConfig()
 
 
 # NOTE:
-# After above setup ONLY, do the OpenFlow.* imports
+# AFTER creating an instance of OpenFlowsWaterConfig ONLY,
+# do the OpenFlow.* imports
 # if not, error is thrown at runtime
 from OpenFlows.Water.Domain import IWaterModel
 

@@ -1,15 +1,16 @@
-import os
 import shutil
 import pathlib
 from typing import Union
-
+from distutils.dir_util import copy_tree
 
 copy_typings_from_assembly_crawler_dir = True
 
-assembly_crawler_typings_path = pathlib.Path(
+assembly_crawler_stubs_path = pathlib.Path(
     r"D:\Development\Python\assembly-crawler\typings")
-local_typings_path = pathlib.Path(r"typings").resolve()
-assert local_typings_path.exists()
+
+local_src_path = pathlib.Path(r"typings").resolve()
+local_src_path = pathlib.Path(r"src").resolve()
+assert local_src_path.exists()
 
 # region Utils
 
@@ -28,34 +29,32 @@ def copy_dir(source: Union[str, pathlib.Path], destination: Union[str, pathlib.P
         destination_path = destination
 
     destination_path.mkdir(parents=True, exist_ok=True)
-    if source_path.is_dir():
-        destination_path = destination_path.joinpath(source_path.name)
-        destination_path.mkdir(parents=True, exist_ok=True)
 
-    for item in os.listdir(source_path):
-        s: pathlib.Path = source_path / item
-        d: pathlib.Path = destination_path / item
-        if s.is_dir():
-            copy_dir(s, d)
-        else:
-            shutil.copy2(str(s), str(d))
+    final_destination_path = destination_path.joinpath(source_path.name)
+    if final_destination_path.exists():
+        shutil.rmtree(final_destination_path)
+
+    # shutil.copytree(str(source_path), str(final_destination_path))
+    copy_tree(str(source_path), str(final_destination_path))
+
 # endregion
 
 
 # 1) Make sure the typings directory is up to date from assembly-crawler.sln
 #     Make sure assembly-crawler project is in sync with https://github.com/MrMontana1889/assembly-crawler
 if copy_typings_from_assembly_crawler_dir:
-    open_flows_path = assembly_crawler_typings_path.joinpath("OpenFlows")
-    haestad_path = assembly_crawler_typings_path.joinpath("Haestad")
-    system_path = assembly_crawler_typings_path.joinpath("System")
+    open_flows_path = assembly_crawler_stubs_path.joinpath("OpenFlows")
+    haestad_path = assembly_crawler_stubs_path.joinpath("Haestad")
+    system_path = assembly_crawler_stubs_path.joinpath("System")
 
     assert open_flows_path.exists()
     assert haestad_path.exists()
     assert system_path.exists()
 
-    copy_dir(open_flows_path, local_typings_path)
-    copy_dir(haestad_path, local_typings_path)
-    copy_dir(system_path, local_typings_path)
+    copy_dir(open_flows_path, local_src_path)
+    copy_dir(haestad_path, local_src_path)
+    copy_dir(system_path, local_src_path)
+
 
 # 2 update the MANIFEST.in file
 # ..\pyofw> check-manifest --create (to create the MANIFEST.in file)

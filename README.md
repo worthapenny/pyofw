@@ -113,4 +113,16 @@ pip install -e .[dev]
     >>>
    ```
 
+## ERROR at Run Time?
 
+During the run time, if you run into
+
+```bat
+AttributeError: module 'clr' has no attribute 'AddReference'
+```
+
+error that most likely due the installed package called `clr`. Simply uninstall this package and the error should go away.
+
+```bat
+pip uninstall clr
+```

@@ -1,0 +1,26 @@
+CHANGES
+=======
+
+* setup working import failed
+* removed specific version from requirements
+* added pyhtonnet installation instruction
+* updated requirements on pyproject.toml
+* setup.py needs manual requirements.txt contents
+* udpated py build.yml
+* updated build.yml
+* Updated py stubs
+* updated py stubs
+* changed name
+* created python-build.yml
+* improved names and removed local path reference
+* Better handles ref fields. + requirements.txt linked to setup.py
+* added repr def
+* added logging to tests
+* Add support to Lat / Lng conversion
+* Updated network input md files
+* added network Input notebook
+* updated stubs, many tests are passings
+* Updated installation section on readme file
+* added python.exe.config file & updated the readme
+* initial commit
+* Initial commit

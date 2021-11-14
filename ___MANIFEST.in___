@@ -1,0 +1,7 @@
+include pyproject.toml
+include *.md
+include LICENSE
+include setup.py
+recursive-include *.pyi
+recursive-include *.py
+recursive-include typings *
