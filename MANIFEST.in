@@ -1,10 +1,4 @@
 include *.in
 include *.py
 include *.txt
-recursive-include example *.py
-recursive-include misc *.config
-recursive-include misc *.py
-recursive-include notebook *.ipynb
-recursive-include notebook *.md
 recursive-include src *.pyi
-recursive-include tests *.py
