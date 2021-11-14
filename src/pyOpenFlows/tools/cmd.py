@@ -2,7 +2,6 @@ import pathlib
 import sys
 import os
 import shutil
-from distutils.dir_util import copy_tree
 
 
 def newofw_command() -> None:
