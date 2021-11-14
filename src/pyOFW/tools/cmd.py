@@ -2,10 +2,26 @@ import pathlib
 import sys
 import os
 import shutil
+from typing import List
+
+# region Constants
+__unreleased_stub_dir = "pyOpenFlowsWaterTypings"
+# endregion
+
+# region Public Methods
 
 
 def newofw_command() -> None:
     args = sys.argv[1:]
+    return __newofw(args)
+# endregion
+
+# region Private Methods
+
+# region NewOFW Command
+
+
+def __newofw(args: List[str]) -> None:
     typings_dir_name = "typings"
     typings_path = pathlib.Path(os.getcwd()).joinpath(typings_dir_name)
 
@@ -27,6 +43,8 @@ def newofw_command() -> None:
 
     return None
 
+# region Help Command
+
 
 def __show_help() -> None:
     print(
@@ -37,10 +55,17 @@ def __show_help() -> None:
     print(f"To show this help message, 'newofw ?' or 'newofw help'")
 
     return None
+# endregion
 
 
-def __setting_up_msg(ver: str) -> str:
-    return f"Setting up for the {ver} version of WaterGEMS/WaterCAD/WaterOPS."
+# region Copy Stubs from package dir to user's working directory
+def __copy_stub_103(to_path: pathlib.Path) -> bool:
+    print("Not supported! (yet)")
+    return True
+
+
+def __copy_stub_unreleased(to_path: pathlib.Path) -> bool:
+    return __copy_stub_files(__unreleased_stub_dir, to_path)
 
 
 def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
@@ -58,16 +83,6 @@ def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
     return success
 
 
-def __copy_stub_103(to_path: pathlib.Path) -> bool:
-    print("Not supported! (yet)")
-    return True
-
-
-def __copy_stub_unreleased(to_path: pathlib.Path) -> bool:
-    unreleased_stub_dir = "pyOpenFlowsWaterTypings"
-    return __copy_stub_files(unreleased_stub_dir, to_path)
-
-
 def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> bool:
     success = True
     destination_path.mkdir(parents=True, exist_ok=True)
@@ -78,7 +93,6 @@ def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> boo
             shutil.rmtree(final_destination_path)
 
         try:
-            # copy_tree(str(path), str(final_destination_path))
             shutil.copytree(str(path), str(final_destination_path),
                             copy_function=shutil.copy2, dirs_exist_ok=True)
 
@@ -88,3 +102,11 @@ def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> boo
         success = False
 
     return success
+
+# endregion - Copy stubs
+
+
+def __setting_up_msg(ver: str) -> str:
+    return f"Setting up for the {ver} version of WaterGEMS/WaterCAD/WaterOPS."
+
+# endregion private methods

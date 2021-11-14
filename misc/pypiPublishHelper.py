@@ -1,6 +1,5 @@
 import shutil
 import pathlib
-from typing import Union
 from distutils.dir_util import copy_tree
 
 copy_typings_from_assembly_crawler_dir = True
@@ -8,25 +7,12 @@ copy_typings_from_assembly_crawler_dir = True
 assembly_crawler_stubs_path = pathlib.Path(
     r"D:\Development\Python\assembly-crawler\typings")
 
-local_src_path = pathlib.Path(r"typings").resolve()
+# region 1) CopyTypings directory from assembly-crawler
 local_src_path = pathlib.Path(r"src").resolve()
 assert local_src_path.exists()
 
-# region Utils
 
-
-def copy_dir(source: Union[str, pathlib.Path], destination: Union[str, pathlib.Path]):
-    destination_path: pathlib.Path
-
-    if isinstance(source, str):
-        source_path = pathlib.Path(source)
-    elif isinstance(source, pathlib.Path):
-        source_path = source
-
-    if isinstance(destination, str):
-        destination_path = pathlib.Path(destination)
-    elif isinstance(destination, pathlib.Path):
-        destination_path = destination
+def copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path):
 
     destination_path.mkdir(parents=True, exist_ok=True)
 
@@ -37,10 +23,8 @@ def copy_dir(source: Union[str, pathlib.Path], destination: Union[str, pathlib.P
     # shutil.copytree(str(source_path), str(final_destination_path))
     copy_tree(str(source_path), str(final_destination_path))
 
-# endregion
 
-
-# 1) Make sure the typings directory is up to date from assembly-crawler.sln
+# Make sure the typings directory is up to date from assembly-crawler.sln
 #     Make sure assembly-crawler project is in sync with https://github.com/MrMontana1889/assembly-crawler
 if copy_typings_from_assembly_crawler_dir:
     open_flows_path = assembly_crawler_stubs_path.joinpath("OpenFlows")
@@ -55,6 +39,7 @@ if copy_typings_from_assembly_crawler_dir:
     copy_dir(haestad_path, local_src_path)
     copy_dir(system_path, local_src_path)
 
+# endregion
 
 # 2 update the MANIFEST.in file
 # ..\pyofw> check-manifest --create (to create the MANIFEST.in file)
