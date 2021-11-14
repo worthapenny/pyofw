@@ -51,7 +51,7 @@ setuptools.setup(
     },
     entry_points={
         'console_scripts': [
-            'prepareofw=pyOpenFlows.tools.cmd:prepareofw_command',
+            'newofw=pyOpenFlows.tools.cmd:newofw_command',
         ],
     },
 )
