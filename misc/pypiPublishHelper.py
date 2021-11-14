@@ -65,6 +65,7 @@ if copy_typings_from_assembly_crawler_dir:
 
 # 3) Prepare the installer
 # CD to root directory i.e. pyofw
+# ..\pyofw> python setup.py clean --all
 # ..\pyofw> python setup.py bdist_wheel sdist
 # above will produce *.whl file and *.tar.gz file inside dist folder
 

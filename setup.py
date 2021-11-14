@@ -49,9 +49,9 @@ setuptools.setup(
             "pytest>=3.7",
         ],
     },
-    # entry_points={
-    #     'console_scripts': [
-    #         'sample=sample:main',
-    #     ],
-    # },
+    entry_points={
+        'console_scripts': [
+            'prepareofw=pyOpenFlows.tools.cmd:prepareofw_command',
+        ],
+    },
 )
