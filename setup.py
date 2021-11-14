@@ -5,7 +5,6 @@ import pathlib
 
 package_version = "0.0.4"
 package_py_openflows = "pyOpenFlows"
-stub_dir_name = "typings"
 
 install_requires = [
     "networkx",

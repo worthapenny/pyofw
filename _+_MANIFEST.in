@@ -1,0 +1,6 @@
+include *.md
+include LICENSE
+include setup.py
+recursive-include src/*.pyi
+recursive-include src/*.py
+recursive-include src/pyOpenFlowsWaterTypings *
