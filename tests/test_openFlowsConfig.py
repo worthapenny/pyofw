@@ -1,6 +1,6 @@
 from typing import Any
 
-from pyOpenFlows.openFlowsWaterConfig import AppType, OpenFlowsWaterConfig
+from pyOFW.openFlowsWaterConfig import AppType, OpenFlowsWaterConfig
 import unittest
 import logging
 

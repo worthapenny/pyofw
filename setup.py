@@ -91,7 +91,7 @@ setuptools.setup(
     #  commandNameThatUserWillType = name.space.to-the.command:public_method_for_this_command_in_the_py_fle
     entry_points={
         'console_scripts': [
-            'newofw=pyOpenFlows.tools.cmd:newofw_command',
+            f'newofw={package_py_openflows}.tools.cmd:newofw_command',
         ],
     },
 )

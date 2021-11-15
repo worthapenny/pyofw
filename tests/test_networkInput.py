@@ -1,6 +1,6 @@
 from typing import Any
 import unittest
-from pyOpenFlows.openFlowsWaterConfig import OpenFlowsWaterConfig
+from pyOFW.openFlowsWaterConfig import OpenFlowsWaterConfig
 import logging
 
 
@@ -20,11 +20,11 @@ class TestNetworkInput(unittest.TestCase):
         )
         logging.info("")
 
-        from pyOpenFlows.openFlowsWaterConfig import OpenFlowsWaterConfig
+        from pyOFW.openFlowsWaterConfig import OpenFlowsWaterConfig
         cls.setup_water = OpenFlowsWaterConfig()
 
         from OpenFlows.Water.Domain import IWaterModel
-        from pyOpenFlows.networkInput import NetworkInput
+        from pyOFW.networkInput import NetworkInput
 
         cls.wm: IWaterModel = cls.setup_water.open_model(cls.water_model_path)
         cls.ni: NetworkInput = NetworkInput(cls.wm)

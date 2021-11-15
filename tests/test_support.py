@@ -1,4 +1,4 @@
-from pyOpenFlows import support
+from pyOFW import support
 import pandas as pd
 import unittest
 import logging

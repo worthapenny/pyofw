@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "PS: Current File",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${file}",
+      "args": [
+        "build"
+      ],
+      "cwd": "${workspaceFolder}"
+    },
+    {
       "name": "Py: Module",
       "type": "python",
       "request": "launch",

@@ -5,7 +5,8 @@ import shutil
 from typing import List
 
 # region Constants
-__unreleased_stub_dir = "pyOpenFlowsWaterTypings"
+__unreleased_stub_dir = "pyOFW"
+__1035_stub_dir = "pyOFW1035"
 # endregion
 
 # region Public Methods
@@ -60,8 +61,7 @@ def __show_help() -> None:
 
 # region Copy Stubs from package dir to user's working directory
 def __copy_stub_103(to_path: pathlib.Path) -> bool:
-    print("Not supported! (yet)")
-    return True
+    return __copy_stub_files(__1035_stub_dir, to_path)
 
 
 def __copy_stub_unreleased(to_path: pathlib.Path) -> bool:
@@ -72,7 +72,7 @@ def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
     success = True
     try:
         package_path = pathlib.Path(__file__).parent.parent
-        stub_files_path = package_path.joinpath(stub_dir_name)
+        stub_files_path = package_path.joinpath("typings", stub_dir_name)
         success = __copy_dir(stub_files_path, to_path)
         print("Setup complete (typings directory added).")
 
