@@ -12,8 +12,9 @@ class IModelComponents(Generic[TElementType, TElementTypeEnum]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -21,19 +22,22 @@ class IModelComponents(Generic[TElementType, TElementTypeEnum]):
 	def ElementType(self, id: int) -> TElementTypeEnum:
 		"""Gets type of element for the given id.
 
-		Args:
-			id(int): id
+		Args
+		--------
+			id (``int``) :  id
 
-		Returns:
-			TElementTypeEnum: 
+		Returns
+		--------
+			``TElementTypeEnum`` : 
 		"""
 		pass
 
 	def Elements(self) -> List[TElementType]:
 		"""Returns a list of all support elements in the model.
 
-		Returns:
-			List[TElementType]: 
+		Returns
+		--------
+			``List[TElementType]`` : 
 		"""
 		pass
 
@@ -43,8 +47,9 @@ class IComponentElements(Generic[TElementManagerType, TElementType, TUnitsType, 
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -55,8 +60,9 @@ class IComponentElement(Generic[TElementManagerType, TElementType, TUnitsType, T
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -65,8 +71,9 @@ class IComponentElement(Generic[TElementManagerType, TElementType, TUnitsType, T
 	def Units(self) -> TUnitsType:
 		"""Provides easy access to this element's field formatters.
 
-		Returns:
-			IComponentElement: 
+		Returns
+		--------
+			``IComponentElement`` : 
 		"""
 		pass
 

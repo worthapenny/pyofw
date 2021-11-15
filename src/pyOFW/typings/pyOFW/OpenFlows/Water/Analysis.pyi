@@ -8,8 +8,9 @@ class IScenarioEnergyCostCalculator(IAnalysisCalculator[IWaterScenario, IWaterSc
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -20,8 +21,9 @@ class IAnalysisTools:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -30,8 +32,9 @@ class IAnalysisTools:
 	def ScenarioEnergyCostCalculator(self) -> IScenarioEnergyCostCalculator:
 		"""Configures and runs a scenario energy cost calculation.
 
-		Returns:
-			IAnalysisTools: 
+		Returns
+		--------
+			``IAnalysisTools`` : 
 		"""
 		pass
 

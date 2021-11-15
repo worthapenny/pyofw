@@ -12,8 +12,9 @@ class IAnalysisCalculator(Generic[TScenarioType, TScenarioManagerType, TScenario
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -21,11 +22,13 @@ class IAnalysisCalculator(Generic[TScenarioType, TScenarioManagerType, TScenario
 	def Run(self, scenario: TScenarioType) -> None:
 		"""No Description
 
-		Args:
-			scenario(TScenarioType): scenario
+		Args
+		--------
+			scenario (``TScenarioType``) :  scenario
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 

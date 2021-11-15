@@ -1,4 +1,5 @@
 from enum import Enum
+from System import TypeCode
 from typing import Generic, overload, TypeVar
 from Haestad.Support.Units import Unit, Dimension
 
@@ -21,18 +22,20 @@ class IModelUnits(Generic[TNetworkUnitsType, TComponentUnitsType]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
 
 	@property
-	def Units(self) -> IUnits:
+	def Units(self) -> IUnits[TNetworkUnitsType,TComponentUnitsType]:
 		"""The unit manager.
 
-		Returns:
-			IModelUnits: 
+		Returns
+		--------
+			``IModelUnits`` : 
 		"""
 		pass
 
@@ -42,8 +45,9 @@ class INetworkUnits:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -54,8 +58,9 @@ class IComponentUnits:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -66,8 +71,9 @@ class IUnits(Generic[TNetworkUnitsType, TComponentUnitsType]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -76,12 +82,14 @@ class IUnits(Generic[TNetworkUnitsType, TComponentUnitsType]):
 	def FormatValue(self, value: float, unit: IUnit) -> str:
 		"""Formats the given value to the given unit's format.
 
-		Args:
-			value(float): The value to format
-			unit(IUnit): The unit to use to format the value.
+		Args
+		--------
+			value (``float``) :  The value to format
+			unit (``IUnit``) :  The unit to use to format the value.
 
-		Returns:
-			str: 
+		Returns
+		--------
+			``str`` : 
 		"""
 		pass
 
@@ -89,38 +97,44 @@ class IUnits(Generic[TNetworkUnitsType, TComponentUnitsType]):
 	def FormatValue(self, value: float, unit: IUnit, format: FormatCode, signficantDigits: int) -> str:
 		"""Formats the value using the unit, format and significant digits provided.
 
-		Args:
-			value(float): The value to format that is in the unit provided
-			unit(IUnit): The unit the value is in.
-			format(FormatCode): The format to use.
-			signficantDigits(int): The number of digits to the right of the decimal.
+		Args
+		--------
+			value (``float``) :  The value to format that is in the unit provided
+			unit (``IUnit``) :  The unit the value is in.
+			format (``FormatCode``) :  The format to use.
+			signficantDigits (``int``) :  The number of digits to the right of the decimal.
 
-		Returns:
-			str: The format string of the provided value in the unit provided.
+		Returns
+		--------
+			``str`` : The format string of the provided value in the unit provided.
 		"""
 		pass
 
 	def ConvertValue(self, value: float, fromUnit: Unit, toUnit: Unit) -> float:
 		"""Convert a value from one unit to another.  The dimension of the toUnit and fromUnit mus be the same.
 
-		Args:
-			value(float): The value to convert.  Any value other than NaN
-			fromUnit(Unit): The unit the value is currently in.
-			toUnit(Unit): The unit to convert the value to.  Must be of the same dimension as fromUnit.
+		Args
+		--------
+			value (``float``) :  The value to convert.  Any value other than NaN
+			fromUnit (``Unit``) :  The unit the value is currently in.
+			toUnit (``Unit``) :  The unit to convert the value to.  Must be of the same dimension as fromUnit.
 
-		Returns:
-			float: The value in the toUnit specified.
+		Returns
+		--------
+			``float`` : The value in the toUnit specified.
 		"""
 		pass
 
 	def Reset(self, unitSystem: UnitSystemType) -> None:
 		"""Sets the units system to either SI or US Customary units
 
-		Args:
-			unitSystem(UnitSystemType): Resets all units to their default units of the given unit system.
+		Args
+		--------
+			unitSystem (``UnitSystemType``) :  Resets all units to their default units of the given unit system.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -128,8 +142,9 @@ class IUnits(Generic[TNetworkUnitsType, TComponentUnitsType]):
 	def NetworkUnits(self) -> TNetworkUnitsType:
 		"""The units for network elements.
 
-		Returns:
-			IUnits: 
+		Returns
+		--------
+			``IUnits`` : 
 		"""
 		pass
 
@@ -137,8 +152,9 @@ class IUnits(Generic[TNetworkUnitsType, TComponentUnitsType]):
 	def ComponentUnits(self) -> TComponentUnitsType:
 		"""The units for component elements.
 
-		Returns:
-			IUnits: 
+		Returns
+		--------
+			``IUnits`` : 
 		"""
 		pass
 
@@ -148,8 +164,9 @@ class IUnit:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -158,11 +175,13 @@ class IUnit:
 	def FormatValue(self, value: float) -> str:
 		"""Format's the value into a string using the current unit's settings.
 
-		Args:
-			value(float): The value to format in the current unit
+		Args
+		--------
+			value (``float``) :  The value to format in the current unit
 
-		Returns:
-			str: A formatted string of the double value
+		Returns
+		--------
+			``str`` : A formatted string of the double value
 		"""
 		pass
 
@@ -170,44 +189,51 @@ class IUnit:
 	def FormatValue(self, value: float, format: FormatCode, significantDigits: int) -> str:
 		"""Formats the value using the given format without overriding the settings of the Unit
 
-		Args:
-			value(float): The value to format in current unit
-			format(FormatCode): Determines how the value is formatted
-			significantDigits(int): The number of significant digits to the right of the decimal.
+		Args
+		--------
+			value (``float``) :  The value to format in current unit
+			format (``FormatCode``) :  Determines how the value is formatted
+			significantDigits (``int``) :  The number of significant digits to the right of the decimal.
 
-		Returns:
-			str: A formatted string of the double value
+		Returns
+		--------
+			``str`` : A formatted string of the double value
 		"""
 		pass
 
 	def SetUnit(self, unit: Unit) -> None:
 		"""Sets the current unit.
 
-		Args:
-			unit(Unit): The unit to use and must be of the same dimension
+		Args
+		--------
+			unit (``Unit``) :  The unit to use and must be of the same dimension
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
 	def GetUnit(self) -> Unit:
 		"""Gets the current assigned unit.
 
-		Returns:
-			Unit: The current unit
+		Returns
+		--------
+			``Unit`` : The current unit
 		"""
 		pass
 
 	def ConvertTo(self, value: float, unit: Unit) -> float:
 		"""Converts a value from the current unit to the provided unit
 
-		Args:
-			value(float): The value to convert.  The value is assumed in the current unit
-			unit(Unit): The value is converted to this unit.  The unit must be of the same dimension
+		Args
+		--------
+			value (``float``) :  The value to convert.  The value is assumed in the current unit
+			unit (``Unit``) :  The value is converted to this unit.  The unit must be of the same dimension
 
-		Returns:
-			float: The converted value in the new unit
+		Returns
+		--------
+			``float`` : The converted value in the new unit
 		"""
 		pass
 
@@ -215,8 +241,9 @@ class IUnit:
 	def Dimension(self) -> Dimension:
 		"""The current dimension of the unit
 
-		Returns:
-			IUnit: 
+		Returns
+		--------
+			``IUnit`` : 
 		"""
 		pass
 
@@ -224,8 +251,9 @@ class IUnit:
 	def FormatCode(self) -> FormatCode:
 		"""Defines how the value is formatted.
 
-		Returns:
-			IUnit: 
+		Returns
+		--------
+			``IUnit`` : 
 		"""
 		pass
 
@@ -237,8 +265,9 @@ class IUnit:
 	def SignificantDigits(self) -> int:
 		"""The number of digits to the right of the decimal point.
 
-		Returns:
-			IUnit: 
+		Returns
+		--------
+			``IUnit`` : 
 		"""
 		pass
 
@@ -250,8 +279,9 @@ class IUnit:
 	def Label(self) -> str:
 		"""The label of the unit.
 
-		Returns:
-			IUnit: 
+		Returns
+		--------
+			``IUnit`` : 
 		"""
 		pass
 
@@ -259,8 +289,9 @@ class IUnit:
 	def ShortLabel(self) -> str:
 		"""A short version of the unit label
 
-		Returns:
-			IUnit: 
+		Returns
+		--------
+			``IUnit`` : 
 		"""
 		pass
 

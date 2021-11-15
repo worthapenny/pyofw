@@ -4,8 +4,9 @@ class IOpenFlowsWaterDefaults:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -15,11 +16,13 @@ class IOpenFlowsWaterDefaults:
 		"""Set the default value for IsActive when creating new elements
             Applies to domain elements only.
 
-		Note:
+		Note
+		--------
 			Default value is true
 
-		Returns:
-			IOpenFlowsWaterDefaults: 
+		Returns
+		--------
+			``IOpenFlowsWaterDefaults`` : 
 		"""
 		pass
 
@@ -32,11 +35,13 @@ class IOpenFlowsWaterDefaults:
 		"""Use the element label generator settings for setting the label
             of a new element.  Applies to domain elements only.
 
-		Note:
+		Note
+		--------
 			Default value is true
 
-		Returns:
-			IOpenFlowsWaterDefaults: 
+		Returns
+		--------
+			``IOpenFlowsWaterDefaults`` : 
 		"""
 		pass
 

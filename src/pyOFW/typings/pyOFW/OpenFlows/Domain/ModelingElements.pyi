@@ -1,5 +1,6 @@
 from enum import Enum
-from typing import List, Generic, overload, TypeVar
+from System import TypeCode
+from typing import List, Dict, Generic, overload, TypeVar
 from Haestad.Support.Support import SortContextCollection, FilterContextCollection, IEditLabeled, ILabeled
 from OpenFlows.Domain.ModelingElements.Support import IFieldManager
 from OpenFlows.Units import IUnit
@@ -32,8 +33,9 @@ class IElementManager:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -41,19 +43,31 @@ class IElementManager:
 	def ElementIDs(self) -> List[int]:
 		"""The list of IDs for each element in the manager.
 
-		Returns:
-			List[int]: 
+		Returns
+		--------
+			``List[int]`` : 
 		"""
 		pass
 
 	def Exists(self, id: int) -> bool:
 		"""Determines if the ID exists.
 
-		Args:
-			id(int): A valid ID of 0 or greater.
+		Args
+		--------
+			id (``int``) :  A valid ID of 0 or greater.
 
-		Returns:
-			bool: True if the ID exists, otherwise false.
+		Returns
+		--------
+			``bool`` : True if the ID exists, otherwise false.
+		"""
+		pass
+
+	def Labels(self) -> Dict[int,int]:
+		"""Returns all the labels for this element manager keyed by element id.
+
+		Returns
+		--------
+			``Dict[int,int]`` : A dictionary keyed by element id with the value of the element label
 		"""
 		pass
 
@@ -61,8 +75,9 @@ class IElementManager:
 	def Count(self) -> int:
 		"""The number of elements in the manager.
 
-		Returns:
-			IElementManager: 
+		Returns
+		--------
+			``IElementManager`` : 
 		"""
 		pass
 
@@ -72,8 +87,9 @@ class IElements(Generic[TElementType], IElementManager):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -81,20 +97,23 @@ class IElements(Generic[TElementType], IElementManager):
 	def Elements(self) -> List[TElementType]:
 		"""A list of all elements in the manager.
 
-		Returns:
-			List[TElementType]: 
+		Returns
+		--------
+			``List[TElementType]`` : 
 		"""
 		pass
 
 	def SelectElements(self, sorts: SortContextCollection, filters: FilterContextCollection) -> List[TElementType]:
 		"""Selects a set of elements given the criteria.
 
-		Args:
-			sorts(SortContextCollection): Sorts the list based on one or more fields in ascending or descending order
-			filters(FilterContextCollection): A list of filters against IFields or a provided SQL statement
+		Args
+		--------
+			sorts (``SortContextCollection``) :  Sorts the list based on one or more fields in ascending or descending order
+			filters (``FilterContextCollection``) :  A list of filters against IFields or a provided SQL statement
 
-		Returns:
-			List[TElementType]: A list of elements that match the provided criteria.  If no elements found, returns an empty List
+		Returns
+		--------
+			``List[TElementType]`` : A list of elements that match the provided criteria.  If no elements found, returns an empty List
 		"""
 		pass
 
@@ -104,8 +123,9 @@ class IElement(IEditLabeled):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -114,8 +134,9 @@ class IElement(IEditLabeled):
 	def Id(self) -> int:
 		"""The ID of the element.
 
-		Returns:
-			IElement: 
+		Returns
+		--------
+			``IElement`` : 
 		"""
 		pass
 
@@ -123,8 +144,9 @@ class IElement(IEditLabeled):
 	def Notes(self) -> str:
 		"""User specified notes about the element.
 
-		Returns:
-			IElement: 
+		Returns
+		--------
+			``IElement`` : 
 		"""
 		pass
 
@@ -136,8 +158,9 @@ class IElement(IEditLabeled):
 	def ModelElementType(self) -> ModelElementType:
 		"""The type of basic element
 
-		Returns:
-			IElement: 
+		Returns
+		--------
+			``IElement`` : 
 		"""
 		pass
 
@@ -147,8 +170,9 @@ class IElementUnits:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -159,8 +183,9 @@ class IElementInput:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -169,8 +194,9 @@ class IElementInput:
 	def InputFields(self) -> IFieldManager:
 		"""Access to fields for this element.
 
-		Returns:
-			IElementInput: 
+		Returns
+		--------
+			``IElementInput`` : 
 		"""
 		pass
 
@@ -180,8 +206,9 @@ class IElementsInput:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -192,8 +219,9 @@ class IElementResults:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -202,8 +230,9 @@ class IElementResults:
 	def ResultFields(self) -> IFieldManager:
 		"""Access to result fields for this element.
 
-		Returns:
-			IElementResults: 
+		Returns
+		--------
+			``IElementResults`` : 
 		"""
 		pass
 
@@ -213,8 +242,9 @@ class IElementsResults:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -225,8 +255,9 @@ class IModelingElementBase(Generic[TElementManagerType, TElementType, TElementTy
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -234,8 +265,9 @@ class IModelingElementBase(Generic[TElementManagerType, TElementType, TElementTy
 	def Delete(self) -> None:
 		"""Deletes the modeling element from the data source.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -243,8 +275,9 @@ class IModelingElementBase(Generic[TElementManagerType, TElementType, TElementTy
 	def Manager(self) -> TElementManagerType:
 		"""The element's manager.
 
-		Returns:
-			IModelingElementBase: 
+		Returns
+		--------
+			``IModelingElementBase`` : 
 		"""
 		pass
 
@@ -252,8 +285,9 @@ class IModelingElementBase(Generic[TElementManagerType, TElementType, TElementTy
 	def ElementType(self) -> TElementTypeEnum:
 		"""The type of element this object represents.
 
-		Returns:
-			IModelingElementBase: 
+		Returns
+		--------
+			``IModelingElementBase`` : 
 		"""
 		pass
 
@@ -263,8 +297,9 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -272,8 +307,9 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 	def Create(self) -> TElementType:
 		"""Creates a new element and returns the object.
 
-		Returns:
-			TElementType: Returns a non-null object with minimally initialized properties.
+		Returns
+		--------
+			``TElementType`` : Returns a non-null object with minimally initialized properties.
 		"""
 		pass
 
@@ -281,11 +317,13 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 	def Element(self, id: int) -> TElementType:
 		"""Retrieves an element given the ID.
 
-		Args:
-			id(int): The non-0 ID of the element.
+		Args
+		--------
+			id (``int``) :  The non-0 ID of the element.
 
-		Returns:
-			TElementType: A  non-null object representing the element of the given ID.  If the ID does not exist, returns null.
+		Returns
+		--------
+			``TElementType`` : A  non-null object representing the element of the given ID.  If the ID does not exist, returns null.
 		"""
 		pass
 
@@ -293,11 +331,13 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 	def Element(self, label: str) -> TElementType:
 		"""Returns the first element that matches the given label.  If not found, returns null.
 
-		Args:
-			label(str): label
+		Args
+		--------
+			label (``str``) :  label
 
-		Returns:
-			TElementType: 
+		Returns
+		--------
+			``TElementType`` : 
 		"""
 		pass
 
@@ -305,11 +345,13 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 	def Elements(self, label: str) -> List[TElementType]:
 		"""Returns a list of elements with the given label.
 
-		Args:
-			label(str): Case-sensitive label to search for
+		Args
+		--------
+			label (``str``) :  Case-sensitive label to search for
 
-		Returns:
-			List[TElementType]: A non-null list containing 0 or more elements with the given label
+		Returns
+		--------
+			``List[TElementType]`` : A non-null list containing 0 or more elements with the given label
 		"""
 		pass
 
@@ -317,8 +359,9 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 	def Elements(self) -> List[TElementType]:
 		"""No Description
 
-		Returns:
-			List[TElementType]: 
+		Returns
+		--------
+			``List[TElementType]`` : 
 		"""
 		pass
 
@@ -326,8 +369,9 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 	def ElementType(self) -> TElementTypeEnum:
 		"""The elementTypeID of the domain element
 
-		Returns:
-			IModelingElementsBase: 
+		Returns
+		--------
+			``IModelingElementsBase`` : 
 		"""
 		pass
 
@@ -335,8 +379,9 @@ class IModelingElementsBase(Generic[TElementManagerType, TElementType, TElementT
 	def InputFields(self) -> IFieldManager:
 		"""Access to input fields for this manager
 
-		Returns:
-			IModelingElementsBase: 
+		Returns
+		--------
+			``IModelingElementsBase`` : 
 		"""
 		pass
 
@@ -346,8 +391,9 @@ class IGeometryUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -356,8 +402,9 @@ class IGeometryUnits(IElementUnits):
 	def GeometryUnit(self) -> IUnit:
 		"""The formatter name for the geometry of the element.
 
-		Returns:
-			IGeometryUnits: 
+		Returns
+		--------
+			``IGeometryUnits`` : 
 		"""
 		pass
 
@@ -367,8 +414,9 @@ class IScenarioOptions(Generic[TUnitsType], IElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -377,8 +425,9 @@ class IScenarioOptions(Generic[TUnitsType], IElement):
 	def Units(self) -> TUnitsType:
 		"""Access to unit information for properties in scenario options.
 
-		Returns:
-			IScenarioOptions: 
+		Returns
+		--------
+			``IScenarioOptions`` : 
 		"""
 		pass
 
@@ -388,8 +437,9 @@ class IScenarios(Generic[TElementManagerType, TElementType, TScenarioOptionsType
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -398,30 +448,35 @@ class IScenarios(Generic[TElementManagerType, TElementType, TScenarioOptionsType
 	def Create(self, parentID: int) -> TElementType:
 		"""Creates a new scenario.  If parentID is non-0, creates a child of that ID.  Otherwise creates a base scenario
 
-		Args:
-			parentID(int): parentID
+		Args
+		--------
+			parentID (``int``) :  parentID
 
-		Returns:
-			TElementType: 
+		Returns
+		--------
+			``TElementType`` : 
 		"""
 		pass
 
 	def ChildrenOfElement(self, parentID: int) -> List[TElementType]:
 		"""Returns a list of scenarios that have the given parent ID
 
-		Args:
-			parentID(int): parentID
+		Args
+		--------
+			parentID (``int``) :  parentID
 
-		Returns:
-			List[TElementType]: 
+		Returns
+		--------
+			``List[TElementType]`` : 
 		"""
 		pass
 
 	def BaseElements(self) -> List[TElementType]:
 		"""Returns a list of base scenarios
 
-		Returns:
-			List[TElementType]: 
+		Returns
+		--------
+			``List[TElementType]`` : 
 		"""
 		pass
 
@@ -429,8 +484,9 @@ class IScenarios(Generic[TElementManagerType, TElementType, TScenarioOptionsType
 	def Create(self) -> TElementType:
 		"""No Description
 
-		Returns:
-			TElementType: 
+		Returns
+		--------
+			``TElementType`` : 
 		"""
 		pass
 
@@ -438,8 +494,9 @@ class IScenarios(Generic[TElementManagerType, TElementType, TScenarioOptionsType
 	def ActiveScenario(self) -> TElementType:
 		"""Gets the currently active scenario
 
-		Returns:
-			IScenarios: 
+		Returns
+		--------
+			``IScenarios`` : 
 		"""
 		pass
 
@@ -449,8 +506,9 @@ class IScenario(Generic[TElementManagerType, TElementType, TScenarioOptionsType,
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -459,38 +517,44 @@ class IScenario(Generic[TElementManagerType, TElementType, TScenarioOptionsType,
 		"""Converts the time at the given time step to a DateTime taking into account
             the start date and time in the scenario options.
 
-		Args:
-			timeStepIndex(int): Th time step index to use with TimeStepsInSeconds.
+		Args
+		--------
+			timeStepIndex (``int``) :  Th time step index to use with TimeStepsInSeconds.
 
-		Returns:
-			datetime: The DateTime at the given time step index taking into account the start date/time of the simulation.
+		Returns
+		--------
+			``datetime`` : The DateTime at the given time step index taking into account the start date/time of the simulation.
 		"""
 		pass
 
 	def TimeStepToDateTime(self, timeStepInSeconds: float) -> datetime:
 		"""Converts the given time in seconds to a date-time.
 
-		Args:
-			timeStepInSeconds(float): The time step in seconds.
+		Args
+		--------
+			timeStepInSeconds (``float``) :  The time step in seconds.
 
-		Returns:
-			datetime: A date-time object representing the time step taking into account the simulation start date and time.
+		Returns
+		--------
+			``datetime`` : A date-time object representing the time step taking into account the simulation start date and time.
 		"""
 		pass
 
 	def MakeCurrent(self) -> None:
 		"""Makes this scenario the active scenario in the model.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
 	def Run(self) -> None:
 		"""Runs the active solver for this scenario
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -498,17 +562,19 @@ class IScenario(Generic[TElementManagerType, TElementType, TScenarioOptionsType,
 	def Options(self) -> TScenarioOptionsType:
 		"""A set of calculation options for the scenario.
 
-		Returns:
-			IScenario: 
+		Returns
+		--------
+			``IScenario`` : 
 		"""
 		pass
 
 	@property
-	def TimeStepsInSeconds(self) -> array('f'):
+	def TimeStepsInSeconds(self) -> array[float]:
 		"""The list of time steps, in seconds, for the scenario if results are available.  Returns an empty array if no results are available.
 
-		Returns:
-			IScenario: 
+		Returns
+		--------
+			``IScenario`` : 
 		"""
 		pass
 
@@ -516,8 +582,9 @@ class IScenario(Generic[TElementManagerType, TElementType, TScenarioOptionsType,
 	def HasResults(self) -> bool:
 		"""Determines if results are available.
 
-		Returns:
-			IScenario: 
+		Returns
+		--------
+			``IScenario`` : 
 		"""
 		pass
 
@@ -525,8 +592,9 @@ class IScenario(Generic[TElementManagerType, TElementType, TScenarioOptionsType,
 	def ActiveTimeStep(self) -> int:
 		"""The active time step index for this scenario
 
-		Returns:
-			IScenario: 
+		Returns
+		--------
+			``IScenario`` : 
 		"""
 		pass
 
@@ -535,16 +603,17 @@ class IScenario(Generic[TElementManagerType, TElementType, TScenarioOptionsType,
 		pass
 
 	@property
-	def ParentScenario(self) -> IScenario:
+	def ParentScenario(self) -> IScenario[TElementManagerType,TElementType,TScenarioOptionsType,TScenarioOptionsUnitsType]:
 		"""Gets a parent if not a base scenario.  Assigns a parent if not null.  If null, sets the scenario as a base scenario
 
-		Returns:
-			IScenario: 
+		Returns
+		--------
+			``IScenario`` : 
 		"""
 		pass
 
 	@ParentScenario.setter
-	def ParentScenario(self, parentscenario: IScenario) -> None:
+	def ParentScenario(self, parentscenario: IScenario[TElementManagerType,TElementType,TScenarioOptionsType,TScenarioOptionsUnitsType]) -> None:
 		pass
 
 class ISelectionSet(Generic[TElementManagerType, TElementType, TNetworkElementType], IModelingElementBase[TElementManagerType, TElementType, ModelingElementTypes]):
@@ -553,8 +622,9 @@ class ISelectionSet(Generic[TElementManagerType, TElementType, TNetworkElementTy
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -562,16 +632,18 @@ class ISelectionSet(Generic[TElementManagerType, TElementType, TNetworkElementTy
 	def Get(self) -> List[int]:
 		"""Gets the IDs in the selection set.
 
-		Returns:
-			List[int]: A non-null list of IDs in the selection set.  May include deleted IDs.
+		Returns
+		--------
+			``List[int]`` : A non-null list of IDs in the selection set.  May include deleted IDs.
 		"""
 		pass
 
 	def Elements(self) -> List[TNetworkElementType]:
 		"""A list of elements representing each ID.
 
-		Returns:
-			List[TNetworkElementType]: A non-null list of elements representing each ID in the selection set.
+		Returns
+		--------
+			``List[TNetworkElementType]`` : A non-null list of elements representing each ID in the selection set.
 		"""
 		pass
 
@@ -579,11 +651,13 @@ class ISelectionSet(Generic[TElementManagerType, TElementType, TNetworkElementTy
 	def Set(self, ids: List[int]) -> None:
 		"""No Description
 
-		Args:
-			ids(List[int]): ids
+		Args
+		--------
+			ids (``List[int]``) :  ids
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -591,11 +665,13 @@ class ISelectionSet(Generic[TElementManagerType, TElementType, TNetworkElementTy
 	def Set(self, elements: List[TNetworkElementType]) -> None:
 		"""No Description
 
-		Args:
-			elements(List[TNetworkElementType]): elements
+		Args
+		--------
+			elements (``List[TNetworkElementType]``) :  elements
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -603,8 +679,9 @@ class ISelectionSet(Generic[TElementManagerType, TElementType, TNetworkElementTy
 	def Count(self) -> int:
 		"""The number of ids in the selection set.
 
-		Returns:
-			ISelectionSet: 
+		Returns
+		--------
+			``ISelectionSet`` : 
 		"""
 		pass
 
@@ -614,8 +691,9 @@ class ISelectionSets(Generic[TElementManagerType, TElementType, TNetworkElementT
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass

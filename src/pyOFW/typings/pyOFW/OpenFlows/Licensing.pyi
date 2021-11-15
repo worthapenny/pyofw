@@ -7,8 +7,9 @@ class ILicenseManager(ILicenseProvider):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -16,8 +17,9 @@ class ILicenseManager(ILicenseProvider):
 	def IsInitialized(self) -> bool:
 		"""Checks to see if the license is initialized.
 
-		Returns:
-			bool: 
+		Returns
+		--------
+			``bool`` : 
 		"""
 		pass
 
@@ -25,12 +27,14 @@ class ILicenseManager(ILicenseProvider):
 	def Initialize(self, product: ProductId, parentWindow: IntPtr) -> LicenseRunStatusEnum:
 		"""Initializes the license for a given product type.
 
-		Args:
-			product(ProductId): product
-			parentWindow(IntPtr): parentWindow
+		Args
+		--------
+			product (``ProductId``) :  product
+			parentWindow (``IntPtr``) :  parentWindow
 
-		Returns:
-			LicenseRunStatusEnum: 
+		Returns
+		--------
+			``LicenseRunStatusEnum`` : 
 		"""
 		pass
 
@@ -38,35 +42,40 @@ class ILicenseManager(ILicenseProvider):
 	def Initialize(self, licensedFeatureSet: ILicensedFeatureSet) -> LicenseRunStatusEnum:
 		"""Initializes the LicenseManager using the Framework-managed ILicensedFeatureSet
 
-		Args:
-			licensedFeatureSet(ILicensedFeatureSet): licensedFeatureSet
+		Args
+		--------
+			licensedFeatureSet (``ILicensedFeatureSet``) :  licensedFeatureSet
 
-		Returns:
-			LicenseRunStatusEnum: 
+		Returns
+		--------
+			``LicenseRunStatusEnum`` : 
 		"""
 		pass
 
 	def CheckLicenseState(self) -> None:
 		"""Checks the state of the license.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
 	def IsLicenseValid(self) -> bool:
 		"""Checks to see if the license is valid.
 
-		Returns:
-			bool: 
+		Returns
+		--------
+			``bool`` : 
 		"""
 		pass
 
 	def GetLicenseStatus(self) -> LicenseStatus:
 		"""Gets the current status of the license.
 
-		Returns:
-			LicenseStatus: 
+		Returns
+		--------
+			``LicenseStatus`` : 
 		"""
 		pass
 
@@ -74,8 +83,9 @@ class ILicenseManager(ILicenseProvider):
 	def LicenseRunStatus(self) -> LicenseRunStatusEnum:
 		"""Gets the run status at the time it was initialized.
 
-		Returns:
-			ILicenseManager: 
+		Returns
+		--------
+			``ILicenseManager`` : 
 		"""
 		pass
 

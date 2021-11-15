@@ -16,7 +16,7 @@ param($build, $publish, $copyTypings)
 # The key of the map MUST be the Branches of assembly--crawler project
 # The value of the map WILL be the Directory name of PYOFW (current project)
 $branchesToLocalDirMap = @{
-  "MAIN"     = "pyOFW";
+  "main"     = "pyOFW";
   "WTRG1035" = "pyOFW1035";
 }
 
@@ -34,7 +34,7 @@ $script:typingsDir = Join-Path $packageDir "typings"
 $script:currentWorkingDir = $PWD
 
 function Import-Env {
-  Write-Host "About to load the env variables from .env file" -ForegroundColor Gray
+  Write-Host "About to load the env variables from .env file" -ForegroundColor DarkBlue
 
   $localEnvFile = Join-Path $PWD ".\.env"
   if (-not(Test-Path $localEnvFile)) {
@@ -80,7 +80,7 @@ function Copy-Branches {
     Remove-Item -Force -Recurse $targetDir
     Write-Host "Removed the local contents: $targetDir" -ForegroundColor Magenta
 
-    Write-Host "[$($map.Key)] About to copy typings contents from: $sourceDir" -ForegroundColor Gray
+    Write-Host "[$($map.Key)] About to copy typings contents from: $sourceDir" -ForegroundColor DarkBlue
     Copy-Item -Force -Recurse -Path $sourceDir -Destination $targetDir
     Remove-Item -Force -Recurse -Path (Join-Path $targetDir "TestAssemblyNET48")
     Write-Host "[$($map.Key)] Copied contents to $targetDir" -ForegroundColor DarkGreen
@@ -97,7 +97,7 @@ function New-Build {
     throw "No setup.py file detected at this location: {$PWD} "
   }
 
-  if ($copyTypings) {
+  if ($copyTypings -eq "True") {
     Copy-Branches
   }
   else {
@@ -106,22 +106,31 @@ function New-Build {
 
   # Make sure to work from current project dir
   Set-Location $script:currentWorkingDir
-  Write-Host "CWD = $($script:currentWorkingDir)" -ForegroundColor Gray
+  Write-Host "CWD = $($script:currentWorkingDir)" -ForegroundColor DarkBlue
 
-  Write-Host "BUILD: Perform cleaning" -ForegroundColor Gray
+  Write-Host "BUILD: Perform cleaning" -ForegroundColor DarkBlue
   python.exe .\setup.py clean --all
 
-  Write-Host "BUILD: Creating..." -ForegroundColor Gray
+  Write-Host "BUILD: Creating..." -ForegroundColor DarkBlue
   python.exe .\setup.py bdist_wheel sdist
   Write-Host "BUILD: Done." -ForegroundColor DarkGreen
 }
 
 function Publish-Build {
   if (-not (Test-Path (Join-Path -Path $script:currentWorkingDir -ChildPath "build"))) {
-    throw "build directory is not detected at this location: {$PWD} "
+    throw "build directory is not detected at this location: {$script:currentWorkingDir} "
   }
 
+  # Import- username and password
+  Import-Env
 
+  # Make sure to work from current project dir
+  Set-Location $script:currentWorkingDir
+  Write-Host "CWD = $($script:currentWorkingDir)" -ForegroundColor DarkBlue
+
+  Write-Host "PUBLISH: working..." -ForegroundColor DarkBlue
+  twine.exe upload dist/* -u $script:pypiUsername -p $script:pypiPassword --verbose
+  Write-Host "PUBLISH: Done" -ForegroundColor DarkGreen
 }
 
 # Perform Build if selected

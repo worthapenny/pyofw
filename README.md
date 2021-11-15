@@ -26,8 +26,10 @@ Run the following to install:
 pip install pyofw
 ```
 
->**Failed to install?** One of the requirements package is `pythonnet` which might not get installed directly. In such case, follow the steps [below](##How-to-install-pythonnet?).
-> **Note:** The package itself will not add any value without the [Bentley's](https://www.bentley.com/en) OpenFlows application like [WaterGEMS](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watergems), [WaterCAD](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watercad), or WaterOPS. And the package assumes the application is installed at the default location. For WaterGEMS it is `C:\Program Files (x86)\Bentley\WaterGEMS\x64`.
+**Failed to install?** One of the requirements package is `pythonnet` which might not get installed directly. In such case, follow the steps [below](##How-to-install-pythonnet?).
+
+
+ **Note:** The package itself will not add any value without the [Bentley's](https://www.bentley.com/en) OpenFlows application like [WaterGEMS](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watergems), [WaterCAD](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watercad), or WaterOPS. And the package assumes the application is installed at the default location. For WaterGEMS it is `C:\Program Files (x86)\Bentley\WaterGEMS\x64`.
 
 ## Usage
 

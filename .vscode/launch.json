@@ -10,7 +10,9 @@
       "request": "launch",
       "script": "${workspaceFolder}/packager.ps1",
       "args": [
-        "build"
+        "build",
+        "do-not-publish",
+        "False", // Copy the typeings 
       ],
       "cwd": "${workspaceFolder}"
     },
@@ -21,8 +23,20 @@
       "script": "${workspaceFolder}/packager.ps1",
       "args": [
         "build",
-        "", // Do NOT pubslish
-        "true", // Copy the typeings 
+        "do-not-publish",
+        "True", // Copy the typeings 
+      ],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "PS: Publish",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/packager.ps1",
+      "args": [
+        "do-not-build",
+        "publish",
+        "False", // Copy the typeings 
       ],
       "cwd": "${workspaceFolder}"
     },

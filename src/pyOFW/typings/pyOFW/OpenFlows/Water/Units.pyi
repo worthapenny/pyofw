@@ -10,8 +10,9 @@ class INetworkElementUnits(INetworkUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -20,8 +21,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Pump(self) -> IPumpUnits:
 		"""Units for pumps
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -29,8 +31,9 @@ class INetworkElementUnits(INetworkUnits):
 	def VSPBUnits(self) -> IVariableSpeedPumpBatteryUnits:
 		"""Units for VSPBs
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -38,8 +41,9 @@ class INetworkElementUnits(INetworkUnits):
 	def FCV(self) -> IFlowControlValveUnits:
 		"""FCV units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -47,8 +51,9 @@ class INetworkElementUnits(INetworkUnits):
 	def GPV(self) -> IGeneralPurposeValveUnits:
 		"""GPV units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -56,8 +61,9 @@ class INetworkElementUnits(INetworkUnits):
 	def PBV(self) -> IPressureBreakingValveUnits:
 		"""PBV units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -65,8 +71,9 @@ class INetworkElementUnits(INetworkUnits):
 	def PRV(self) -> IPressureReducingValveUnits:
 		"""PRV units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -74,8 +81,9 @@ class INetworkElementUnits(INetworkUnits):
 	def PSV(self) -> IPressureSustainingValveUnits:
 		"""PSV units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -83,8 +91,9 @@ class INetworkElementUnits(INetworkUnits):
 	def TCV(self) -> IThrottleControlValveUnits:
 		"""TCV units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -92,8 +101,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Pipe(self) -> IPipeUnits:
 		"""Pipe units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -101,8 +111,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Lateral(self) -> IBaseLinkUnits:
 		"""Lateral units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -110,8 +121,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Junction(self) -> IJunctionUnits:
 		"""Junction units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -119,8 +131,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Hydrant(self) -> IHydrantUnits:
 		"""Hydrant units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -128,8 +141,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Tank(self) -> ITankUnits:
 		"""Tank units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -137,8 +151,9 @@ class INetworkElementUnits(INetworkUnits):
 	def CustomerMeter(self) -> ICustomerMeterUnits:
 		"""Customer meter units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -146,8 +161,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Reservoir(self) -> IReservoirUnits:
 		"""Reservoir units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -155,8 +171,9 @@ class INetworkElementUnits(INetworkUnits):
 	def SCADAElement(self) -> IGeometryUnits:
 		"""SCADA element units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -164,8 +181,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Tap(self) -> IGeometryUnits:
 		"""Tap units
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -173,8 +191,9 @@ class INetworkElementUnits(INetworkUnits):
 	def SpotElevation(self) -> ISpotElevationUnits:
 		"""Units for spot eelvations
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -182,8 +201,9 @@ class INetworkElementUnits(INetworkUnits):
 	def ValveWithLinearAreaChange(self) -> IValveWithLinearAreaChangeUnits:
 		"""Units for valve with linear area change
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -191,8 +211,9 @@ class INetworkElementUnits(INetworkUnits):
 	def PeriodicHeadFlow(self) -> IPeriodicHeadFlowUnits:
 		"""Units for periodic head-flow nodes
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -200,8 +221,9 @@ class INetworkElementUnits(INetworkUnits):
 	def AirValve(self) -> IAirValveUnits:
 		"""Units for air valves
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -209,8 +231,9 @@ class INetworkElementUnits(INetworkUnits):
 	def OrificeBetweenTwoPipes(self) -> IOrificeBetweenTwoPipesUnits:
 		"""Units for orifice between two pipes
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -218,8 +241,9 @@ class INetworkElementUnits(INetworkUnits):
 	def SurgeValve(self) -> ISurgeValveUnits:
 		"""The units for surge valve (Sav/Srv)
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -227,8 +251,9 @@ class INetworkElementUnits(INetworkUnits):
 	def DischargeToAtmosphere(self) -> IDischargeToAtmosphereUnits:
 		"""Units for discharge to atmosphere nodes
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -236,8 +261,9 @@ class INetworkElementUnits(INetworkUnits):
 	def RuptureDisk(self) -> IRuptureDiskUnits:
 		"""Unit information for rupture disk
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -245,8 +271,9 @@ class INetworkElementUnits(INetworkUnits):
 	def Turbine(self) -> ITurbineUnits:
 		"""The unit information for turbines
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -254,8 +281,9 @@ class INetworkElementUnits(INetworkUnits):
 	def SurgeTank(self) -> ISurgeTankUnits:
 		"""Unit information for surge tank
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -263,8 +291,9 @@ class INetworkElementUnits(INetworkUnits):
 	def HydropneumaticTank(self) -> IHydropneumaticTankUnits:
 		"""Unit information for hydropneumatic tank
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -272,8 +301,9 @@ class INetworkElementUnits(INetworkUnits):
 	def IsolationValve(self) -> IIsolationValveUnits:
 		"""Units for isolation valves
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -281,8 +311,9 @@ class INetworkElementUnits(INetworkUnits):
 	def PumpStation(self) -> IPumpStationUnits:
 		"""Units for pump station
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -290,8 +321,9 @@ class INetworkElementUnits(INetworkUnits):
 	def CheckValve(self) -> ICheckValveUnits:
 		"""Units for check valve
 
-		Returns:
-			INetworkElementUnits: 
+		Returns
+		--------
+			``INetworkElementUnits`` : 
 		"""
 		pass
 
@@ -301,8 +333,9 @@ class IComponentElementUnits(IComponentUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -311,8 +344,9 @@ class IComponentElementUnits(IComponentUnits):
 	def Constituent(self) -> IConstituentUnits:
 		"""Constituent units
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -320,8 +354,9 @@ class IComponentElementUnits(IComponentUnits):
 	def Condition(self) -> IControlConditionUnits:
 		"""Control condition units
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -329,8 +364,9 @@ class IComponentElementUnits(IComponentUnits):
 	def Action(self) -> IControlActionUnits:
 		"""Control action units
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -338,8 +374,9 @@ class IComponentElementUnits(IComponentUnits):
 	def Pattern(self) -> IPatternUnits:
 		"""Pattern units
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -347,8 +384,9 @@ class IComponentElementUnits(IComponentUnits):
 	def PumpDefinition(self) -> IPumpDefinitionUnits:
 		"""Pump definition units
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -356,8 +394,9 @@ class IComponentElementUnits(IComponentUnits):
 	def UnitDemandLoad(self) -> IUnitDemandLoadUnits:
 		"""Unit demand load units
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -365,8 +404,9 @@ class IComponentElementUnits(IComponentUnits):
 	def AirFlowCurve(self) -> IAirFlowCurveUnits:
 		"""Units for air flow curve
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -374,8 +414,9 @@ class IComponentElementUnits(IComponentUnits):
 	def GPVHeadlossCurve(self) -> IGPVHeadlossUnits:
 		"""Unit information for GPV Headloss Curve
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -383,8 +424,9 @@ class IComponentElementUnits(IComponentUnits):
 	def ValveCharacteristic(self) -> IValveCharacteristicUnits:
 		"""Unit information for valve characteristic
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -392,8 +434,9 @@ class IComponentElementUnits(IComponentUnits):
 	def MinorLossCoefficient(self) -> IMinorLossCoefficientUnits:
 		"""Unit information for minor loss
 
-		Returns:
-			IComponentElementUnits: 
+		Returns
+		--------
+			``IComponentElementUnits`` : 
 		"""
 		pass
 
@@ -403,8 +446,9 @@ class IWaterUnitsManager:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass

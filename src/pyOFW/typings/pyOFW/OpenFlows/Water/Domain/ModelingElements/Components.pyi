@@ -3,6 +3,9 @@ from typing import overload, Generic, Iterator
 from OpenFlows.Units import IUnit
 from OpenFlows.Domain.ModelingElements import IElementUnits, IElement, TElementManagerType, TElementType, TUnitsType, IModelingElementBase, IModelingElementsBase, IElements, IElementManager
 from enum import Enum
+from System import TypeCode
+from Haestad.Domain.ModelingObjects.Water.Enumerations import ControlTypeEnum, ControlPriorityEnum, ConditionTypeEnum, NodeAttributeEnum, TankAttributeEnum, ControlConditionPressureValveAttributeEnum, ControlConditionFCVAttributeEnum, FCVStatusEnum, ControlConditionGPVAttributeEnum, ControlConditionGPVStatusEnum, ControlConditionTCVAttributeEnum, TCVStatusEnum, HydroTankAttributeEnum, SurgeTankAttributeEnum, LogicalOperatorEnum, ControlActionTypeEnum, PumpEfficiencyTypeEnum, UnitDemandLoadTypeEnum, MinorLossTypeEnum
+from Haestad.Calculations.Pressure import SimpleConditionType, ControlConditionPumpAttribute, ControlConditionPipeAttribute, ControlConditionValveStatus, ControlActionPipeAttribute, ControlActionPipeStatus, ControlActionPumpAttribute, ControlActionPumpStatus, ControlActionTCVAttribute, ControlActionTCVStatus, ControlActionGPVAttribute, ControlActionGPVStatus, ControlActionFCVAttribute, ControlActionFCVStatus, ControlActionPressureValveAttribute, ControlActionPressureValveStatus, PatternCategory, PatternFormat, PumpDefinitionType, WallReactionOrder
 from datetime import datetime
 from OpenFlows.Domain.ModelingElements.Components import IComponentElements, IComponentElement, IModelComponents
 from Haestad.Support.Units import PopulationUnit, AreaUnit
@@ -75,8 +78,9 @@ class IAirFlowPressureCollection(ICollectionElements[IAirFlowPressures, IAirFlow
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -87,8 +91,9 @@ class IAirFlowPressures(ICollection[IAirFlowPressure]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -97,12 +102,14 @@ class IAirFlowPressures(ICollection[IAirFlowPressure]):
 	def Add(self, flow: float, pressure: float) -> IAirFlowPressure:
 		"""Adds a new row to the collection with the provided flow and pressure values.
 
-		Args:
-			flow(float): flow
-			pressure(float): pressure
+		Args
+		--------
+			flow (``float``) :  flow
+			pressure (``float``) :  pressure
 
-		Returns:
-			IAirFlowPressure: 
+		Returns
+		--------
+			``IAirFlowPressure`` : 
 		"""
 		pass
 
@@ -110,8 +117,9 @@ class IAirFlowPressures(ICollection[IAirFlowPressure]):
 	def Add(self) -> IAirFlowPressure:
 		"""No Description
 
-		Returns:
-			IAirFlowPressure: 
+		Returns
+		--------
+			``IAirFlowPressure`` : 
 		"""
 		pass
 
@@ -121,8 +129,9 @@ class IAirFlowPressure(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -131,8 +140,9 @@ class IAirFlowPressure(ICollectionElement):
 	def Flow(self) -> float:
 		"""No Description
 
-		Returns:
-			IAirFlowPressure: 
+		Returns
+		--------
+			``IAirFlowPressure`` : 
 		"""
 		pass
 
@@ -144,8 +154,9 @@ class IAirFlowPressure(ICollectionElement):
 	def Pressure(self) -> float:
 		"""No Description
 
-		Returns:
-			IAirFlowPressure: 
+		Returns
+		--------
+			``IAirFlowPressure`` : 
 		"""
 		pass
 
@@ -159,8 +170,9 @@ class IAirFlowPressureUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -169,8 +181,9 @@ class IAirFlowPressureUnits(IElementUnits):
 	def FlowUnit(self) -> IUnit:
 		"""Unit information for flow
 
-		Returns:
-			IAirFlowPressureUnits: 
+		Returns
+		--------
+			``IAirFlowPressureUnits`` : 
 		"""
 		pass
 
@@ -178,8 +191,9 @@ class IAirFlowPressureUnits(IElementUnits):
 	def PressureUnit(self) -> IUnit:
 		"""Unit information for pressure
 
-		Returns:
-			IAirFlowPressureUnits: 
+		Returns
+		--------
+			``IAirFlowPressureUnits`` : 
 		"""
 		pass
 
@@ -189,8 +203,9 @@ class IAirFlowCurve(IWaterComponentBase[IAirFlowCurves, IAirFlowCurve, IAirFlowC
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -199,8 +214,9 @@ class IAirFlowCurve(IWaterComponentBase[IAirFlowCurves, IAirFlowCurve, IAirFlowC
 	def AirFlowPressureCollection(self) -> IAirFlowPressureCollection:
 		"""No Description
 
-		Returns:
-			IAirFlowCurve: 
+		Returns
+		--------
+			``IAirFlowCurve`` : 
 		"""
 		pass
 
@@ -210,8 +226,9 @@ class IAirFlowCurves(IWaterComponentsBase[IAirFlowCurves, IAirFlowCurve, IAirFlo
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -222,8 +239,9 @@ class IAirFlowCurveUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -234,8 +252,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -244,8 +263,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 	def ControlType(self) -> ControlTypeEnum:
 		"""Defines the type of control - Logical or Simple.  Logical allows for use of an Else action.
 
-		Returns:
-			IControl: 
+		Returns
+		--------
+			``IControl`` : 
 		"""
 		pass
 
@@ -257,8 +277,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 	def Condition(self) -> IControlCondition:
 		"""A condition on which to act when this control is used.
 
-		Returns:
-			IControl: 
+		Returns
+		--------
+			``IControl`` : 
 		"""
 		pass
 
@@ -270,8 +291,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 	def Action(self) -> IControlAction:
 		"""The action to execute when the condition is filled.
 
-		Returns:
-			IControl: 
+		Returns
+		--------
+			``IControl`` : 
 		"""
 		pass
 
@@ -283,8 +305,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 	def LogicalControl(self) -> ILogicalControl:
 		"""Logical control properties
 
-		Returns:
-			IControl: 
+		Returns
+		--------
+			``IControl`` : 
 		"""
 		pass
 
@@ -292,8 +315,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 	def DefineDescription(self) -> bool:
 		"""Determines whether the control description is automatically generated or user defined.
 
-		Returns:
-			IControl: 
+		Returns
+		--------
+			``IControl`` : 
 		"""
 		pass
 
@@ -305,8 +329,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 	def Description(self) -> str:
 		"""The description of the control.  If not user defined, returns Summary.
 
-		Returns:
-			IControl: 
+		Returns
+		--------
+			``IControl`` : 
 		"""
 		pass
 
@@ -318,8 +343,9 @@ class IControl(IWaterComponentBase[IControls, IControl, IElementUnits], IWaterCo
 	def Summary(self) -> str:
 		"""The control statement in a readable format.
 
-		Returns:
-			IControl: 
+		Returns
+		--------
+			``IControl`` : 
 		"""
 		pass
 
@@ -329,8 +355,9 @@ class ILogicalControl:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -339,8 +366,9 @@ class ILogicalControl:
 	def IsLogicalControl(self) -> bool:
 		"""Determines if the current control is a logical control.
 
-		Returns:
-			ILogicalControl: 
+		Returns
+		--------
+			``ILogicalControl`` : 
 		"""
 		pass
 
@@ -348,8 +376,9 @@ class ILogicalControl:
 	def HasPriority(self) -> bool:
 		"""If set to true, can set a custom priority.
 
-		Returns:
-			ILogicalControl: 
+		Returns
+		--------
+			``ILogicalControl`` : 
 		"""
 		pass
 
@@ -361,8 +390,9 @@ class ILogicalControl:
 	def Priority(self) -> ControlPriorityEnum:
 		"""The priority of the control.
 
-		Returns:
-			ILogicalControl: 
+		Returns
+		--------
+			``ILogicalControl`` : 
 		"""
 		pass
 
@@ -374,8 +404,9 @@ class ILogicalControl:
 	def HasElse(self) -> bool:
 		"""Set to true to use an else action
 
-		Returns:
-			ILogicalControl: 
+		Returns
+		--------
+			``ILogicalControl`` : 
 		"""
 		pass
 
@@ -387,8 +418,9 @@ class ILogicalControl:
 	def ElseAction(self) -> IControlAction:
 		"""If a logical control and condition resolves to false, executes this action.
 
-		Returns:
-			ILogicalControl: 
+		Returns
+		--------
+			``ILogicalControl`` : 
 		"""
 		pass
 
@@ -402,8 +434,9 @@ class IControls(IWaterComponentsBase[IControls, IControl, IElementUnits]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -414,8 +447,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -424,8 +458,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def ConditionType(self) -> ConditionTypeEnum:
 		"""The type of condition - simple or composite
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -437,8 +472,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def SimpleConditionType(self) -> SimpleConditionType:
 		"""The type of simple condition to define.
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -450,8 +486,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def ElementCondition(self) -> IElementControlConditionInput:
 		"""Element-based condition
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -459,8 +496,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def SystemDemandCondition(self) -> ISystemDemandConditionInput:
 		"""System demand based condition
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -468,8 +506,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def ClockTimeCondition(self) -> IClockTimeConditionInput:
 		"""Clock time based condition
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -477,8 +516,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def TimeFromStartCondition(self) -> ITimeFromStartConditionInput:
 		"""Time from start based condition
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -486,8 +526,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def CompositeConditionCollection(self) -> ICompositeConditionCollection:
 		"""The list of conditions making up a composite condition.
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -495,8 +536,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def IsUserDefinedDescriptionFormat(self) -> bool:
 		"""Determines whether the condition description is automatically generated or user defined.
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -508,8 +550,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def Description(self) -> str:
 		"""The description of the condition.  If not user defined, returns Summary.
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -521,8 +564,9 @@ class IControlCondition(IWaterComponentBase[IControlConditions, IControlConditio
 	def Summary(self) -> str:
 		"""The condition statement in a readable format.
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -532,8 +576,9 @@ class IControlSimpleConditionInput:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -542,8 +587,9 @@ class IControlSimpleConditionInput:
 	def SimpleConditionType(self) -> SimpleConditionType:
 		"""The type of simple condition to define.
 
-		Returns:
-			IControlSimpleConditionInput: 
+		Returns
+		--------
+			``IControlSimpleConditionInput`` : 
 		"""
 		pass
 
@@ -551,8 +597,9 @@ class IControlSimpleConditionInput:
 	def Comparison(self) -> ConditionComparisonOperator:
 		"""Defines how the condition is compared to return true.
 
-		Returns:
-			IControlSimpleConditionInput: 
+		Returns
+		--------
+			``IControlSimpleConditionInput`` : 
 		"""
 		pass
 
@@ -566,8 +613,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -576,8 +624,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def IsElementCondition(self) -> bool:
 		"""True if the ConditionType is set to Element.
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -585,8 +634,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def Element(self) -> IWaterElement:
 		"""The element to associate with this condition.
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -598,8 +648,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def Node(self) -> INodeConditionInput:
 		"""The node condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -607,8 +658,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def Tank(self) -> ITankConditionInput:
 		"""The tank condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -616,8 +668,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def Pump(self) -> IPumpConditionInput:
 		"""The pump condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -625,8 +678,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def Pipe(self) -> IPipeConditionInput:
 		"""The pipe condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -634,8 +688,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def PressureValve(self) -> IPressureValveConditionInput:
 		"""The pressure valve condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -643,8 +698,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def FCV(self) -> IFlowControLValveConditionInput:
 		"""The FCV condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -652,8 +708,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def GPV(self) -> IGeneralPurposeValveConditionInput:
 		"""The GPV condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -661,8 +718,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def TCV(self) -> IThrottleControlValveConditionInput:
 		"""The TCV condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -670,8 +728,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def HydroTank(self) -> IHydroTankConditionInput:
 		"""The hydro-tank condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -679,8 +738,9 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 	def SurgeTank(self) -> ISurgeTankConditionInput:
 		"""The surge tank condition settings
 
-		Returns:
-			IElementControlConditionInput: 
+		Returns
+		--------
+			``IElementControlConditionInput`` : 
 		"""
 		pass
 
@@ -690,8 +750,9 @@ class IElementConditionInput:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -700,8 +761,9 @@ class IElementConditionInput:
 	def Element(self) -> IWaterElement:
 		"""The element assigned to the condition.
 
-		Returns:
-			IElementConditionInput: 
+		Returns
+		--------
+			``IElementConditionInput`` : 
 		"""
 		pass
 
@@ -711,8 +773,9 @@ class INodeConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -721,8 +784,9 @@ class INodeConditionInput(IElementConditionInput):
 	def NodeAttribute(self) -> NodeAttributeEnum:
 		"""The node attribute for this condition.
 
-		Returns:
-			INodeConditionInput: 
+		Returns
+		--------
+			``INodeConditionInput`` : 
 		"""
 		pass
 
@@ -734,8 +798,9 @@ class INodeConditionInput(IElementConditionInput):
 	def Demand(self) -> float:
 		"""Demand
 
-		Returns:
-			INodeConditionInput: 
+		Returns
+		--------
+			``INodeConditionInput`` : 
 		"""
 		pass
 
@@ -747,8 +812,9 @@ class INodeConditionInput(IElementConditionInput):
 	def HydraulicGrade(self) -> float:
 		"""Hydraulic Grade
 
-		Returns:
-			INodeConditionInput: 
+		Returns
+		--------
+			``INodeConditionInput`` : 
 		"""
 		pass
 
@@ -760,8 +826,9 @@ class INodeConditionInput(IElementConditionInput):
 	def Pressure(self) -> float:
 		"""Pressure
 
-		Returns:
-			INodeConditionInput: 
+		Returns
+		--------
+			``INodeConditionInput`` : 
 		"""
 		pass
 
@@ -775,8 +842,9 @@ class ITankConditionInput:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -785,8 +853,9 @@ class ITankConditionInput:
 	def TankAttribute(self) -> TankAttributeEnum:
 		"""The tank attribute for this condition.
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -798,8 +867,9 @@ class ITankConditionInput:
 	def Demand(self) -> float:
 		"""Demand
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -811,8 +881,9 @@ class ITankConditionInput:
 	def HydraulicGrade(self) -> float:
 		"""Hydraulic Grade
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -824,8 +895,9 @@ class ITankConditionInput:
 	def Pressure(self) -> float:
 		"""Pressure
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -837,8 +909,9 @@ class ITankConditionInput:
 	def Level(self) -> float:
 		"""Tank Level
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -850,8 +923,9 @@ class ITankConditionInput:
 	def TimeToDrain(self) -> float:
 		"""Time to drain
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -863,8 +937,9 @@ class ITankConditionInput:
 	def TimeToFill(self) -> float:
 		"""Time to fill
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -876,8 +951,9 @@ class ITankConditionInput:
 	def PercentFull(self) -> float:
 		"""Percent full.
 
-		Returns:
-			ITankConditionInput: 
+		Returns
+		--------
+			``ITankConditionInput`` : 
 		"""
 		pass
 
@@ -891,8 +967,9 @@ class IPumpConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -901,8 +978,9 @@ class IPumpConditionInput(IElementConditionInput):
 	def PumpAttribute(self) -> ControlConditionPumpAttribute:
 		"""The pump attribute for this condition.
 
-		Returns:
-			IPumpConditionInput: 
+		Returns
+		--------
+			``IPumpConditionInput`` : 
 		"""
 		pass
 
@@ -914,8 +992,9 @@ class IPumpConditionInput(IElementConditionInput):
 	def Discharge(self) -> float:
 		"""Discharge
 
-		Returns:
-			IPumpConditionInput: 
+		Returns
+		--------
+			``IPumpConditionInput`` : 
 		"""
 		pass
 
@@ -927,8 +1006,9 @@ class IPumpConditionInput(IElementConditionInput):
 	def PumpSetting(self) -> float:
 		"""Relative Speed Factor
 
-		Returns:
-			IPumpConditionInput: 
+		Returns
+		--------
+			``IPumpConditionInput`` : 
 		"""
 		pass
 
@@ -940,8 +1020,9 @@ class IPumpConditionInput(IElementConditionInput):
 	def PumpStatus(self) -> PumpStatus:
 		"""Pump status
 
-		Returns:
-			IPumpConditionInput: 
+		Returns
+		--------
+			``IPumpConditionInput`` : 
 		"""
 		pass
 
@@ -955,8 +1036,9 @@ class IPipeConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -965,8 +1047,9 @@ class IPipeConditionInput(IElementConditionInput):
 	def PipeAttribute(self) -> ControlConditionPipeAttribute:
 		"""The pipe attribute for this condition
 
-		Returns:
-			IPipeConditionInput: 
+		Returns
+		--------
+			``IPipeConditionInput`` : 
 		"""
 		pass
 
@@ -978,8 +1061,9 @@ class IPipeConditionInput(IElementConditionInput):
 	def Discharge(self) -> float:
 		"""Discharge
 
-		Returns:
-			IPipeConditionInput: 
+		Returns
+		--------
+			``IPipeConditionInput`` : 
 		"""
 		pass
 
@@ -991,8 +1075,9 @@ class IPipeConditionInput(IElementConditionInput):
 	def PipeStatus(self) -> PipeStatus:
 		"""Pipe status
 
-		Returns:
-			IPipeConditionInput: 
+		Returns
+		--------
+			``IPipeConditionInput`` : 
 		"""
 		pass
 
@@ -1006,8 +1091,9 @@ class IPressureValveConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1016,8 +1102,9 @@ class IPressureValveConditionInput(IElementConditionInput):
 	def PressureValveAttribute(self) -> ControlConditionPressureValveAttributeEnum:
 		"""The pressure valve attribute for this condition
 
-		Returns:
-			IPressureValveConditionInput: 
+		Returns
+		--------
+			``IPressureValveConditionInput`` : 
 		"""
 		pass
 
@@ -1029,8 +1116,9 @@ class IPressureValveConditionInput(IElementConditionInput):
 	def Discharge(self) -> float:
 		"""Dishcarge
 
-		Returns:
-			IPressureValveConditionInput: 
+		Returns
+		--------
+			``IPressureValveConditionInput`` : 
 		"""
 		pass
 
@@ -1042,8 +1130,9 @@ class IPressureValveConditionInput(IElementConditionInput):
 	def HeadlossCoefficient(self) -> float:
 		"""Headloss coefficient
 
-		Returns:
-			IPressureValveConditionInput: 
+		Returns
+		--------
+			``IPressureValveConditionInput`` : 
 		"""
 		pass
 
@@ -1055,8 +1144,9 @@ class IPressureValveConditionInput(IElementConditionInput):
 	def ValveStatus(self) -> ControlConditionValveStatus:
 		"""Valve status
 
-		Returns:
-			IPressureValveConditionInput: 
+		Returns
+		--------
+			``IPressureValveConditionInput`` : 
 		"""
 		pass
 
@@ -1070,8 +1160,9 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1080,8 +1171,9 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 	def FCVAttribute(self) -> ControlConditionFCVAttributeEnum:
 		"""The FCV attribute for this condition.
 
-		Returns:
-			IFlowControLValveConditionInput: 
+		Returns
+		--------
+			``IFlowControLValveConditionInput`` : 
 		"""
 		pass
 
@@ -1093,8 +1185,9 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 	def Discharge(self) -> float:
 		"""Discharge
 
-		Returns:
-			IFlowControLValveConditionInput: 
+		Returns
+		--------
+			``IFlowControLValveConditionInput`` : 
 		"""
 		pass
 
@@ -1106,8 +1199,9 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 	def HeadlossCoefficient(self) -> float:
 		"""Headloss coefficient
 
-		Returns:
-			IFlowControLValveConditionInput: 
+		Returns
+		--------
+			``IFlowControLValveConditionInput`` : 
 		"""
 		pass
 
@@ -1119,8 +1213,9 @@ class IFlowControLValveConditionInput(IElementConditionInput):
 	def FCVStatus(self) -> FCVStatusEnum:
 		"""FCV status
 
-		Returns:
-			IFlowControLValveConditionInput: 
+		Returns
+		--------
+			``IFlowControLValveConditionInput`` : 
 		"""
 		pass
 
@@ -1134,8 +1229,9 @@ class IGeneralPurposeValveConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1144,8 +1240,9 @@ class IGeneralPurposeValveConditionInput(IElementConditionInput):
 	def GPVAttribute(self) -> ControlConditionGPVAttributeEnum:
 		"""GPV attribute for this condition.
 
-		Returns:
-			IGeneralPurposeValveConditionInput: 
+		Returns
+		--------
+			``IGeneralPurposeValveConditionInput`` : 
 		"""
 		pass
 
@@ -1157,8 +1254,9 @@ class IGeneralPurposeValveConditionInput(IElementConditionInput):
 	def Discharge(self) -> float:
 		"""Discharge
 
-		Returns:
-			IGeneralPurposeValveConditionInput: 
+		Returns
+		--------
+			``IGeneralPurposeValveConditionInput`` : 
 		"""
 		pass
 
@@ -1170,8 +1268,9 @@ class IGeneralPurposeValveConditionInput(IElementConditionInput):
 	def GPVStatus(self) -> ControlConditionGPVStatusEnum:
 		"""GPV status
 
-		Returns:
-			IGeneralPurposeValveConditionInput: 
+		Returns
+		--------
+			``IGeneralPurposeValveConditionInput`` : 
 		"""
 		pass
 
@@ -1185,8 +1284,9 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1195,8 +1295,9 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 	def TCVAttribute(self) -> ControlConditionTCVAttributeEnum:
 		"""The TCV attribute for this condition.
 
-		Returns:
-			IThrottleControlValveConditionInput: 
+		Returns
+		--------
+			``IThrottleControlValveConditionInput`` : 
 		"""
 		pass
 
@@ -1208,8 +1309,9 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 	def Discharge(self) -> float:
 		"""Discharge
 
-		Returns:
-			IThrottleControlValveConditionInput: 
+		Returns
+		--------
+			``IThrottleControlValveConditionInput`` : 
 		"""
 		pass
 
@@ -1221,8 +1323,9 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 	def HeadlossCoefficient(self) -> float:
 		"""Setting
 
-		Returns:
-			IThrottleControlValveConditionInput: 
+		Returns
+		--------
+			``IThrottleControlValveConditionInput`` : 
 		"""
 		pass
 
@@ -1234,8 +1337,9 @@ class IThrottleControlValveConditionInput(IElementConditionInput):
 	def TCVStatus(self) -> TCVStatusEnum:
 		"""TCV status
 
-		Returns:
-			IThrottleControlValveConditionInput: 
+		Returns
+		--------
+			``IThrottleControlValveConditionInput`` : 
 		"""
 		pass
 
@@ -1249,8 +1353,9 @@ class IHydroTankConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1259,8 +1364,9 @@ class IHydroTankConditionInput(IElementConditionInput):
 	def HydroTankAttribute(self) -> HydroTankAttributeEnum:
 		"""The HydroTank attribute for this condition.
 
-		Returns:
-			IHydroTankConditionInput: 
+		Returns
+		--------
+			``IHydroTankConditionInput`` : 
 		"""
 		pass
 
@@ -1272,8 +1378,9 @@ class IHydroTankConditionInput(IElementConditionInput):
 	def HydraulicGrade(self) -> float:
 		"""Hydraulic Grade
 
-		Returns:
-			IHydroTankConditionInput: 
+		Returns
+		--------
+			``IHydroTankConditionInput`` : 
 		"""
 		pass
 
@@ -1285,8 +1392,9 @@ class IHydroTankConditionInput(IElementConditionInput):
 	def Pressure(self) -> float:
 		"""Pressure
 
-		Returns:
-			IHydroTankConditionInput: 
+		Returns
+		--------
+			``IHydroTankConditionInput`` : 
 		"""
 		pass
 
@@ -1300,8 +1408,9 @@ class ISurgeTankConditionInput(IElementConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1310,8 +1419,9 @@ class ISurgeTankConditionInput(IElementConditionInput):
 	def SurgeTankAttribute(self) -> SurgeTankAttributeEnum:
 		"""The surge tank attribute for this condition.
 
-		Returns:
-			ISurgeTankConditionInput: 
+		Returns
+		--------
+			``ISurgeTankConditionInput`` : 
 		"""
 		pass
 
@@ -1323,8 +1433,9 @@ class ISurgeTankConditionInput(IElementConditionInput):
 	def Demand(self) -> float:
 		"""Demand
 
-		Returns:
-			ISurgeTankConditionInput: 
+		Returns
+		--------
+			``ISurgeTankConditionInput`` : 
 		"""
 		pass
 
@@ -1336,8 +1447,9 @@ class ISurgeTankConditionInput(IElementConditionInput):
 	def HydraulicGrade(self) -> float:
 		"""Hydraulic Grade
 
-		Returns:
-			ISurgeTankConditionInput: 
+		Returns
+		--------
+			``ISurgeTankConditionInput`` : 
 		"""
 		pass
 
@@ -1349,8 +1461,9 @@ class ISurgeTankConditionInput(IElementConditionInput):
 	def Pressure(self) -> float:
 		"""Pressure
 
-		Returns:
-			ISurgeTankConditionInput: 
+		Returns
+		--------
+			``ISurgeTankConditionInput`` : 
 		"""
 		pass
 
@@ -1364,8 +1477,9 @@ class ISystemDemandConditionInput(IControlSimpleConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1374,8 +1488,9 @@ class ISystemDemandConditionInput(IControlSimpleConditionInput):
 	def IsSystemDemandCondition(self) -> bool:
 		"""True if the ConditionType is set to system demand
 
-		Returns:
-			ISystemDemandConditionInput: 
+		Returns
+		--------
+			``ISystemDemandConditionInput`` : 
 		"""
 		pass
 
@@ -1383,8 +1498,9 @@ class ISystemDemandConditionInput(IControlSimpleConditionInput):
 	def SystemDemand(self) -> float:
 		"""The system demand to compare against to trigger the condition
 
-		Returns:
-			ISystemDemandConditionInput: 
+		Returns
+		--------
+			``ISystemDemandConditionInput`` : 
 		"""
 		pass
 
@@ -1398,8 +1514,9 @@ class IClockTimeConditionInput(IControlSimpleConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1408,8 +1525,9 @@ class IClockTimeConditionInput(IControlSimpleConditionInput):
 	def IsClockTimeCondition(self) -> bool:
 		"""True if the ConditionType is set to clock time.
 
-		Returns:
-			IClockTimeConditionInput: 
+		Returns
+		--------
+			``IClockTimeConditionInput`` : 
 		"""
 		pass
 
@@ -1417,8 +1535,9 @@ class IClockTimeConditionInput(IControlSimpleConditionInput):
 	def ClockTime(self) -> datetime:
 		"""The clock time to use to trigger the condition
 
-		Returns:
-			IClockTimeConditionInput: 
+		Returns
+		--------
+			``IClockTimeConditionInput`` : 
 		"""
 		pass
 
@@ -1432,8 +1551,9 @@ class ITimeFromStartConditionInput(IControlSimpleConditionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1442,8 +1562,9 @@ class ITimeFromStartConditionInput(IControlSimpleConditionInput):
 	def IsTimeFromStartCondition(self) -> bool:
 		"""True if the ConditionType is set to time from start
 
-		Returns:
-			ITimeFromStartConditionInput: 
+		Returns
+		--------
+			``ITimeFromStartConditionInput`` : 
 		"""
 		pass
 
@@ -1451,8 +1572,9 @@ class ITimeFromStartConditionInput(IControlSimpleConditionInput):
 	def TimeFromStart(self) -> float:
 		"""The time from start to trigger the condition.
 
-		Returns:
-			ITimeFromStartConditionInput: 
+		Returns
+		--------
+			``ITimeFromStartConditionInput`` : 
 		"""
 		pass
 
@@ -1466,8 +1588,9 @@ class IControlConditions(IWaterComponentsBase[IControlConditions, IControlCondit
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1478,8 +1601,9 @@ class IControlConditionUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1488,8 +1612,9 @@ class IControlConditionUnits(IElementUnits):
 	def DemandUnit(self) -> IUnit:
 		"""Formatter for demand attribute
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1497,8 +1622,9 @@ class IControlConditionUnits(IElementUnits):
 	def HydraulicGradeUnit(self) -> IUnit:
 		"""Formatter for HGL
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1506,8 +1632,9 @@ class IControlConditionUnits(IElementUnits):
 	def PressureUnit(self) -> IUnit:
 		"""Formatter for pressure
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1515,8 +1642,9 @@ class IControlConditionUnits(IElementUnits):
 	def LevelUnit(self) -> IUnit:
 		"""Formatter for tank level
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1524,8 +1652,9 @@ class IControlConditionUnits(IElementUnits):
 	def TimeToFillUnit(self) -> IUnit:
 		"""Formatter for tank time to fill
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1533,8 +1662,9 @@ class IControlConditionUnits(IElementUnits):
 	def TimeToDrainUnit(self) -> IUnit:
 		"""Formatter for tank time to drain
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1542,8 +1672,9 @@ class IControlConditionUnits(IElementUnits):
 	def PercentFullUnit(self) -> IUnit:
 		"""Formatter for tank percent full
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1551,8 +1682,9 @@ class IControlConditionUnits(IElementUnits):
 	def DischargeUnit(self) -> IUnit:
 		"""Formatter for discharge
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1560,8 +1692,9 @@ class IControlConditionUnits(IElementUnits):
 	def HeadlossCoefficientUnit(self) -> IUnit:
 		"""Formatter for headloss coefficient
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1569,8 +1702,9 @@ class IControlConditionUnits(IElementUnits):
 	def TimeFromStartUnit(self) -> IUnit:
 		"""Formatter for time from start
 
-		Returns:
-			IControlConditionUnits: 
+		Returns
+		--------
+			``IControlConditionUnits`` : 
 		"""
 		pass
 
@@ -1580,8 +1714,9 @@ class ICompositeCondition(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1591,8 +1726,9 @@ class ICompositeCondition(ICollectionElement):
 		"""If the first row of the composite conditions collection, always returns If.
             If not the first row, then use AND or OR.
 
-		Returns:
-			ICompositeCondition: 
+		Returns
+		--------
+			``ICompositeCondition`` : 
 		"""
 		pass
 
@@ -1604,8 +1740,9 @@ class ICompositeCondition(ICollectionElement):
 	def Condition(self) -> IControlCondition:
 		"""The condition for this row.
 
-		Returns:
-			ICompositeCondition: 
+		Returns
+		--------
+			``ICompositeCondition`` : 
 		"""
 		pass
 
@@ -1619,8 +1756,9 @@ class ICompositeConditions(ICollection[ICompositeCondition]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1629,12 +1767,14 @@ class ICompositeConditions(ICollection[ICompositeCondition]):
 	def Add(self, logicalOperator: LogicalOperatorEnum, condition: IControlCondition) -> ICompositeCondition:
 		"""Adds a condition to the collection
 
-		Args:
-			logicalOperator(LogicalOperatorEnum): If the first row, can be IF.  Otherwise, must be AND or OR.
-			condition(IControlCondition): The condition to use for the row.
+		Args
+		--------
+			logicalOperator (``LogicalOperatorEnum``) :  If the first row, can be IF.  Otherwise, must be AND or OR.
+			condition (``IControlCondition``) :  The condition to use for the row.
 
-		Returns:
-			ICompositeCondition: The composite condition created with the assigned parameters.
+		Returns
+		--------
+			``ICompositeCondition`` : The composite condition created with the assigned parameters.
 		"""
 		pass
 
@@ -1642,8 +1782,9 @@ class ICompositeConditions(ICollection[ICompositeCondition]):
 	def Add(self) -> ICompositeCondition:
 		"""No Description
 
-		Returns:
-			ICompositeCondition: 
+		Returns
+		--------
+			``ICompositeCondition`` : 
 		"""
 		pass
 
@@ -1653,8 +1794,9 @@ class ICompositeConditionCollection(ICollectionElements[ICompositeConditions, IC
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1665,8 +1807,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1675,8 +1818,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def ActionType(self) -> ControlActionTypeEnum:
 		"""The type of action - simple or composite
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1688,8 +1832,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def Element(self) -> IWaterElement:
 		"""The element assigned to the action.
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1701,8 +1846,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def Pipe(self) -> IPipeActionInput:
 		"""The pipe action properties
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1710,8 +1856,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def Pump(self) -> IPumpActionInput:
 		"""The pump action properties
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1719,8 +1866,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def TCV(self) -> IThrottleControlValveActionInput:
 		"""The TCV action properties
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1728,8 +1876,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def GPV(self) -> IGeneralPurposeValveActionInput:
 		"""The GPV action properties
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1737,8 +1886,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def FCV(self) -> IFlowControlValveActionInput:
 		"""The FCV action properties
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1746,8 +1896,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def PressureValve(self) -> IPressureValveActionInput:
 		"""The pressure valve action properties
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1755,8 +1906,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def CompositeActionCollection(self) -> ICompositeActionCollection:
 		"""The list of actions making up a composite action.
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1764,8 +1916,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def DefineDescription(self) -> bool:
 		"""Determines whether the action description is automatically generated or user defined.
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1777,8 +1930,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def Description(self) -> str:
 		"""The description of the action.  If not user defined, returns Summary.
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1790,8 +1944,9 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 	def Summary(self) -> str:
 		"""The action statement in a readable format.
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -1801,8 +1956,9 @@ class IElementActionInput:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1811,8 +1967,9 @@ class IElementActionInput:
 	def Element(self) -> IWaterElement:
 		"""The assigned element for the action
 
-		Returns:
-			IElementActionInput: 
+		Returns
+		--------
+			``IElementActionInput`` : 
 		"""
 		pass
 
@@ -1822,8 +1979,9 @@ class IPipeActionInput(IElementActionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1832,8 +1990,9 @@ class IPipeActionInput(IElementActionInput):
 	def IsPipeAction(self) -> bool:
 		"""True if a pipe is assigned as the action element
 
-		Returns:
-			IPipeActionInput: 
+		Returns
+		--------
+			``IPipeActionInput`` : 
 		"""
 		pass
 
@@ -1841,8 +2000,9 @@ class IPipeActionInput(IElementActionInput):
 	def PipeAttribute(self) -> ControlActionPipeAttribute:
 		"""The pipe attribute to use for the action
 
-		Returns:
-			IPipeActionInput: 
+		Returns
+		--------
+			``IPipeActionInput`` : 
 		"""
 		pass
 
@@ -1854,8 +2014,9 @@ class IPipeActionInput(IElementActionInput):
 	def PipeStatus(self) -> ControlActionPipeStatus:
 		"""The pipe status to set.
 
-		Returns:
-			IPipeActionInput: 
+		Returns
+		--------
+			``IPipeActionInput`` : 
 		"""
 		pass
 
@@ -1869,8 +2030,9 @@ class IPumpActionInput(IElementActionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1879,8 +2041,9 @@ class IPumpActionInput(IElementActionInput):
 	def IsPumpAction(self) -> bool:
 		"""True if a pump is assigned as the action element
 
-		Returns:
-			IPumpActionInput: 
+		Returns
+		--------
+			``IPumpActionInput`` : 
 		"""
 		pass
 
@@ -1888,8 +2051,9 @@ class IPumpActionInput(IElementActionInput):
 	def PumpAttribute(self) -> ControlActionPumpAttribute:
 		"""the pump attribute to use for the action
 
-		Returns:
-			IPumpActionInput: 
+		Returns
+		--------
+			``IPumpActionInput`` : 
 		"""
 		pass
 
@@ -1901,8 +2065,9 @@ class IPumpActionInput(IElementActionInput):
 	def PumpStatus(self) -> ControlActionPumpStatus:
 		"""The pump status to use
 
-		Returns:
-			IPumpActionInput: 
+		Returns
+		--------
+			``IPumpActionInput`` : 
 		"""
 		pass
 
@@ -1914,8 +2079,9 @@ class IPumpActionInput(IElementActionInput):
 	def RelativeSpeedFactor(self) -> float:
 		"""The relative speed factor to use.
 
-		Returns:
-			IPumpActionInput: 
+		Returns
+		--------
+			``IPumpActionInput`` : 
 		"""
 		pass
 
@@ -1927,8 +2093,9 @@ class IPumpActionInput(IElementActionInput):
 	def TargetPressure(self) -> float:
 		"""The target pressure to set.
 
-		Returns:
-			IPumpActionInput: 
+		Returns
+		--------
+			``IPumpActionInput`` : 
 		"""
 		pass
 
@@ -1940,8 +2107,9 @@ class IPumpActionInput(IElementActionInput):
 	def TargetHead(self) -> float:
 		"""the target head to set.
 
-		Returns:
-			IPumpActionInput: 
+		Returns
+		--------
+			``IPumpActionInput`` : 
 		"""
 		pass
 
@@ -1955,8 +2123,9 @@ class IThrottleControlValveActionInput(IElementActionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -1965,8 +2134,9 @@ class IThrottleControlValveActionInput(IElementActionInput):
 	def IsTCVAction(self) -> bool:
 		"""True if a TCV is assigned as the action element.
 
-		Returns:
-			IThrottleControlValveActionInput: 
+		Returns
+		--------
+			``IThrottleControlValveActionInput`` : 
 		"""
 		pass
 
@@ -1974,8 +2144,9 @@ class IThrottleControlValveActionInput(IElementActionInput):
 	def TCVAttribute(self) -> ControlActionTCVAttribute:
 		"""The TCV attribute to use for this action
 
-		Returns:
-			IThrottleControlValveActionInput: 
+		Returns
+		--------
+			``IThrottleControlValveActionInput`` : 
 		"""
 		pass
 
@@ -1987,8 +2158,9 @@ class IThrottleControlValveActionInput(IElementActionInput):
 	def TCVStatus(self) -> ControlActionTCVStatus:
 		"""The TCV status to use
 
-		Returns:
-			IThrottleControlValveActionInput: 
+		Returns
+		--------
+			``IThrottleControlValveActionInput`` : 
 		"""
 		pass
 
@@ -2000,8 +2172,9 @@ class IThrottleControlValveActionInput(IElementActionInput):
 	def HeadlossCoefficient(self) -> float:
 		"""The headloss coefficient to use.
 
-		Returns:
-			IThrottleControlValveActionInput: 
+		Returns
+		--------
+			``IThrottleControlValveActionInput`` : 
 		"""
 		pass
 
@@ -2015,8 +2188,9 @@ class IGeneralPurposeValveActionInput(IElementActionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2025,8 +2199,9 @@ class IGeneralPurposeValveActionInput(IElementActionInput):
 	def IsGPVAction(self) -> bool:
 		"""True if a GPV is assigned as the action element.
 
-		Returns:
-			IGeneralPurposeValveActionInput: 
+		Returns
+		--------
+			``IGeneralPurposeValveActionInput`` : 
 		"""
 		pass
 
@@ -2034,8 +2209,9 @@ class IGeneralPurposeValveActionInput(IElementActionInput):
 	def GPVAttribute(self) -> ControlActionGPVAttribute:
 		"""The GPV attribute to use.
 
-		Returns:
-			IGeneralPurposeValveActionInput: 
+		Returns
+		--------
+			``IGeneralPurposeValveActionInput`` : 
 		"""
 		pass
 
@@ -2047,8 +2223,9 @@ class IGeneralPurposeValveActionInput(IElementActionInput):
 	def GPVStatus(self) -> ControlActionGPVStatus:
 		"""The GPV status.
 
-		Returns:
-			IGeneralPurposeValveActionInput: 
+		Returns
+		--------
+			``IGeneralPurposeValveActionInput`` : 
 		"""
 		pass
 
@@ -2062,8 +2239,9 @@ class IFlowControlValveActionInput(IElementActionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2072,8 +2250,9 @@ class IFlowControlValveActionInput(IElementActionInput):
 	def IsFCVAction(self) -> bool:
 		"""True if an FCV is assigned as the action element
 
-		Returns:
-			IFlowControlValveActionInput: 
+		Returns
+		--------
+			``IFlowControlValveActionInput`` : 
 		"""
 		pass
 
@@ -2081,8 +2260,9 @@ class IFlowControlValveActionInput(IElementActionInput):
 	def FCVAttribute(self) -> ControlActionFCVAttribute:
 		"""The FCv attribute to use.
 
-		Returns:
-			IFlowControlValveActionInput: 
+		Returns
+		--------
+			``IFlowControlValveActionInput`` : 
 		"""
 		pass
 
@@ -2094,8 +2274,9 @@ class IFlowControlValveActionInput(IElementActionInput):
 	def Discharge(self) -> float:
 		"""The discharge to use
 
-		Returns:
-			IFlowControlValveActionInput: 
+		Returns
+		--------
+			``IFlowControlValveActionInput`` : 
 		"""
 		pass
 
@@ -2107,8 +2288,9 @@ class IFlowControlValveActionInput(IElementActionInput):
 	def FCVStatus(self) -> ControlActionFCVStatus:
 		"""The FCV status to use.
 
-		Returns:
-			IFlowControlValveActionInput: 
+		Returns
+		--------
+			``IFlowControlValveActionInput`` : 
 		"""
 		pass
 
@@ -2122,8 +2304,9 @@ class IPressureValveActionInput(IElementActionInput):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2132,8 +2315,9 @@ class IPressureValveActionInput(IElementActionInput):
 	def IsPressureValveAction(self) -> bool:
 		"""True if a PRV, PBV or PSV is assigned as the action element.
 
-		Returns:
-			IPressureValveActionInput: 
+		Returns
+		--------
+			``IPressureValveActionInput`` : 
 		"""
 		pass
 
@@ -2141,8 +2325,9 @@ class IPressureValveActionInput(IElementActionInput):
 	def PressureValveAttribute(self) -> ControlActionPressureValveAttribute:
 		"""the pressure valve attribue to use.
 
-		Returns:
-			IPressureValveActionInput: 
+		Returns
+		--------
+			``IPressureValveActionInput`` : 
 		"""
 		pass
 
@@ -2154,8 +2339,9 @@ class IPressureValveActionInput(IElementActionInput):
 	def HydraulicGrade(self) -> float:
 		"""The hGL to set.
 
-		Returns:
-			IPressureValveActionInput: 
+		Returns
+		--------
+			``IPressureValveActionInput`` : 
 		"""
 		pass
 
@@ -2167,8 +2353,9 @@ class IPressureValveActionInput(IElementActionInput):
 	def Pressure(self) -> float:
 		"""The pressure to set.
 
-		Returns:
-			IPressureValveActionInput: 
+		Returns
+		--------
+			``IPressureValveActionInput`` : 
 		"""
 		pass
 
@@ -2180,8 +2367,9 @@ class IPressureValveActionInput(IElementActionInput):
 	def PressureValveStatus(self) -> ControlActionPressureValveStatus:
 		"""The status to set.
 
-		Returns:
-			IPressureValveActionInput: 
+		Returns
+		--------
+			``IPressureValveActionInput`` : 
 		"""
 		pass
 
@@ -2195,8 +2383,9 @@ class IControlActions(IWaterComponentsBase[IControlActions, IControlAction, ICon
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2207,8 +2396,9 @@ class IControlActionUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2217,8 +2407,9 @@ class IControlActionUnits(IElementUnits):
 	def RelativeSpeedFactorUnit(self) -> IUnit:
 		"""Formatter for relative speed factor
 
-		Returns:
-			IControlActionUnits: 
+		Returns
+		--------
+			``IControlActionUnits`` : 
 		"""
 		pass
 
@@ -2226,8 +2417,9 @@ class IControlActionUnits(IElementUnits):
 	def TargetPressureUnit(self) -> IUnit:
 		"""Formatter for target pressure
 
-		Returns:
-			IControlActionUnits: 
+		Returns
+		--------
+			``IControlActionUnits`` : 
 		"""
 		pass
 
@@ -2235,8 +2427,9 @@ class IControlActionUnits(IElementUnits):
 	def TargetHeadUnit(self) -> IUnit:
 		"""Formatter for target head
 
-		Returns:
-			IControlActionUnits: 
+		Returns
+		--------
+			``IControlActionUnits`` : 
 		"""
 		pass
 
@@ -2244,8 +2437,9 @@ class IControlActionUnits(IElementUnits):
 	def HeadlossCoefficientUnit(self) -> IUnit:
 		"""Formatter for headloss coefficient
 
-		Returns:
-			IControlActionUnits: 
+		Returns
+		--------
+			``IControlActionUnits`` : 
 		"""
 		pass
 
@@ -2253,8 +2447,9 @@ class IControlActionUnits(IElementUnits):
 	def DischargeUnit(self) -> IUnit:
 		"""Formatter for discharge
 
-		Returns:
-			IControlActionUnits: 
+		Returns
+		--------
+			``IControlActionUnits`` : 
 		"""
 		pass
 
@@ -2262,8 +2457,9 @@ class IControlActionUnits(IElementUnits):
 	def HydraulicGradeUnit(self) -> IUnit:
 		"""Formatter for hydraulic grade
 
-		Returns:
-			IControlActionUnits: 
+		Returns
+		--------
+			``IControlActionUnits`` : 
 		"""
 		pass
 
@@ -2271,8 +2467,9 @@ class IControlActionUnits(IElementUnits):
 	def PressureUnit(self) -> IUnit:
 		"""Formatter for pressure
 
-		Returns:
-			IControlActionUnits: 
+		Returns
+		--------
+			``IControlActionUnits`` : 
 		"""
 		pass
 
@@ -2282,8 +2479,9 @@ class ICompositeAction(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2292,8 +2490,9 @@ class ICompositeAction(ICollectionElement):
 	def Action(self) -> IControlAction:
 		"""The action for this row.
 
-		Returns:
-			ICompositeAction: 
+		Returns
+		--------
+			``ICompositeAction`` : 
 		"""
 		pass
 
@@ -2307,8 +2506,9 @@ class ICompositeActions(ICollection[ICompositeAction]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2317,11 +2517,13 @@ class ICompositeActions(ICollection[ICompositeAction]):
 	def Add(self, action: IControlAction) -> ICompositeAction:
 		"""Adds an action to the composite action collection.
 
-		Args:
-			action(IControlAction): The action to add.
+		Args
+		--------
+			action (``IControlAction``) :  The action to add.
 
-		Returns:
-			ICompositeAction: Represents the new row added to the collection
+		Returns
+		--------
+			``ICompositeAction`` : Represents the new row added to the collection
 		"""
 		pass
 
@@ -2329,8 +2531,9 @@ class ICompositeActions(ICollection[ICompositeAction]):
 	def Add(self) -> ICompositeAction:
 		"""No Description
 
-		Returns:
-			ICompositeAction: 
+		Returns
+		--------
+			``ICompositeAction`` : 
 		"""
 		pass
 
@@ -2340,8 +2543,9 @@ class ICompositeActionCollection(ICollectionElements[ICompositeActions, IComposi
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2352,8 +2556,9 @@ class ControlExtensionMethods:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2363,14 +2568,16 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, pipe: IPipe, attribute: ControlActionPipeAttribute, status: ControlActionPipeStatus) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			pipe(IPipe): pipe
-			attribute(ControlActionPipeAttribute): attribute
-			status(ControlActionPipeStatus): status
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			pipe (``IPipe``) :  pipe
+			attribute (``ControlActionPipeAttribute``) :  attribute
+			status (``ControlActionPipeStatus``) :  status
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2379,14 +2586,16 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, pump: IPump, attribute: PumpAttribute, value: float) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			pump(IPump): pump
-			attribute(PumpAttribute): attribute
-			value(float): value
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			pump (``IPump``) :  pump
+			attribute (``PumpAttribute``) :  attribute
+			value (``float``) :  value
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2395,13 +2604,15 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, pump: IPump, status: ControlActionPumpStatus) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			pump(IPump): pump
-			status(ControlActionPumpStatus): status
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			pump (``IPump``) :  pump
+			status (``ControlActionPumpStatus``) :  status
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2410,13 +2621,15 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, tcv: IThrottleControlValve, status: ControlActionTCVStatus) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			tcv(IThrottleControlValve): tcv
-			status(ControlActionTCVStatus): status
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			tcv (``IThrottleControlValve``) :  tcv
+			status (``ControlActionTCVStatus``) :  status
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2425,13 +2638,15 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, tcv: IThrottleControlValve, value: float) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			tcv(IThrottleControlValve): tcv
-			value(float): value
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			tcv (``IThrottleControlValve``) :  tcv
+			value (``float``) :  value
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2440,13 +2655,15 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, gpv: IGeneralPurposeValve, status: ControlActionGPVStatus) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			gpv(IGeneralPurposeValve): gpv
-			status(ControlActionGPVStatus): status
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			gpv (``IGeneralPurposeValve``) :  gpv
+			status (``ControlActionGPVStatus``) :  status
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2455,13 +2672,15 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, fcv: IFlowControlValve, status: ControlActionFCVStatus) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			fcv(IFlowControlValve): fcv
-			status(ControlActionFCVStatus): status
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			fcv (``IFlowControlValve``) :  fcv
+			status (``ControlActionFCVStatus``) :  status
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2470,14 +2689,16 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, psv: IPressureSustainingValve, attribute: PressureValveAttribute, value: float) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			psv(IPressureSustainingValve): psv
-			attribute(PressureValveAttribute): attribute
-			value(float): value
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			psv (``IPressureSustainingValve``) :  psv
+			attribute (``PressureValveAttribute``) :  attribute
+			value (``float``) :  value
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2486,14 +2707,16 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, pbv: IPressureBreakingValve, attribute: PressureValveAttribute, value: float) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			pbv(IPressureBreakingValve): pbv
-			attribute(PressureValveAttribute): attribute
-			value(float): value
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			pbv (``IPressureBreakingValve``) :  pbv
+			attribute (``PressureValveAttribute``) :  attribute
+			value (``float``) :  value
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2502,14 +2725,16 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, prv: IPressureReducingValve, attribute: PressureValveAttribute, value: float) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			prv(IPressureReducingValve): prv
-			attribute(PressureValveAttribute): attribute
-			value(float): value
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			prv (``IPressureReducingValve``) :  prv
+			attribute (``PressureValveAttribute``) :  attribute
+			value (``float``) :  value
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2518,13 +2743,15 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, pbv: IPressureBreakingValve, status: ControlActionPressureValveStatus) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			pbv(IPressureBreakingValve): pbv
-			status(ControlActionPressureValveStatus): status
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			pbv (``IPressureBreakingValve``) :  pbv
+			status (``ControlActionPressureValveStatus``) :  status
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2533,13 +2760,15 @@ class ControlExtensionMethods:
 	def CreateAction(actions: IControlActions, prv: IPressureReducingValve, status: ControlActionPressureValveStatus) -> IControlAction:
 		"""No Description
 
-		Args:
-			actions(IControlActions): actions
-			prv(IPressureReducingValve): prv
-			status(ControlActionPressureValveStatus): status
+		Args
+		--------
+			actions (``IControlActions``) :  actions
+			prv (``IPressureReducingValve``) :  prv
+			status (``ControlActionPressureValveStatus``) :  status
 
-		Returns:
-			IControlAction: 
+		Returns
+		--------
+			``IControlAction`` : 
 		"""
 		pass
 
@@ -2548,15 +2777,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, reservoir: IReservoir, attribute: NodeAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""Create a condition for a reservoir using the attribute value.
 
-		Args:
-			conditions(IControlConditions): conditions
-			reservoir(IReservoir): reservoir
-			attribute(NodeAttributeEnum): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			reservoir (``IReservoir``) :  reservoir
+			attribute (``NodeAttributeEnum``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2565,15 +2796,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, junction: IJunction, attribute: NodeAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""Create a condition for the junction
 
-		Args:
-			conditions(IControlConditions): conditions
-			junction(IJunction): junction
-			attribute(NodeAttributeEnum): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			junction (``IJunction``) :  junction
+			attribute (``NodeAttributeEnum``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2582,15 +2815,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, hydrant: IHydrant, attribute: NodeAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""Create a condition for the hydrant.
 
-		Args:
-			conditions(IControlConditions): conditions
-			hydrant(IHydrant): hydrant
-			attribute(NodeAttributeEnum): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			hydrant (``IHydrant``) :  hydrant
+			attribute (``NodeAttributeEnum``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2599,15 +2834,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, tank: ITank, attribute: TankAttributeEnum, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""Create a condition for the tank using the attribute and value.
 
-		Args:
-			conditions(IControlConditions): conditions
-			tank(ITank): tank
-			attribute(TankAttributeEnum): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			tank (``ITank``) :  tank
+			attribute (``TankAttributeEnum``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2616,15 +2853,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, pump: IPump, attribute: PumpConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""Create a condition for the pump
 
-		Args:
-			conditions(IControlConditions): conditions
-			pump(IPump): pump
-			attribute(PumpConditionAttribute): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			pump (``IPump``) :  pump
+			attribute (``PumpConditionAttribute``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2633,13 +2872,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, pump: IPump, status: PumpStatus) -> IControlCondition:
 		"""Create a condition for the pump using its status.
 
-		Args:
-			conditions(IControlConditions): conditions
-			pump(IPump): pump
-			status(PumpStatus): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			pump (``IPump``) :  pump
+			status (``PumpStatus``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2648,14 +2889,16 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, pipe: IPipe, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""Create a condition for the pipe
 
-		Args:
-			conditions(IControlConditions): conditions
-			pipe(IPipe): pipe
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			pipe (``IPipe``) :  pipe
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2664,13 +2907,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, pipe: IPipe, status: PipeStatus) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			pipe(IPipe): pipe
-			status(PipeStatus): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			pipe (``IPipe``) :  pipe
+			status (``PipeStatus``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2679,15 +2924,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, psv: IPressureSustainingValve, attribute: PressureValveConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""Create a condition for the psv
 
-		Args:
-			conditions(IControlConditions): conditions
-			psv(IPressureSustainingValve): psv
-			attribute(PressureValveConditionAttribute): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			psv (``IPressureSustainingValve``) :  psv
+			attribute (``PressureValveConditionAttribute``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2696,13 +2943,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, psv: IPressureSustainingValve, status: ControlConditionValveStatus) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			psv(IPressureSustainingValve): psv
-			status(ControlConditionValveStatus): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			psv (``IPressureSustainingValve``) :  psv
+			status (``ControlConditionValveStatus``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2711,15 +2960,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, pbv: IPressureBreakingValve, attribute: PressureValveConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			pbv(IPressureBreakingValve): pbv
-			attribute(PressureValveConditionAttribute): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			pbv (``IPressureBreakingValve``) :  pbv
+			attribute (``PressureValveConditionAttribute``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2728,13 +2979,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, pbv: IPressureBreakingValve, status: ControlConditionValveStatus) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			pbv(IPressureBreakingValve): pbv
-			status(ControlConditionValveStatus): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			pbv (``IPressureBreakingValve``) :  pbv
+			status (``ControlConditionValveStatus``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2743,15 +2996,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, prv: IPressureReducingValve, attribute: PressureValveConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			prv(IPressureReducingValve): prv
-			attribute(PressureValveConditionAttribute): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			prv (``IPressureReducingValve``) :  prv
+			attribute (``PressureValveConditionAttribute``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2760,13 +3015,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, prv: IPressureReducingValve, status: ControlConditionValveStatus) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			prv(IPressureReducingValve): prv
-			status(ControlConditionValveStatus): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			prv (``IPressureReducingValve``) :  prv
+			status (``ControlConditionValveStatus``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2775,15 +3032,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, fcv: IFlowControlValve, attribute: FCVConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			fcv(IFlowControlValve): fcv
-			attribute(FCVConditionAttribute): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			fcv (``IFlowControlValve``) :  fcv
+			attribute (``FCVConditionAttribute``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2792,13 +3051,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, fcv: IFlowControlValve, status: FCVStatusEnum) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			fcv(IFlowControlValve): fcv
-			status(FCVStatusEnum): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			fcv (``IFlowControlValve``) :  fcv
+			status (``FCVStatusEnum``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2807,13 +3068,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, gpv: IGeneralPurposeValve, status: ControlConditionGPVStatusEnum) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			gpv(IGeneralPurposeValve): gpv
-			status(ControlConditionGPVStatusEnum): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			gpv (``IGeneralPurposeValve``) :  gpv
+			status (``ControlConditionGPVStatusEnum``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2822,14 +3085,16 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, gpv: IGeneralPurposeValve, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			gpv(IGeneralPurposeValve): gpv
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			gpv (``IGeneralPurposeValve``) :  gpv
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2838,15 +3103,17 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, tcv: IThrottleControlValve, attribute: TCVConditionAttribute, op: ConditionComparisonOperator, value: float) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			tcv(IThrottleControlValve): tcv
-			attribute(TCVConditionAttribute): attribute
-			op(ConditionComparisonOperator): op
-			value(float): value
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			tcv (``IThrottleControlValve``) :  tcv
+			attribute (``TCVConditionAttribute``) :  attribute
+			op (``ConditionComparisonOperator``) :  op
+			value (``float``) :  value
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2855,13 +3122,15 @@ class ControlExtensionMethods:
 	def CreateCondition(conditions: IControlConditions, tcv: IThrottleControlValve, status: TCVStatusEnum) -> IControlCondition:
 		"""No Description
 
-		Args:
-			conditions(IControlConditions): conditions
-			tcv(IThrottleControlValve): tcv
-			status(TCVStatusEnum): status
+		Args
+		--------
+			conditions (``IControlConditions``) :  conditions
+			tcv (``IThrottleControlValve``) :  tcv
+			status (``TCVStatusEnum``) :  status
 
-		Returns:
-			IControlCondition: 
+		Returns
+		--------
+			``IControlCondition`` : 
 		"""
 		pass
 
@@ -2869,12 +3138,14 @@ class ControlExtensionMethods:
 	def CreateControl(controls: IControls, controlStatement: str) -> IControl:
 		"""Creates a logical control using a readable string
 
-		Args:
-			controls(IControls): The controls manager
-			controlStatement(str): The string in a readable format representing the logical control to create.
+		Args
+		--------
+			controls (``IControls``) :  The controls manager
+			controlStatement (``str``) :  The string in a readable format representing the logical control to create.
 
-		Returns:
-			IControl: If the control statement is in the appropriate format, a non-null control.  Otherwise, null.
+		Returns
+		--------
+			``IControl`` : If the control statement is in the appropriate format, a non-null control.  Otherwise, null.
 		"""
 		pass
 
@@ -2884,8 +3155,9 @@ class SCADASignalExtensions:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2894,14 +3166,16 @@ class SCADASignalExtensions:
 	def CreateFormulaSignal(scadaSignals: ISCADASignals, label: str, signalLabel: str, formula: str) -> ISCADASignal:
 		"""Creates a new derived SCADA signal based on a formula.
 
-		Args:
-			scadaSignals(ISCADASignals): The SCADA signals manager for a specific data source
-			label(str): The label of the new derived signal
-			signalLabel(str): The label of the signal in the data source.
-			formula(str): The formula to use for the derived signal
+		Args
+		--------
+			scadaSignals (``ISCADASignals``) :  The SCADA signals manager for a specific data source
+			label (``str``) :  The label of the new derived signal
+			signalLabel (``str``) :  The label of the signal in the data source.
+			formula (``str``) :  The formula to use for the derived signal
 
-		Returns:
-			ISCADASignal: 
+		Returns
+		--------
+			``ISCADASignal`` : 
 		"""
 		pass
 
@@ -2909,13 +3183,15 @@ class SCADASignalExtensions:
 	def CreateSignal(scadaSignals: ISCADASignals, label: str, signalLabel: str) -> ISCADASignal:
 		"""Creates a new SCADA signal.
 
-		Args:
-			scadaSignals(ISCADASignals): The SCADA signals manager for a specific data source
-			label(str): The custom label of the signal.
-			signalLabel(str): The label of the signal in the data source.
+		Args
+		--------
+			scadaSignals (``ISCADASignals``) :  The SCADA signals manager for a specific data source
+			label (``str``) :  The custom label of the signal.
+			signalLabel (``str``) :  The label of the signal in the data source.
 
-		Returns:
-			ISCADASignal: A new SCADA signal
+		Returns
+		--------
+			``ISCADASignal`` : A new SCADA signal
 		"""
 		pass
 
@@ -2925,8 +3201,9 @@ class IWaterComponent(IElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2935,8 +3212,9 @@ class IWaterComponent(IElement):
 	def ElementType(self) -> WaterComponentType:
 		"""The type of support element
 
-		Returns:
-			IWaterComponent: 
+		Returns
+		--------
+			``IWaterComponent`` : 
 		"""
 		pass
 
@@ -2946,8 +3224,9 @@ class IWaterComponentsBase(Generic[TElementManagerType, TElementType, TUnitsType
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2958,8 +3237,9 @@ class IWaterComponentBase(Generic[TElementManagerType, TElementType, TUnitsType]
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2970,8 +3250,9 @@ class IZones(IWaterComponentsBase[IZones, IZone, IElementUnits]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2982,8 +3263,9 @@ class IZone(IWaterComponentBase[IZones, IZone, IElementUnits]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -2994,8 +3276,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3004,8 +3287,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 	def PatternCategory(self) -> PatternCategory:
 		"""The type of pattern this represents
 
-		Returns:
-			IPattern: 
+		Returns
+		--------
+			``IPattern`` : 
 		"""
 		pass
 
@@ -3017,8 +3301,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 	def PatternFormat(self) -> PatternFormat:
 		"""The format of the pattern - stepwise or continuous
 
-		Returns:
-			IPattern: 
+		Returns
+		--------
+			``IPattern`` : 
 		"""
 		pass
 
@@ -3030,8 +3315,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 	def PatternStartTime(self) -> datetime:
 		"""The first time step in the pattern. The start time format is a standard 24-hour clock.
 
-		Returns:
-			IPattern: 
+		Returns
+		--------
+			``IPattern`` : 
 		"""
 		pass
 
@@ -3043,8 +3329,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 	def PatternStartingMultiplier(self) -> float:
 		"""The multiplier value of the first time step point in your pattern. Any real number can be used for this multiplier (it does not have to be 1.0).
 
-		Returns:
-			IPattern: 
+		Returns
+		--------
+			``IPattern`` : 
 		"""
 		pass
 
@@ -3056,8 +3343,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 	def PatternCurve(self) -> IPatternCurveCollection:
 		"""The pattern curve for this pattern.
 
-		Returns:
-			IPattern: 
+		Returns
+		--------
+			``IPattern`` : 
 		"""
 		pass
 
@@ -3065,8 +3353,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 	def DailyMultipliers(self) -> IDailyMultipliers:
 		"""The daily multipliers for this pattern.
 
-		Returns:
-			IPattern: 
+		Returns
+		--------
+			``IPattern`` : 
 		"""
 		pass
 
@@ -3074,8 +3363,9 @@ class IPattern(IWaterComponentBase[IPatterns, IPattern, IPatternUnits]):
 	def MonthlyMultipliers(self) -> IMonthlyMultipliers:
 		"""The monthly multipliers for this pattern.
 
-		Returns:
-			IPattern: 
+		Returns
+		--------
+			``IPattern`` : 
 		"""
 		pass
 
@@ -3085,8 +3375,9 @@ class IPatternUnits(IPatternMultiplierUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3095,8 +3386,9 @@ class IPatternUnits(IPatternMultiplierUnits):
 	def TimeFromStartUnit(self) -> IUnit:
 		"""The formatter name for time from start
 
-		Returns:
-			IPatternUnits: 
+		Returns
+		--------
+			``IPatternUnits`` : 
 		"""
 		pass
 
@@ -3106,8 +3398,9 @@ class IPatternMultiplierUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3116,8 +3409,9 @@ class IPatternMultiplierUnits(IElementUnits):
 	def MultiplierUnit(self) -> IUnit:
 		"""The formatter name for multiplier
 
-		Returns:
-			IPatternMultiplierUnits: 
+		Returns
+		--------
+			``IPatternMultiplierUnits`` : 
 		"""
 		pass
 
@@ -3127,8 +3421,9 @@ class IPatterns(IWaterComponentsBase[IPatterns, IPattern, IPatternUnits]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3139,8 +3434,9 @@ class IPatternCurveCollection(ICollectionElements[IPatternCurve, IPatternCurveEl
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3151,8 +3447,9 @@ class IPatternCurve(ICollection[IPatternCurveElement]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3161,12 +3458,14 @@ class IPatternCurve(ICollection[IPatternCurveElement]):
 	def Add(self, timeFromStart: float, multiplier: float) -> IPatternCurveElement:
 		"""Adds a new row to the collection using the parameter provided.
 
-		Args:
-			timeFromStart(float): The amount of time from the Start Time of the pattern to the time step point being defined.
-			multiplier(float): The multiplier value associated with the time step point.
+		Args
+		--------
+			timeFromStart (``float``) :  The amount of time from the Start Time of the pattern to the time step point being defined.
+			multiplier (``float``) :  The multiplier value associated with the time step point.
 
-		Returns:
-			IPatternCurveElement: 
+		Returns
+		--------
+			``IPatternCurveElement`` : 
 		"""
 		pass
 
@@ -3174,8 +3473,9 @@ class IPatternCurve(ICollection[IPatternCurveElement]):
 	def Add(self) -> IPatternCurveElement:
 		"""No Description
 
-		Returns:
-			IPatternCurveElement: 
+		Returns
+		--------
+			``IPatternCurveElement`` : 
 		"""
 		pass
 
@@ -3185,8 +3485,9 @@ class IPatternCurveElement(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3195,8 +3496,9 @@ class IPatternCurveElement(ICollectionElement):
 	def TimeFromStart(self) -> float:
 		"""The amount of time from the Start Time of the pattern to the time step point being defined.
 
-		Returns:
-			IPatternCurveElement: 
+		Returns
+		--------
+			``IPatternCurveElement`` : 
 		"""
 		pass
 
@@ -3208,8 +3510,9 @@ class IPatternCurveElement(ICollectionElement):
 	def Multiplier(self) -> float:
 		"""The multiplier value associated with the time step point.
 
-		Returns:
-			IPatternCurveElement: 
+		Returns
+		--------
+			``IPatternCurveElement`` : 
 		"""
 		pass
 
@@ -3223,8 +3526,9 @@ class IDailyMultipliers:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3233,8 +3537,9 @@ class IDailyMultipliers:
 	def Sunday(self) -> float:
 		"""Sunday multiplier
 
-		Returns:
-			IDailyMultipliers: 
+		Returns
+		--------
+			``IDailyMultipliers`` : 
 		"""
 		pass
 
@@ -3246,8 +3551,9 @@ class IDailyMultipliers:
 	def Monday(self) -> float:
 		"""Monday multiplier
 
-		Returns:
-			IDailyMultipliers: 
+		Returns
+		--------
+			``IDailyMultipliers`` : 
 		"""
 		pass
 
@@ -3259,8 +3565,9 @@ class IDailyMultipliers:
 	def Tuesday(self) -> float:
 		"""Tuesday multiplier
 
-		Returns:
-			IDailyMultipliers: 
+		Returns
+		--------
+			``IDailyMultipliers`` : 
 		"""
 		pass
 
@@ -3272,8 +3579,9 @@ class IDailyMultipliers:
 	def Wednesday(self) -> float:
 		"""Wednesday multiplier
 
-		Returns:
-			IDailyMultipliers: 
+		Returns
+		--------
+			``IDailyMultipliers`` : 
 		"""
 		pass
 
@@ -3285,8 +3593,9 @@ class IDailyMultipliers:
 	def Thursday(self) -> float:
 		"""Thursday multiplier
 
-		Returns:
-			IDailyMultipliers: 
+		Returns
+		--------
+			``IDailyMultipliers`` : 
 		"""
 		pass
 
@@ -3298,8 +3607,9 @@ class IDailyMultipliers:
 	def Friday(self) -> float:
 		"""Friday multiplier
 
-		Returns:
-			IDailyMultipliers: 
+		Returns
+		--------
+			``IDailyMultipliers`` : 
 		"""
 		pass
 
@@ -3311,8 +3621,9 @@ class IDailyMultipliers:
 	def Saturday(self) -> float:
 		"""Saturday multiplier
 
-		Returns:
-			IDailyMultipliers: 
+		Returns
+		--------
+			``IDailyMultipliers`` : 
 		"""
 		pass
 
@@ -3326,8 +3637,9 @@ class IMonthlyMultipliers:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3336,8 +3648,9 @@ class IMonthlyMultipliers:
 	def January(self) -> float:
 		"""January multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3349,8 +3662,9 @@ class IMonthlyMultipliers:
 	def February(self) -> float:
 		"""February multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3362,8 +3676,9 @@ class IMonthlyMultipliers:
 	def March(self) -> float:
 		"""March multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3375,8 +3690,9 @@ class IMonthlyMultipliers:
 	def April(self) -> float:
 		"""April multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3388,8 +3704,9 @@ class IMonthlyMultipliers:
 	def May(self) -> float:
 		"""May multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3401,8 +3718,9 @@ class IMonthlyMultipliers:
 	def June(self) -> float:
 		"""June multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3414,8 +3732,9 @@ class IMonthlyMultipliers:
 	def July(self) -> float:
 		"""July multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3427,8 +3746,9 @@ class IMonthlyMultipliers:
 	def August(self) -> float:
 		"""August multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3440,8 +3760,9 @@ class IMonthlyMultipliers:
 	def September(self) -> float:
 		"""September multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3453,8 +3774,9 @@ class IMonthlyMultipliers:
 	def October(self) -> float:
 		"""October multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3466,8 +3788,9 @@ class IMonthlyMultipliers:
 	def November(self) -> float:
 		"""November multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3479,8 +3802,9 @@ class IMonthlyMultipliers:
 	def December(self) -> float:
 		"""December multiplier
 
-		Returns:
-			IMonthlyMultipliers: 
+		Returns
+		--------
+			``IMonthlyMultipliers`` : 
 		"""
 		pass
 
@@ -3494,8 +3818,9 @@ class IPumpDefinitions(IWaterComponentsBase[IPumpDefinitions, IPumpDefinition, I
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3506,8 +3831,9 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3516,8 +3842,9 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 	def Head(self) -> IPumpDefinitionHead:
 		"""The pump definition head settings.
 
-		Returns:
-			IPumpDefinition: 
+		Returns
+		--------
+			``IPumpDefinition`` : 
 		"""
 		pass
 
@@ -3525,8 +3852,9 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 	def Efficiency(self) -> IPumpDefinitionEfficiency:
 		"""The efficiency settings for the pump definition
 
-		Returns:
-			IPumpDefinition: 
+		Returns
+		--------
+			``IPumpDefinition`` : 
 		"""
 		pass
 
@@ -3534,8 +3862,9 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 	def NPSH(self) -> IPumpDefinitionNPSH:
 		"""The NPSH settings for the pump definition
 
-		Returns:
-			IPumpDefinition: 
+		Returns
+		--------
+			``IPumpDefinition`` : 
 		"""
 		pass
 
@@ -3543,8 +3872,9 @@ class IPumpDefinition(IWaterComponentBase[IPumpDefinitions, IPumpDefinition, IPu
 	def Motor(self) -> IPumpDefinitionMotor:
 		"""The motor settings for the pump definition
 
-		Returns:
-			IPumpDefinition: 
+		Returns
+		--------
+			``IPumpDefinition`` : 
 		"""
 		pass
 
@@ -3554,8 +3884,9 @@ class IPumpDefinitionUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3564,8 +3895,9 @@ class IPumpDefinitionUnits(IElementUnits):
 	def FlowUnit(self) -> IUnit:
 		"""Unit information for flow
 
-		Returns:
-			IPumpDefinitionUnits: 
+		Returns
+		--------
+			``IPumpDefinitionUnits`` : 
 		"""
 		pass
 
@@ -3573,8 +3905,9 @@ class IPumpDefinitionUnits(IElementUnits):
 	def HeadUnit(self) -> IUnit:
 		"""Unit information for head
 
-		Returns:
-			IPumpDefinitionUnits: 
+		Returns
+		--------
+			``IPumpDefinitionUnits`` : 
 		"""
 		pass
 
@@ -3582,8 +3915,9 @@ class IPumpDefinitionUnits(IElementUnits):
 	def PowerUnit(self) -> IUnit:
 		"""Unit information for power
 
-		Returns:
-			IPumpDefinitionUnits: 
+		Returns
+		--------
+			``IPumpDefinitionUnits`` : 
 		"""
 		pass
 
@@ -3591,8 +3925,9 @@ class IPumpDefinitionUnits(IElementUnits):
 	def EfficiencyUnit(self) -> IUnit:
 		"""The field formatter information for efficiency
 
-		Returns:
-			IPumpDefinitionUnits: 
+		Returns
+		--------
+			``IPumpDefinitionUnits`` : 
 		"""
 		pass
 
@@ -3600,8 +3935,9 @@ class IPumpDefinitionUnits(IElementUnits):
 	def SpeedUnit(self) -> IUnit:
 		"""The unit information for speed.
 
-		Returns:
-			IPumpDefinitionUnits: 
+		Returns
+		--------
+			``IPumpDefinitionUnits`` : 
 		"""
 		pass
 
@@ -3611,8 +3947,9 @@ class IPumpDefinitionHead:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3621,8 +3958,9 @@ class IPumpDefinitionHead:
 	def PumpDefinitionType(self) -> PumpDefinitionType:
 		"""DepthFlowVariableSpeed
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3634,8 +3972,9 @@ class IPumpDefinitionHead:
 	def ConstantPower(self) -> float:
 		"""This is available only for constant-power pumps.
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3647,8 +3986,9 @@ class IPumpDefinitionHead:
 	def DesignFlow(self) -> float:
 		"""The pump definition's design flow.
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3660,8 +4000,9 @@ class IPumpDefinitionHead:
 	def DesignHead(self) -> float:
 		"""The pump definitions design head.
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3673,8 +4014,9 @@ class IPumpDefinitionHead:
 	def ShutoffHead(self) -> float:
 		"""The pump definition's shutoff head
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3686,8 +4028,9 @@ class IPumpDefinitionHead:
 	def MaxOperatingHead(self) -> float:
 		"""The pump definition's maximum operating head
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3699,8 +4042,9 @@ class IPumpDefinitionHead:
 	def MaxOperatingFlow(self) -> float:
 		"""The pump definition's maximum operating flow
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3712,8 +4056,9 @@ class IPumpDefinitionHead:
 	def MaxExtendedFlow(self) -> float:
 		"""The pump definition's max extended flow
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3725,8 +4070,9 @@ class IPumpDefinitionHead:
 	def PumpCurve(self) -> IPumpCurveCollection:
 		"""Gets the pump curve collection
 
-		Returns:
-			IPumpDefinitionHead: 
+		Returns
+		--------
+			``IPumpDefinitionHead`` : 
 		"""
 		pass
 
@@ -3736,8 +4082,9 @@ class IPumpCurveCollection(ICollectionElements[IPumpCurve, IPumpCurveElement, IP
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3748,8 +4095,9 @@ class IPumpCurve(ICollection[IPumpCurveElement]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3758,12 +4106,14 @@ class IPumpCurve(ICollection[IPumpCurveElement]):
 	def Add(self, flow: float, head: float) -> IPumpCurveElement:
 		"""Adds a new row to the pump curve.
 
-		Args:
-			flow(float): flow
-			head(float): head
+		Args
+		--------
+			flow (``float``) :  flow
+			head (``float``) :  head
 
-		Returns:
-			IPumpCurveElement: 
+		Returns
+		--------
+			``IPumpCurveElement`` : 
 		"""
 		pass
 
@@ -3771,8 +4121,9 @@ class IPumpCurve(ICollection[IPumpCurveElement]):
 	def Add(self) -> IPumpCurveElement:
 		"""No Description
 
-		Returns:
-			IPumpCurveElement: 
+		Returns
+		--------
+			``IPumpCurveElement`` : 
 		"""
 		pass
 
@@ -3782,8 +4133,9 @@ class IPumpCurveElement(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3792,8 +4144,9 @@ class IPumpCurveElement(ICollectionElement):
 	def Flow(self) -> float:
 		"""The flow for this row.
 
-		Returns:
-			IPumpCurveElement: 
+		Returns
+		--------
+			``IPumpCurveElement`` : 
 		"""
 		pass
 
@@ -3805,8 +4158,9 @@ class IPumpCurveElement(ICollectionElement):
 	def Head(self) -> float:
 		"""The head for this row.
 
-		Returns:
-			IPumpCurveElement: 
+		Returns
+		--------
+			``IPumpCurveElement`` : 
 		"""
 		pass
 
@@ -3820,8 +4174,9 @@ class IPumpCurveUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3830,8 +4185,9 @@ class IPumpCurveUnits(IElementUnits):
 	def FlowUnit(self) -> IUnit:
 		"""The field formatter for flow
 
-		Returns:
-			IPumpCurveUnits: 
+		Returns
+		--------
+			``IPumpCurveUnits`` : 
 		"""
 		pass
 
@@ -3839,8 +4195,9 @@ class IPumpCurveUnits(IElementUnits):
 	def HeadUnit(self) -> IUnit:
 		"""The field formatter for head.
 
-		Returns:
-			IPumpCurveUnits: 
+		Returns
+		--------
+			``IPumpCurveUnits`` : 
 		"""
 		pass
 
@@ -3850,8 +4207,9 @@ class IPumpDefinitionEfficiency:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3860,8 +4218,9 @@ class IPumpDefinitionEfficiency:
 	def PumpEfficiencyType(self) -> PumpEfficiencyTypeEnum:
 		"""The type of efficiency to use for this pump definition
 
-		Returns:
-			IPumpDefinitionEfficiency: 
+		Returns
+		--------
+			``IPumpDefinitionEfficiency`` : 
 		"""
 		pass
 
@@ -3873,8 +4232,9 @@ class IPumpDefinitionEfficiency:
 	def BEPFlow(self) -> float:
 		"""The BEP Flow for this pump definition
 
-		Returns:
-			IPumpDefinitionEfficiency: 
+		Returns
+		--------
+			``IPumpDefinitionEfficiency`` : 
 		"""
 		pass
 
@@ -3886,8 +4246,9 @@ class IPumpDefinitionEfficiency:
 	def BEPEfficiency(self) -> float:
 		"""The BEP efficiency for this pump definition.
 
-		Returns:
-			IPumpDefinitionEfficiency: 
+		Returns
+		--------
+			``IPumpDefinitionEfficiency`` : 
 		"""
 		pass
 
@@ -3899,8 +4260,9 @@ class IPumpDefinitionEfficiency:
 	def DefineBEPMaximumFlow(self) -> bool:
 		"""If true, set a user defined BEP maximum flow.
 
-		Returns:
-			IPumpDefinitionEfficiency: 
+		Returns
+		--------
+			``IPumpDefinitionEfficiency`` : 
 		"""
 		pass
 
@@ -3912,8 +4274,9 @@ class IPumpDefinitionEfficiency:
 	def UserDefinedBEPMaximumFlow(self) -> float:
 		"""The user defined maximum BEP flow for this pump definition.
 
-		Returns:
-			IPumpDefinitionEfficiency: 
+		Returns
+		--------
+			``IPumpDefinitionEfficiency`` : 
 		"""
 		pass
 
@@ -3925,8 +4288,9 @@ class IPumpDefinitionEfficiency:
 	def ConstantEfficiency(self) -> float:
 		"""The constant efficiency for the pump definition.
 
-		Returns:
-			IPumpDefinitionEfficiency: 
+		Returns
+		--------
+			``IPumpDefinitionEfficiency`` : 
 		"""
 		pass
 
@@ -3938,8 +4302,9 @@ class IPumpDefinitionEfficiency:
 	def FlowEfficiencyCurve(self) -> IFlowEfficiencyCollection:
 		"""The flow-efficiency curve for this pump definition
 
-		Returns:
-			IPumpDefinitionEfficiency: 
+		Returns
+		--------
+			``IPumpDefinitionEfficiency`` : 
 		"""
 		pass
 
@@ -3949,8 +4314,9 @@ class IFlowEfficiencyCurveElement(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3959,8 +4325,9 @@ class IFlowEfficiencyCurveElement(ICollectionElement):
 	def Flow(self) -> float:
 		"""The flow in display units.
 
-		Returns:
-			IFlowEfficiencyCurveElement: 
+		Returns
+		--------
+			``IFlowEfficiencyCurveElement`` : 
 		"""
 		pass
 
@@ -3972,8 +4339,9 @@ class IFlowEfficiencyCurveElement(ICollectionElement):
 	def Efficiency(self) -> float:
 		"""The efficiency in display units
 
-		Returns:
-			IFlowEfficiencyCurveElement: 
+		Returns
+		--------
+			``IFlowEfficiencyCurveElement`` : 
 		"""
 		pass
 
@@ -3987,8 +4355,9 @@ class IFlowEfficiencyCurve(ICollection[IFlowEfficiencyCurveElement]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -3997,12 +4366,14 @@ class IFlowEfficiencyCurve(ICollection[IFlowEfficiencyCurveElement]):
 	def Add(self, flow: float, efficiency: float) -> IFlowEfficiencyCurveElement:
 		"""Adds a new row to the pump efficiency curve
 
-		Args:
-			flow(float): The flow in display units
-			efficiency(float): The efficiency in display units
+		Args
+		--------
+			flow (``float``) :  The flow in display units
+			efficiency (``float``) :  The efficiency in display units
 
-		Returns:
-			IFlowEfficiencyCurveElement: 
+		Returns
+		--------
+			``IFlowEfficiencyCurveElement`` : 
 		"""
 		pass
 
@@ -4010,8 +4381,9 @@ class IFlowEfficiencyCurve(ICollection[IFlowEfficiencyCurveElement]):
 	def Add(self) -> IFlowEfficiencyCurveElement:
 		"""No Description
 
-		Returns:
-			IFlowEfficiencyCurveElement: 
+		Returns
+		--------
+			``IFlowEfficiencyCurveElement`` : 
 		"""
 		pass
 
@@ -4021,8 +4393,9 @@ class IFlowEfficiencyUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4031,8 +4404,9 @@ class IFlowEfficiencyUnits(IElementUnits):
 	def FlowUnit(self) -> IUnit:
 		"""The field formatter information for flow
 
-		Returns:
-			IFlowEfficiencyUnits: 
+		Returns
+		--------
+			``IFlowEfficiencyUnits`` : 
 		"""
 		pass
 
@@ -4040,8 +4414,9 @@ class IFlowEfficiencyUnits(IElementUnits):
 	def EfficiencyUnit(self) -> IUnit:
 		"""The field formatter information for efficiency
 
-		Returns:
-			IFlowEfficiencyUnits: 
+		Returns
+		--------
+			``IFlowEfficiencyUnits`` : 
 		"""
 		pass
 
@@ -4051,8 +4426,9 @@ class IFlowEfficiencyCollection(ICollectionElements[IFlowEfficiencyCurve, IFlowE
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4063,8 +4439,9 @@ class IPumpDefinitionNPSH:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4073,8 +4450,9 @@ class IPumpDefinitionNPSH:
 	def UseNPSHCurve(self) -> bool:
 		"""Sets whether the NPSH curve is used during calculations.
 
-		Returns:
-			IPumpDefinitionNPSH: 
+		Returns
+		--------
+			``IPumpDefinitionNPSH`` : 
 		"""
 		pass
 
@@ -4086,8 +4464,9 @@ class IPumpDefinitionNPSH:
 	def NPSHCurveSafetyFactor(self) -> float:
 		"""The safety factor to use with the NPSH curve duration calculations.
 
-		Returns:
-			IPumpDefinitionNPSH: 
+		Returns
+		--------
+			``IPumpDefinitionNPSH`` : 
 		"""
 		pass
 
@@ -4099,8 +4478,9 @@ class IPumpDefinitionNPSH:
 	def NPSHCurve(self) -> INPSHCurveCollection:
 		"""The NPSH curve collection
 
-		Returns:
-			IPumpDefinitionNPSH: 
+		Returns
+		--------
+			``IPumpDefinitionNPSH`` : 
 		"""
 		pass
 
@@ -4110,8 +4490,9 @@ class IFlowNPSHr(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4120,8 +4501,9 @@ class IFlowNPSHr(ICollectionElement):
 	def Flow(self) -> float:
 		"""No Description
 
-		Returns:
-			IFlowNPSHr: 
+		Returns
+		--------
+			``IFlowNPSHr`` : 
 		"""
 		pass
 
@@ -4133,8 +4515,9 @@ class IFlowNPSHr(ICollectionElement):
 	def NPSHr(self) -> float:
 		"""No Description
 
-		Returns:
-			IFlowNPSHr: 
+		Returns
+		--------
+			``IFlowNPSHr`` : 
 		"""
 		pass
 
@@ -4148,8 +4531,9 @@ class IFlowNPSHrCurve(ICollection[IFlowNPSHr]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4158,12 +4542,14 @@ class IFlowNPSHrCurve(ICollection[IFlowNPSHr]):
 	def Add(self, flow: float, NPSHr: float) -> IFlowNPSHr:
 		"""Adds a new row to the colletion with the given data.
 
-		Args:
-			flow(float): flow
-			NPSHr(float): NPSHr
+		Args
+		--------
+			flow (``float``) :  flow
+			NPSHr (``float``) :  NPSHr
 
-		Returns:
-			IFlowNPSHr: 
+		Returns
+		--------
+			``IFlowNPSHr`` : 
 		"""
 		pass
 
@@ -4171,8 +4557,9 @@ class IFlowNPSHrCurve(ICollection[IFlowNPSHr]):
 	def Add(self) -> IFlowNPSHr:
 		"""No Description
 
-		Returns:
-			IFlowNPSHr: 
+		Returns
+		--------
+			``IFlowNPSHr`` : 
 		"""
 		pass
 
@@ -4182,8 +4569,9 @@ class INPSHCurveUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4192,8 +4580,9 @@ class INPSHCurveUnits(IElementUnits):
 	def FlowUnit(self) -> IUnit:
 		"""Unit information for flow
 
-		Returns:
-			INPSHCurveUnits: 
+		Returns
+		--------
+			``INPSHCurveUnits`` : 
 		"""
 		pass
 
@@ -4201,8 +4590,9 @@ class INPSHCurveUnits(IElementUnits):
 	def NPSHUnit(self) -> IUnit:
 		"""Unit information for NPSH
 
-		Returns:
-			INPSHCurveUnits: 
+		Returns
+		--------
+			``INPSHCurveUnits`` : 
 		"""
 		pass
 
@@ -4212,8 +4602,9 @@ class INPSHCurveCollection(ICollectionElements[IFlowNPSHrCurve, IFlowNPSHr, INPS
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4224,8 +4615,9 @@ class IPumpDefinitionMotor:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4234,8 +4626,9 @@ class IPumpDefinitionMotor:
 	def IsVariableSpeedDrive(self) -> bool:
 		"""Sets if the pump definition's motor is variable speed.
 
-		Returns:
-			IPumpDefinitionMotor: 
+		Returns
+		--------
+			``IPumpDefinitionMotor`` : 
 		"""
 		pass
 
@@ -4247,8 +4640,9 @@ class IPumpDefinitionMotor:
 	def MotorEfficiency(self) -> float:
 		"""The efficiency of the constant speed motor
 
-		Returns:
-			IPumpDefinitionMotor: 
+		Returns
+		--------
+			``IPumpDefinitionMotor`` : 
 		"""
 		pass
 
@@ -4260,8 +4654,9 @@ class IPumpDefinitionMotor:
 	def SpeedEfficiencyCurve(self) -> ISpeedEfficiencyCurveCollection:
 		"""The variable speed efficiency curve for the pump definition
 
-		Returns:
-			IPumpDefinitionMotor: 
+		Returns
+		--------
+			``IPumpDefinitionMotor`` : 
 		"""
 		pass
 
@@ -4271,8 +4666,9 @@ class ISpeedEfficiency(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4281,8 +4677,9 @@ class ISpeedEfficiency(ICollectionElement):
 	def Speed(self) -> float:
 		"""No Description
 
-		Returns:
-			ISpeedEfficiency: 
+		Returns
+		--------
+			``ISpeedEfficiency`` : 
 		"""
 		pass
 
@@ -4294,8 +4691,9 @@ class ISpeedEfficiency(ICollectionElement):
 	def Efficiency(self) -> float:
 		"""No Description
 
-		Returns:
-			ISpeedEfficiency: 
+		Returns
+		--------
+			``ISpeedEfficiency`` : 
 		"""
 		pass
 
@@ -4309,8 +4707,9 @@ class ISpeedEfficiencyCurve(ICollection[ISpeedEfficiency]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4319,12 +4718,14 @@ class ISpeedEfficiencyCurve(ICollection[ISpeedEfficiency]):
 	def Add(self, speed: float, efficiency: float) -> ISpeedEfficiency:
 		"""Adds a new row to the collection with the given data.
 
-		Args:
-			speed(float): speed
-			efficiency(float): efficiency
+		Args
+		--------
+			speed (``float``) :  speed
+			efficiency (``float``) :  efficiency
 
-		Returns:
-			ISpeedEfficiency: 
+		Returns
+		--------
+			``ISpeedEfficiency`` : 
 		"""
 		pass
 
@@ -4332,8 +4733,9 @@ class ISpeedEfficiencyCurve(ICollection[ISpeedEfficiency]):
 	def Add(self) -> ISpeedEfficiency:
 		"""No Description
 
-		Returns:
-			ISpeedEfficiency: 
+		Returns
+		--------
+			``ISpeedEfficiency`` : 
 		"""
 		pass
 
@@ -4343,8 +4745,9 @@ class ISpeedEfficiencyUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4353,8 +4756,9 @@ class ISpeedEfficiencyUnits(IElementUnits):
 	def SpeedUnit(self) -> IUnit:
 		"""Unit information for speed
 
-		Returns:
-			ISpeedEfficiencyUnits: 
+		Returns
+		--------
+			``ISpeedEfficiencyUnits`` : 
 		"""
 		pass
 
@@ -4362,8 +4766,9 @@ class ISpeedEfficiencyUnits(IElementUnits):
 	def EfficiencyUnit(self) -> IUnit:
 		"""Unit information for efficiency
 
-		Returns:
-			ISpeedEfficiencyUnits: 
+		Returns
+		--------
+			``ISpeedEfficiencyUnits`` : 
 		"""
 		pass
 
@@ -4373,8 +4778,9 @@ class ISpeedEfficiencyCurveCollection(ICollectionElements[ISpeedEfficiencyCurve,
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4385,8 +4791,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4395,8 +4802,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def Diffusivity(self) -> float:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4408,8 +4816,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def HasUnlimitedConcentration(self) -> bool:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4421,8 +4830,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def ConcentrationLimit(self) -> float:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4434,8 +4844,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def BulkReactionOrder(self) -> int:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4447,8 +4858,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def BulkReactionRate(self) -> float:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4460,8 +4872,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def IsRoughnessCorrelated(self) -> bool:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4473,8 +4886,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def RoughnessCorrelationFactor(self) -> float:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4486,8 +4900,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def WallReactionOrder(self) -> WallReactionOrder:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4499,8 +4914,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def ZeroOrderWallReactionRate(self) -> float:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4512,8 +4928,9 @@ class IConstituent(IWaterComponentBase[IConstituents, IConstituent, IConstituent
 	def FirstOrderWallReactionRate(self) -> float:
 		"""No Description
 
-		Returns:
-			IConstituent: 
+		Returns
+		--------
+			``IConstituent`` : 
 		"""
 		pass
 
@@ -4527,8 +4944,9 @@ class IConstituents(IWaterComponentsBase[IConstituents, IConstituent, IConstitue
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4539,8 +4957,9 @@ class IConstituentUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4551,8 +4970,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4561,8 +4981,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 	def UnitDemand(self) -> float:
 		"""The unit load.
 
-		Returns:
-			IUnitDemandLoad: 
+		Returns
+		--------
+			``IUnitDemandLoad`` : 
 		"""
 		pass
 
@@ -4574,8 +4995,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 	def UnitDemandType(self) -> UnitDemandLoadTypeEnum:
 		"""The type of unit demand load
 
-		Returns:
-			IUnitDemandLoad: 
+		Returns
+		--------
+			``IUnitDemandLoad`` : 
 		"""
 		pass
 
@@ -4587,8 +5009,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 	def PopulationUnit(self) -> PopulationUnit:
 		"""The population unit to use for population unit demand load
 
-		Returns:
-			IUnitDemandLoad: 
+		Returns
+		--------
+			``IUnitDemandLoad`` : 
 		"""
 		pass
 
@@ -4600,8 +5023,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 	def AreaUnit(self) -> AreaUnit:
 		"""The area unit to use for area unit demand load
 
-		Returns:
-			IUnitDemandLoad: 
+		Returns
+		--------
+			``IUnitDemandLoad`` : 
 		"""
 		pass
 
@@ -4613,8 +5037,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 	def CountUnit(self) -> str:
 		"""A user defined unit for count unit demand loads
 
-		Returns:
-			IUnitDemandLoad: 
+		Returns
+		--------
+			``IUnitDemandLoad`` : 
 		"""
 		pass
 
@@ -4626,8 +5051,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 	def ReportPopulationEquivalent(self) -> bool:
 		"""Flag to specify the population equivalent of the unit demand load.
 
-		Returns:
-			IUnitDemandLoad: 
+		Returns
+		--------
+			``IUnitDemandLoad`` : 
 		"""
 		pass
 
@@ -4639,8 +5065,9 @@ class IUnitDemandLoad(IWaterComponentBase[IUnitDemandLoads, IUnitDemandLoad, IUn
 	def PopulationEquivalent(self) -> float:
 		"""The population density applicable only to area and count unit loads.
 
-		Returns:
-			IUnitDemandLoad: 
+		Returns
+		--------
+			``IUnitDemandLoad`` : 
 		"""
 		pass
 
@@ -4654,8 +5081,9 @@ class IUnitDemandLoads(IWaterComponentsBase[IUnitDemandLoads, IUnitDemandLoad, I
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4666,8 +5094,9 @@ class IUnitDemandLoadUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4678,8 +5107,9 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4688,8 +5118,9 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 	def ScadaDatasourceID(self) -> int:
 		"""The SCADA data source that this signal is part of.
 
-		Returns:
-			ISCADASignal: 
+		Returns
+		--------
+			``ISCADASignal`` : 
 		"""
 		pass
 
@@ -4697,8 +5128,9 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 	def SignalLabel(self) -> str:
 		"""The label of the SCADA signal
 
-		Returns:
-			ISCADASignal: 
+		Returns
+		--------
+			``ISCADASignal`` : 
 		"""
 		pass
 
@@ -4710,8 +5142,9 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 	def IsDerived(self) -> bool:
 		"""Flag that this SCADA signal is a dervied signal where the value is based on other signals.
 
-		Returns:
-			ISCADASignal: 
+		Returns
+		--------
+			``ISCADASignal`` : 
 		"""
 		pass
 
@@ -4723,8 +5156,9 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 	def Formula(self) -> str:
 		"""The formula to use for this derived signal
 
-		Returns:
-			ISCADASignal: 
+		Returns
+		--------
+			``ISCADASignal`` : 
 		"""
 		pass
 
@@ -4736,8 +5170,9 @@ class ISCADASignal(IWaterComponentBase[ISCADASignals, ISCADASignal, IElementUnit
 	def TransformMethod(self) -> SCADASignalTransformMethod:
 		"""The transform method to use for this signal.  Only applies if it is derived.
 
-		Returns:
-			ISCADASignal: 
+		Returns
+		--------
+			``ISCADASignal`` : 
 		"""
 		pass
 
@@ -4751,8 +5186,9 @@ class ISCADASignals(IWaterComponentsBase[ISCADASignals, ISCADASignal, IElementUn
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4763,8 +5199,9 @@ class IGPVHeadlossCurve(IWaterComponentBase[IGPVHeadlossCurves, IGPVHeadlossCurv
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4773,8 +5210,9 @@ class IGPVHeadlossCurve(IWaterComponentBase[IGPVHeadlossCurves, IGPVHeadlossCurv
 	def GPVHeadlossFlowCurve(self) -> IGPVFlowHeadlossCurveCollection:
 		"""The GPV flow-headloss curve collection
 
-		Returns:
-			IGPVHeadlossCurve: 
+		Returns
+		--------
+			``IGPVHeadlossCurve`` : 
 		"""
 		pass
 
@@ -4784,8 +5222,9 @@ class IGPVHeadlossCurves(IWaterComponentsBase[IGPVHeadlossCurves, IGPVHeadlossCu
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4796,8 +5235,9 @@ class IGPVHeadlossUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4808,8 +5248,9 @@ class IGPVFlowHeadloss(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4818,8 +5259,9 @@ class IGPVFlowHeadloss(ICollectionElement):
 	def Flow(self) -> float:
 		"""No Description
 
-		Returns:
-			IGPVFlowHeadloss: 
+		Returns
+		--------
+			``IGPVFlowHeadloss`` : 
 		"""
 		pass
 
@@ -4831,8 +5273,9 @@ class IGPVFlowHeadloss(ICollectionElement):
 	def Headloss(self) -> float:
 		"""No Description
 
-		Returns:
-			IGPVFlowHeadloss: 
+		Returns
+		--------
+			``IGPVFlowHeadloss`` : 
 		"""
 		pass
 
@@ -4846,8 +5289,9 @@ class IGPVFlowHeadlossCurve(ICollection[IGPVFlowHeadloss]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4856,12 +5300,14 @@ class IGPVFlowHeadlossCurve(ICollection[IGPVFlowHeadloss]):
 	def Add(self, flow: float, headloss: float) -> IGPVFlowHeadloss:
 		"""Adds a row to the collection with the given data.
 
-		Args:
-			flow(float): flow
-			headloss(float): headloss
+		Args
+		--------
+			flow (``float``) :  flow
+			headloss (``float``) :  headloss
 
-		Returns:
-			IGPVFlowHeadloss: 
+		Returns
+		--------
+			``IGPVFlowHeadloss`` : 
 		"""
 		pass
 
@@ -4869,8 +5315,9 @@ class IGPVFlowHeadlossCurve(ICollection[IGPVFlowHeadloss]):
 	def Add(self) -> IGPVFlowHeadloss:
 		"""No Description
 
-		Returns:
-			IGPVFlowHeadloss: 
+		Returns
+		--------
+			``IGPVFlowHeadloss`` : 
 		"""
 		pass
 
@@ -4880,8 +5327,9 @@ class IGPVFlowHeadlossCurveCollection(ICollectionElements[IGPVFlowHeadlossCurve,
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4892,8 +5340,9 @@ class IGPVFlowHeadlossUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4902,8 +5351,9 @@ class IGPVFlowHeadlossUnits(IElementUnits):
 	def Flow(self) -> IUnit:
 		"""Unit information for flow
 
-		Returns:
-			IGPVFlowHeadlossUnits: 
+		Returns
+		--------
+			``IGPVFlowHeadlossUnits`` : 
 		"""
 		pass
 
@@ -4911,8 +5361,9 @@ class IGPVFlowHeadlossUnits(IElementUnits):
 	def Headloss(self) -> IUnit:
 		"""Unit information for headloss
 
-		Returns:
-			IGPVFlowHeadlossUnits: 
+		Returns
+		--------
+			``IGPVFlowHeadlossUnits`` : 
 		"""
 		pass
 
@@ -4922,8 +5373,9 @@ class IValveCharacteristic(IWaterComponentBase[IValveCharacteristics, IValveChar
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4932,8 +5384,9 @@ class IValveCharacteristic(IWaterComponentBase[IValveCharacteristics, IValveChar
 	def ValveCharacteristicsCurve(self) -> IValveCharacteristicsCurveCollection:
 		"""The valve characteristics curve
 
-		Returns:
-			IValveCharacteristic: 
+		Returns
+		--------
+			``IValveCharacteristic`` : 
 		"""
 		pass
 
@@ -4943,8 +5396,9 @@ class IValveCharacteristics(IWaterComponentsBase[IValveCharacteristics, IValveCh
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4955,8 +5409,9 @@ class IValveCharacteristicUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4967,8 +5422,9 @@ class IRelativeClosureRelativeArea(ICollectionElement):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -4977,8 +5433,9 @@ class IRelativeClosureRelativeArea(ICollectionElement):
 	def RelativeClosure(self) -> float:
 		"""No Description
 
-		Returns:
-			IRelativeClosureRelativeArea: 
+		Returns
+		--------
+			``IRelativeClosureRelativeArea`` : 
 		"""
 		pass
 
@@ -4990,8 +5447,9 @@ class IRelativeClosureRelativeArea(ICollectionElement):
 	def RelativeArea(self) -> float:
 		"""No Description
 
-		Returns:
-			IRelativeClosureRelativeArea: 
+		Returns
+		--------
+			``IRelativeClosureRelativeArea`` : 
 		"""
 		pass
 
@@ -5005,8 +5463,9 @@ class IRelativeClosureRelativeAreas(ICollection[IRelativeClosureRelativeArea]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -5015,12 +5474,14 @@ class IRelativeClosureRelativeAreas(ICollection[IRelativeClosureRelativeArea]):
 	def Add(self, relativeClosure: float, relativeArea: float) -> IRelativeClosureRelativeArea:
 		"""Adds a new row to the collection with the given data.
 
-		Args:
-			relativeClosure(float): relativeClosure
-			relativeArea(float): relativeArea
+		Args
+		--------
+			relativeClosure (``float``) :  relativeClosure
+			relativeArea (``float``) :  relativeArea
 
-		Returns:
-			IRelativeClosureRelativeArea: 
+		Returns
+		--------
+			``IRelativeClosureRelativeArea`` : 
 		"""
 		pass
 
@@ -5028,8 +5489,9 @@ class IRelativeClosureRelativeAreas(ICollection[IRelativeClosureRelativeArea]):
 	def Add(self) -> IRelativeClosureRelativeArea:
 		"""No Description
 
-		Returns:
-			IRelativeClosureRelativeArea: 
+		Returns
+		--------
+			``IRelativeClosureRelativeArea`` : 
 		"""
 		pass
 
@@ -5039,8 +5501,9 @@ class IValveCharacteristicsCurveCollection(ICollectionElements[IRelativeClosureR
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -5051,8 +5514,9 @@ class IRelativeClosureRelativeAreaUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -5061,8 +5525,9 @@ class IRelativeClosureRelativeAreaUnits(IElementUnits):
 	def ClosureUnit(self) -> IUnit:
 		"""Unit information for relative closure
 
-		Returns:
-			IRelativeClosureRelativeAreaUnits: 
+		Returns
+		--------
+			``IRelativeClosureRelativeAreaUnits`` : 
 		"""
 		pass
 
@@ -5070,8 +5535,9 @@ class IRelativeClosureRelativeAreaUnits(IElementUnits):
 	def AreaUnit(self) -> IUnit:
 		"""Unit information for relative area
 
-		Returns:
-			IRelativeClosureRelativeAreaUnits: 
+		Returns
+		--------
+			``IRelativeClosureRelativeAreaUnits`` : 
 		"""
 		pass
 
@@ -5081,8 +5547,9 @@ class IMinorLossCoefficients(IWaterComponentsBase[IMinorLossCoefficients, IMinor
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -5093,8 +5560,9 @@ class IMinorLossCoefficient(IWaterComponentBase[IMinorLossCoefficients, IMinorLo
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -5103,8 +5571,9 @@ class IMinorLossCoefficient(IWaterComponentBase[IMinorLossCoefficients, IMinorLo
 	def MinorLossType(self) -> MinorLossTypeEnum:
 		"""The type of minor loss.
 
-		Returns:
-			IMinorLossCoefficient: 
+		Returns
+		--------
+			``IMinorLossCoefficient`` : 
 		"""
 		pass
 
@@ -5116,8 +5585,9 @@ class IMinorLossCoefficient(IWaterComponentBase[IMinorLossCoefficients, IMinorLo
 	def MinorLoss(self) -> float:
 		"""the minor loss coefficient, typically from a shared library
 
-		Returns:
-			IMinorLossCoefficient: 
+		Returns
+		--------
+			``IMinorLossCoefficient`` : 
 		"""
 		pass
 
@@ -5131,8 +5601,9 @@ class IMinorLossCoefficientUnits(IElementUnits):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -5141,8 +5612,9 @@ class IMinorLossCoefficientUnits(IElementUnits):
 	def CoefficientUnit(self) -> IUnit:
 		"""Uni tinformation about the minor loss
 
-		Returns:
-			IMinorLossCoefficientUnits: 
+		Returns
+		--------
+			``IMinorLossCoefficientUnits`` : 
 		"""
 		pass
 
@@ -5152,8 +5624,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -5163,11 +5636,13 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
             Any new signals added in this instance will
             automatically be associated with this id.
 
-		Args:
-			dataSourceID(int): A valid, non-zero SCADA data source ID
+		Args
+		--------
+			dataSourceID (``int``) :  A valid, non-zero SCADA data source ID
 
-		Returns:
-			ISCADASignals: If the dataSourceID is valid, returns the manager, otherwise null
+		Returns
+		--------
+			``ISCADASignals`` : If the dataSourceID is valid, returns the manager, otherwise null
 		"""
 		pass
 
@@ -5175,8 +5650,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def Zones(self) -> IZones:
 		"""The zones in the model.
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5184,8 +5660,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def Patterns(self) -> IPatterns:
 		"""The patterns in the model.
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5193,8 +5670,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def PumpDefinitions(self) -> IPumpDefinitions:
 		"""The pump definitions in the model.
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5202,8 +5680,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def Constituents(self) -> IConstituents:
 		"""The constituents in the model.
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5211,8 +5690,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def UnitDemandLoads(self) -> IUnitDemandLoads:
 		"""The unit demand loads in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5220,8 +5700,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def Controls(self) -> IControls:
 		"""The controls in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5229,8 +5710,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def ControlConditions(self) -> IControlConditions:
 		"""The control conditions in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5238,8 +5720,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def ControlActions(self) -> IControlActions:
 		"""The control actions in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5247,8 +5730,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def AirFlowCurves(self) -> IAirFlowCurves:
 		"""The air flow curves in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5256,8 +5740,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def GPVHeadlossCurves(self) -> IGPVHeadlossCurves:
 		"""The GPV headloss curves in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5265,8 +5750,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def ValveCharacteristics(self) -> IValveCharacteristics:
 		"""The valve characteristics in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 
@@ -5274,8 +5760,9 @@ class IWaterModelSupport(IModelComponents[IWaterComponent, WaterComponentType]):
 	def MinorLossCoefficients(self) -> IMinorLossCoefficients:
 		"""The minor loss coefficients in the model
 
-		Returns:
-			IWaterModelSupport: 
+		Returns
+		--------
+			``IWaterModelSupport`` : 
 		"""
 		pass
 

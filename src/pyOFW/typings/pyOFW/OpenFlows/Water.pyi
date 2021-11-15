@@ -1,4 +1,5 @@
 from enum import Enum
+from System import TypeCode
 from Haestad.LicensingFacade import LicenseRunStatusEnum
 from typing import overload
 from OpenFlows.Water.Domain import IWaterModel
@@ -15,8 +16,9 @@ class OpenFlowsWater:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -26,11 +28,13 @@ class OpenFlowsWater:
 	def StartSession(product: WaterProductLicenseType) -> LicenseRunStatusEnum:
 		"""Starts a session of OpenFlows.  Must be called before opening a model.
 
-		Args:
-			product(WaterProductLicenseType): product
+		Args
+		--------
+			product (``WaterProductLicenseType``) :  product
 
-		Returns:
-			LicenseRunStatusEnum: 
+		Returns
+		--------
+			``LicenseRunStatusEnum`` : 
 		"""
 		pass
 
@@ -39,11 +43,13 @@ class OpenFlowsWater:
 	def StartSession(licensedFeatureSet: ILicensedFeatureSet) -> LicenseRunStatusEnum:
 		"""Starts an OpenFlows session using a Framework-managed ILicensedFeatureSet
 
-		Args:
-			licensedFeatureSet(ILicensedFeatureSet): licensedFeatureSet
+		Args
+		--------
+			licensedFeatureSet (``ILicensedFeatureSet``) :  licensedFeatureSet
 
-		Returns:
-			LicenseRunStatusEnum: 
+		Returns
+		--------
+			``LicenseRunStatusEnum`` : 
 		"""
 		pass
 
@@ -51,8 +57,9 @@ class OpenFlowsWater:
 	def IsValid() -> bool:
 		"""Checks the state of the OpenFlows session.
 
-		Returns:
-			bool: 
+		Returns
+		--------
+			``bool`` : 
 		"""
 		pass
 
@@ -61,11 +68,13 @@ class OpenFlowsWater:
 		"""Sets the maximum number of projects that can be opened.
             The default is 1.
 
-		Args:
-			count(int): A minimum of 1 and a maximum of 5 is allowed.
+		Args
+		--------
+			count (``int``) :  A minimum of 1 and a maximum of 5 is allowed.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -73,12 +82,14 @@ class OpenFlowsWater:
 	def Open(filename: str, openInPlace: bool = False) -> IWaterModel:
 		"""Opens a model using the provided filename.
 
-		Args:
-			filename(str): The file to open.  Can be the project (wtg) file or the sqlite database.
-			openInPlace(bool): True to open model without a copy.  Otherwise, a copy of the model is made when opened.  Save() has no effect if true.
+		Args
+		--------
+			filename (``str``) :  The file to open.  Can be the project (wtg) file or the sqlite database.
+			openInPlace (``bool``) :  True to open model without a copy.  Otherwise, a copy of the model is made when opened.  Save() has no effect if true.
 
-		Returns:
-			IWaterModel: 
+		Returns
+		--------
+			``IWaterModel`` : 
 		"""
 		pass
 
@@ -86,11 +97,13 @@ class OpenFlowsWater:
 	def GetModel(project: IProject) -> IWaterModel:
 		"""Creates an IWaterModel given a Framework-managed project
 
-		Args:
-			project(IProject): project
+		Args
+		--------
+			project (``IProject``) :  project
 
-		Returns:
-			IWaterModel: 
+		Returns
+		--------
+			``IWaterModel`` : 
 		"""
 		pass
 
@@ -98,8 +111,9 @@ class OpenFlowsWater:
 	def EndSession() -> None:
 		"""If Save() was not previously called, closes the project without saving changes or results.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -108,8 +122,9 @@ class OpenFlowsWater:
 	def Options() -> IOpenFlowsWaterDefaults:
 		"""Configure default settings
 
-		Returns:
-			OpenFlowsWater: 
+		Returns
+		--------
+			``OpenFlowsWater`` : 
 		"""
 		pass
 

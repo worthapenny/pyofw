@@ -12,8 +12,9 @@ class ICollectionElements(Generic[TCollectionType, TElementType, TUnitsType]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -21,31 +22,36 @@ class ICollectionElements(Generic[TCollectionType, TElementType, TUnitsType]):
 	def Get(self) -> TCollectionType:
 		"""Returns the collection data.
 
-		Returns:
-			TCollectionType: 
+		Returns
+		--------
+			``TCollectionType`` : 
 		"""
 		pass
 
 	def Set(self, collection: TCollectionType) -> None:
 		"""No Description
 
-		Args:
-			collection(TCollectionType): collection
+		Args
+		--------
+			collection (``TCollectionType``) :  collection
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
 	def SelectElements(self, sorts: SortContextCollection, filters: FilterContextCollection) -> List[TElementType]:
 		"""Applies a sort and/or filter against the collection and returns the matching elements.
 
-		Args:
-			sorts(SortContextCollection): Sorts on a field in either ascending or descending order
-			filters(FilterContextCollection): Filters the collection on one or more fields
+		Args
+		--------
+			sorts (``SortContextCollection``) :  Sorts on a field in either ascending or descending order
+			filters (``FilterContextCollection``) :  Filters the collection on one or more fields
 
-		Returns:
-			List[TElementType]:  containing matching elements for the provided criteria.
+		Returns
+		--------
+			``List[TElementType]`` :  containing matching elements for the provided criteria.
 		"""
 		pass
 
@@ -53,8 +59,9 @@ class ICollectionElements(Generic[TCollectionType, TElementType, TUnitsType]):
 	def Count(self) -> int:
 		"""The number of items in the collection stored in the model.
 
-		Returns:
-			ICollectionElements: 
+		Returns
+		--------
+			``ICollectionElements`` : 
 		"""
 		pass
 
@@ -62,8 +69,9 @@ class ICollectionElements(Generic[TCollectionType, TElementType, TUnitsType]):
 	def Units(self) -> TUnitsType:
 		"""Gets the field units for the collection to modify.
 
-		Returns:
-			ICollectionElements: 
+		Returns
+		--------
+			``ICollectionElements`` : 
 		"""
 		pass
 
@@ -73,20 +81,22 @@ class ICollectionElement:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
 
-class ICollection(Generic[TElementType], IEnumerable[TElementType]):
+class ICollection(Generic[TElementType], Iterator[TElementType]):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -94,38 +104,44 @@ class ICollection(Generic[TElementType], IEnumerable[TElementType]):
 	def Add(self) -> TElementType:
 		"""Creates a new item, adds it to the collection and returns the object.
 
-		Returns:
-			TElementType: 
+		Returns
+		--------
+			``TElementType`` : 
 		"""
 		pass
 
 	def RemoveAt(self, index: int) -> None:
 		"""Removes the System.Collections.Generic.IList`1 item at the specified index.
 
-		Args:
-			index(int): The zero-based index of the item to remove.
+		Args
+		--------
+			index (``int``) :  The zero-based index of the item to remove.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
 	def Remove(self, item: TElementType) -> bool:
 		"""No Description
 
-		Args:
-			item(TElementType): item
+		Args
+		--------
+			item (``TElementType``) :  item
 
-		Returns:
-			bool: 
+		Returns
+		--------
+			``bool`` : 
 		"""
 		pass
 
 	def Clear(self) -> None:
 		"""Removes all items from the collection.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -133,8 +149,9 @@ class ICollection(Generic[TElementType], IEnumerable[TElementType]):
 	def Item(self) -> TElementType:
 		"""No Description
 
-		Returns:
-			ICollection: 
+		Returns
+		--------
+			``ICollection`` : 
 		"""
 		pass
 
@@ -146,8 +163,9 @@ class ICollection(Generic[TElementType], IEnumerable[TElementType]):
 	def Count(self) -> int:
 		"""Gets the number of elements contained in the System.Collections.Generic.ICollection`1.
 
-		Returns:
-			ICollection: 
+		Returns
+		--------
+			``ICollection`` : 
 		"""
 		pass
 
@@ -155,8 +173,9 @@ class ICollection(Generic[TElementType], IEnumerable[TElementType]):
 	def Fields(self) -> IFieldManager:
 		"""Gets the fields for this collection
 
-		Returns:
-			ICollection: 
+		Returns
+		--------
+			``ICollection`` : 
 		"""
 		pass
 

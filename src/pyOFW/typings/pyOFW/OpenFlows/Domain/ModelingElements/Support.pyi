@@ -1,8 +1,10 @@
 from enum import Enum
+from System import TypeCode
 from Haestad.Support.Support import IField, FieldDataType, INamable, ILabeled
 from Haestad.Domain import DomainFieldType
 from Haestad.Support.Units import Unit
 from OpenFlows.Units import IUnit
+from System.Collections.Generic import IReadOnlyCollection
 from typing import List, Generic, TypeVar
 
 TValueType = TypeVar("TValueType")
@@ -23,8 +25,9 @@ class IFieldInfo(INamable, ILabeled):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -32,23 +35,27 @@ class IFieldInfo(INamable, ILabeled):
 	def GetValue(self, id: int) -> TValueType:
 		"""No Description
 
-		Args:
-			id(int): id
+		Args
+		--------
+			id (``int``) :  id
 
-		Returns:
-			TValueType: 
+		Returns
+		--------
+			``TValueType`` : 
 		"""
 		pass
 
 	def SetValue(self, id: int, value: TValueType) -> None:
 		"""No Description
 
-		Args:
-			id(int): id
-			value(TValueType): value
+		Args
+		--------
+			id (``int``) :  id
+			value (``TValueType``) :  value
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -56,8 +63,9 @@ class IFieldInfo(INamable, ILabeled):
 	def Field(self) -> IField:
 		"""The field associated with this FieldInfo
 
-		Returns:
-			IFieldInfo: 
+		Returns
+		--------
+			``IFieldInfo`` : 
 		"""
 		pass
 
@@ -65,8 +73,9 @@ class IFieldInfo(INamable, ILabeled):
 	def FieldType(self) -> DomainFieldType:
 		"""The type of field - domain, support, scenario, etc.
 
-		Returns:
-			IFieldInfo: 
+		Returns
+		--------
+			``IFieldInfo`` : 
 		"""
 		pass
 
@@ -74,8 +83,9 @@ class IFieldInfo(INamable, ILabeled):
 	def FieldDataType(self) -> FieldDataType:
 		"""The value type for this field when retrieved.
 
-		Returns:
-			IFieldInfo: 
+		Returns
+		--------
+			``IFieldInfo`` : 
 		"""
 		pass
 
@@ -83,8 +93,9 @@ class IFieldInfo(INamable, ILabeled):
 	def StorageUnit(self) -> Unit:
 		"""If unitized, the storage unit the value is stored in.
 
-		Returns:
-			IFieldInfo: 
+		Returns
+		--------
+			``IFieldInfo`` : 
 		"""
 		pass
 
@@ -92,8 +103,9 @@ class IFieldInfo(INamable, ILabeled):
 	def Unit(self) -> IUnit:
 		"""If unitized, the format information for the field.
 
-		Returns:
-			IFieldInfo: 
+		Returns
+		--------
+			``IFieldInfo`` : 
 		"""
 		pass
 
@@ -103,8 +115,9 @@ class INetworkFieldInfo(IFieldInfo):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -113,8 +126,9 @@ class INetworkFieldInfo(IFieldInfo):
 	def AlternativeTypeName(self) -> str:
 		"""The name of the alternative type this field belongs to.
 
-		Returns:
-			INetworkFieldInfo: 
+		Returns
+		--------
+			``INetworkFieldInfo`` : 
 		"""
 		pass
 
@@ -122,8 +136,9 @@ class INetworkFieldInfo(IFieldInfo):
 	def DomainElementTypeName(self) -> str:
 		"""The name of the domain element type that this field is assigned.
 
-		Returns:
-			INetworkFieldInfo: 
+		Returns
+		--------
+			``INetworkFieldInfo`` : 
 		"""
 		pass
 
@@ -133,8 +148,9 @@ class IUserNetworkfieldInfo(INetworkFieldInfo):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -142,8 +158,9 @@ class IUserNetworkfieldInfo(INetworkFieldInfo):
 	def Delete(self) -> None:
 		"""Deletes the user defined field from all supported element types.
 
-		Returns:
-			None: 
+		Returns
+		--------
+			``None`` : 
 		"""
 		pass
 
@@ -153,8 +170,9 @@ class IResultFieldInfo(IFieldInfo):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -163,8 +181,9 @@ class IResultFieldInfo(IFieldInfo):
 	def ResultRecordTypeName(self) -> str:
 		"""the result record that the field is part of.
 
-		Returns:
-			IResultFieldInfo: 
+		Returns
+		--------
+			``IResultFieldInfo`` : 
 		"""
 		pass
 
@@ -172,8 +191,9 @@ class IResultFieldInfo(IFieldInfo):
 	def NumericalEngineTypeName(self) -> str:
 		"""The numerical engine that the field belongs to.
 
-		Returns:
-			IResultFieldInfo: 
+		Returns
+		--------
+			``IResultFieldInfo`` : 
 		"""
 		pass
 
@@ -183,8 +203,9 @@ class IComponentElementFieldInfo(IFieldInfo):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -193,8 +214,9 @@ class IComponentElementFieldInfo(IFieldInfo):
 	def SupportElementTypeName(self) -> str:
 		"""The name of the support element
 
-		Returns:
-			IComponentElementFieldInfo: 
+		Returns
+		--------
+			``IComponentElementFieldInfo`` : 
 		"""
 		pass
 
@@ -204,8 +226,9 @@ class IFieldManager:
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -213,32 +236,37 @@ class IFieldManager:
 	def FieldByName(self, name: str) -> IFieldInfo:
 		"""Gets an IFieldInfo given the name.
 
-		Args:
-			name(str): The name of the field to return.
+		Args
+		--------
+			name (``str``) :  The name of the field to return.
 
-		Returns:
-			IFieldInfo: A non-null IFieldInfo implementation if the name is found, otherwise null.
+		Returns
+		--------
+			``IFieldInfo`` : A non-null IFieldInfo implementation if the name is found, otherwise null.
 		"""
 		pass
 
 	def FieldByLabel(self, label: str) -> IFieldInfo:
 		"""Gets an IFieldINfo by label.
 
-		Args:
-			label(str): The label of the field to search for.  Exact match is used.
+		Args
+		--------
+			label (``str``) :  The label of the field to search for.  Exact match is used.
 
-		Returns:
-			IFieldInfo: A non-null IFieldInfo if found, otherwise null
+		Returns
+		--------
+			``IFieldInfo`` : A non-null IFieldInfo if found, otherwise null
 		"""
 		pass
 
 	@property
-	def FieldInfo(self) -> IReadOnlyCollection:
+	def FieldInfo(self) -> IReadOnlyCollection[IFieldInfo]:
 		"""A list of IFieldInfo objects providing information about individual fields including
             data type, name, etc.
 
-		Returns:
-			IFieldManager: 
+		Returns
+		--------
+			``IFieldManager`` : 
 		"""
 		pass
 
@@ -248,8 +276,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -258,8 +287,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def FieldType(self) -> UserFieldDataType:
 		"""The created field will use this type of data.
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -267,8 +297,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def Name(self) -> str:
 		"""The name of the field.  Must be unique across all element types being used.
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -280,8 +311,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def Label(self) -> str:
 		"""The display label to show in the user interface (if applicable)
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -293,8 +325,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def ElementType(self) -> TNetworkElementTypeEnum:
 		"""The primary element type this field belongs to.
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -306,8 +339,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def SharedWith(self) -> List[TNetworkElementTypeEnum]:
 		"""The list of element types to share this field with.  Should not include ElementType in this list.
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -315,8 +349,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def DefaultValue(self) -> TFieldType:
 		"""The default value for this field.
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -328,8 +363,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def Category(self) -> str:
 		"""The category the field is placed in the property grid or quick attribute selection.
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -341,8 +377,9 @@ class IUserFieldOptions(Generic[TFieldType, TNetworkElementTypeEnum]):
 	def JustLikeField(self) -> IFieldInfo:
 		"""The field to use for getting the storage unit for a unitized real field.  Ignored if FieldType is not Real.
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
@@ -356,8 +393,9 @@ class IUserFieldManager(Generic[TNetworkElementType]):
 		"""Creating a new Instance of this class is not allowed
 
 
-		Raises:
-			Exception: if this class is instanciated
+		Raises
+		--------
+			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
@@ -365,19 +403,22 @@ class IUserFieldManager(Generic[TNetworkElementType]):
 	def NewFieldOptions(self) -> IUserFieldOptions:
 		"""No Description
 
-		Returns:
-			IUserFieldOptions: 
+		Returns
+		--------
+			``IUserFieldOptions`` : 
 		"""
 		pass
 
-	def CreateField(self, options: IUserFieldOptions) -> IUserNetworkfieldInfo:
+	def CreateField(self, options: IUserFieldOptions[TFieldType,TNetworkElementType]) -> IUserNetworkfieldInfo:
 		"""No Description
 
-		Args:
-			options(IUserFieldOptions): options
+		Args
+		--------
+			options (``IUserFieldOptions``) :  options
 
-		Returns:
-			IUserNetworkfieldInfo: 
+		Returns
+		--------
+			``IUserNetworkfieldInfo`` : 
 		"""
 		pass
 
