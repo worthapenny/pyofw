@@ -1,3 +1,11 @@
+'''
+ # @ Author: Akshaya Niraula
+ # @ Create Time: 2021-11-13 19:48:34
+ # @ Modified by: Akshaya Niraula
+ # @ Modified time: 2021-11-15 01:41:23
+ # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
+ '''
+
 import pathlib
 import sys
 import os
