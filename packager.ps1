@@ -10,7 +10,7 @@
 # Run this file to build and publish
 
 # this are the arguments passed in
-param($build, $publish)
+param($build, $publish, $copyTypings)
 
 # branches map to be build
 # The key of the map MUST be the Branches of assembly--crawler project
@@ -97,7 +97,12 @@ function New-Build {
     throw "No setup.py file detected at this location: {$PWD} "
   }
 
-  Copy-Branches
+  if ($copyTypings) {
+    Copy-Branches
+  }
+  else {
+    Write-Host "Skipped copying typings" -ForegroundColor Red
+  }
 
   # Make sure to work from current project dir
   Set-Location $script:currentWorkingDir

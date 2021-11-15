@@ -1,18 +1,20 @@
 '''
  # @ Author: Akshaya Niraula
- # @ Create Time: 2021-10-18 06:57:08
+ # @ Create Time: 2021-11-15 02:02:34
  # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-15 02:02:47
+ # @ Modified time: 2021-11-15 02:03:02
  # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
  '''
 
-from pyOFW import support
-import pandas as pd
+
 import unittest
 import logging
 
+from sqlalchemy import true
+from pyOFW.tools import cmd
 
-class TestSupport(unittest.TestCase):
+
+class TestCMD(unittest.TestCase):
 
     # region Setup and Teardown
 
@@ -34,16 +36,13 @@ class TestSupport(unittest.TestCase):
 
     # region Tests
 
-    # region Test Lat / Lng
-    def test_add_lat_lng(self):
-        df = pd.DataFrame({
-            "X": [3063456.483],
-            "Y": [1235478.99]})
+    # region Test Help Args
+    def test_help(self):
+        cmd.newofw(["?"])
+        self.assertTrue(True)
 
-        support.add_lat_long(df=df, from_epsg=2231, x_col="X", y_col="Y")
-
-        self.assertAlmostEqual(df["Lat"][0], 39.9795514636454, 4)
-        self.assertAlmostEqual(df["Lng"][0], -105.27356160030409, 4)
+    def test_copy(self):
+        cmd.newofw(["10.3.5"])
     # endregion
 
     # endregion

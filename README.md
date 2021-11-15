@@ -32,63 +32,35 @@ pip install pyofw
 ## Usage
 
 ```python
-from pyOpenFlows.openFlowsWaterConfig import OpenFlowsWaterConfig
-
-# if logging is desired
-import logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    # level=logging.INFO,
-    format="%(asctime)s.%(msecs)03d %(levelname)s: %(message)s",
-    datefmt="%d %H:%M:%S",
-)
-log = logging.getLogger(__name__)
+# -------------------- VERY FIRST STEP ---------------------
+# | From command line run:
+# | newofw 10.3.5
+# | --------------------------------------------------------
+# | Above command will add "typings folder" to the workspace
+# | FAILURE to do above will result in NO IntelliSense
+# | --------------------------------------------------------
 
 
-# Default setup is for WaterGEMS,
+from pyOFW.openFlowsWaterConfig import OpenFlowsWaterConfig
+
 ofw_config = OpenFlowsWaterConfig()
-# Above class loads the OpenFlow* assemblies
-# as well as opens up the session where licensing
-# information are checked
-
-
-# # example for WaterCAD,
-# from SetupOpenFlows import AppType
-# setup = SetupOpenFlowsWater(AppType.WaterCAD)
-
 
 # NOTE:
-# After above setup ONLY, do the OpenFlow.* imports
+# AFTER creating an instance of OpenFlowsWaterConfig ONLY,
+# do the OpenFlow.* imports
 # if not, error is thrown at runtime
 from OpenFlows.Water.Domain import IWaterModel
 
-# Path of the model file to be opened
 model_filepath = r"C:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-model: IWaterModel = setup.open_model(model_filepath)
+model: IWaterModel = ofw_config.open_model(model_filepath)
 
-message = f"Active scenario is: {model.ActiveScenario}"
-print(message)
-log.info(message)
+print(f"Active scenario is: {model.ActiveScenario}")
+print(f"And there are '{model.Scenarios.Count}' scenarios in the model")
 
-
-# To close the model and and the session
-setup.end()
-
-# # To only close the model but not the session
-# # Option 1:
-# model.Close()
-
-# # Option 2:
-# setup.end(close_session=False)
+# close the model and the session
+ofw_config.end_session()
 ```
 
-## Developing pyofw
-
-To install `pyofw`, along with the tools you need to develop and run test, run the following in your [virtual]evn:
-
-```python
-pip install -e .[dev]
-```
 
 ## How to install pythonnet?
 
@@ -115,14 +87,21 @@ pip install -e .[dev]
 
 ## ERROR at Run Time?
 
-During the run time, if you run into
+### clr ERROR
 
-```bat
-AttributeError: module 'clr' has no attribute 'AddReference'
-```
+>`AttributeError: module 'clr' has no attribute 'AddReference'`
+> error that most likely due the installed package called `clr`. Simply uninstall this package and the error should go away.
+>`pip uninstall clr`
 
-error that most likely due the installed package called `clr`. Simply uninstall this package and the error should go away.
+### No module named 'OpenFlows'
 
-```bat
-pip uninstall clr
+>`ModuleNotFoundError: No module named 'OpenFlows'`
+>Make sure the OpenFlows*.dll files are in the x64 directory of the Water products
+>You could also pass in the custom location `ofw_config = OpenFlowsWaterConfig(dlls_dir="C:\Path\To\WaterGEMS\x64")`
+## Developing pyofw
+
+To install `pyofw`, along with the tools you need to develop and run test, run the following in your [virtual]evn:
+
+```python
+pip install -e .[dev]
 ```

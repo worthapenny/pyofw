@@ -11,6 +11,7 @@ import sys
 import os
 import shutil
 from typing import List
+from distutils.dir_util import copy_tree
 
 # region Constants
 __unreleased_stub_dir = "pyOFW"
@@ -22,15 +23,10 @@ __1035_stub_dir = "pyOFW1035"
 
 def newofw_command() -> None:
     args = sys.argv[1:]
-    return __newofw(args)
-# endregion
-
-# region Private Methods
-
-# region NewOFW Command
+    return newofw(args)
 
 
-def __newofw(args: List[str]) -> None:
+def newofw(args: List[str]) -> None:
     typings_dir_name = "typings"
     typings_path = pathlib.Path(os.getcwd()).joinpath(typings_dir_name)
 
@@ -51,6 +47,9 @@ def __newofw(args: List[str]) -> None:
             __show_help()
 
     return None
+
+
+# endregion
 
 # region Help Command
 
@@ -95,14 +94,15 @@ def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> boo
     success = True
     destination_path.mkdir(parents=True, exist_ok=True)
 
-    for path in source_path.rglob("**"):
-        final_destination_path = destination_path.joinpath(path.name)
-        if final_destination_path.exists():
-            shutil.rmtree(final_destination_path)
+    # final_destination_path = destination_path.joinpath(source_path.name)
+    if destination_path.exists():
+        shutil.rmtree(destination_path)
 
+    for path in source_path.rglob("*"):
         try:
-            shutil.copytree(str(path), str(final_destination_path),
-                            copy_function=shutil.copy2, dirs_exist_ok=True)
+            # shutil.copytree(str(path), str(destination_path),
+            #                 copy_function=shutil.copy2, dirs_exist_ok=True)
+            copy_tree(str(source_path), str(destination_path))
 
         except Exception as ex:
             success = False

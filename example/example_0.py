@@ -23,4 +23,5 @@ model: IWaterModel = ofw_config.open_model(model_filepath)
 print(f"Active scenario is: {model.ActiveScenario}")
 print(f"And there are '{model.Scenarios.Count}' scenarios in the model")
 
+# close the model and the session
 ofw_config.end_session()
