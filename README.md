@@ -1,5 +1,8 @@
 # pyofw
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/worthapenny/pyofw)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/pyofw)
+
 Python package for OpenFlowsWater module from Bentley that mainly contains the stub (*.pyi) files and a few py files to get started.
 
 ## Must Create python.exe.config File
