@@ -63,6 +63,22 @@ print(f"And there are '{model.Scenarios.Count}' scenarios in the model")
 ofw_config.end_session()
 ```
 
+## IntelliSense not working?
+
+For IntelliSense to work properly, we have to make sure certain settings are configured properly. 
+
+### VSCode IDE
+
+If VSCode is the IDE of choice,
+
+* Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and type in `Settings`. 
+* Select `Preferences: Open User[/Workspace] Settings`, which will open up the Settings.
+* In the search type, `stub`
+* Either on User or Workspace tab, select `pylance`
+* Under `Python • Analysis: Stub Path`, make sure `typings` is selected
+
+![vscode_pylance_stub](misc/pylance_stub_typings.png)
+
 
 ## How to install pythonnet?
 
