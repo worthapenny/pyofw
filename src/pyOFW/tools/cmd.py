@@ -30,7 +30,7 @@ def newofw(args: List[str]) -> None:
     typings_dir_name = "typings"
     typings_path = pathlib.Path(os.getcwd()).joinpath(typings_dir_name)
 
-    if len(args) < 1:
+    if args == None or len(args) < 1:
         print(__setting_up_msg("UNRELEASED"))
         __copy_stub_unreleased(typings_path)
     else:
@@ -81,8 +81,11 @@ def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
         package_path = pathlib.Path(__file__).parent.parent
         stub_files_path = package_path.joinpath("typings", stub_dir_name)
         success = __copy_dir(stub_files_path, to_path)
-        print("Setup complete (typings directory added).")
 
+        if success:
+            print("Setup complete (typings directory added).")
+        else:
+            print("Setup was unsuccessful, see previous errors.")
     except Exception as ex:
         print(f"ERROR: Failed to setup.\n {ex}")
         success = False
@@ -92,16 +95,16 @@ def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
 
 def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> bool:
     success = True
-    destination_path.mkdir(parents=True, exist_ok=True)
 
-    # final_destination_path = destination_path.joinpath(source_path.name)
+    # delete the 'typings' folder if exits to clear the leftover
     if destination_path.exists():
         shutil.rmtree(destination_path)
 
+    # create a new 'typings' dir
+    destination_path.mkdir(parents=True, exist_ok=True)
+
     for path in source_path.rglob("*"):
         try:
-            # shutil.copytree(str(path), str(destination_path),
-            #                 copy_function=shutil.copy2, dirs_exist_ok=True)
             copy_tree(str(source_path), str(destination_path))
 
         except Exception as ex:
