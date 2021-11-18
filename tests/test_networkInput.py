@@ -8,13 +8,13 @@
 
 from typing import Any
 import unittest
-from pyOFW.openFlowsWaterConfig import OpenFlowsWaterConfig
+from pyOFW.ofwConfig import OFWConfig
 import logging
 
 
 class TestNetworkInput(unittest.TestCase):
     water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-    setup_water: OpenFlowsWaterConfig
+    setup_water: OFWConfig
     wm: Any
     ni: Any
 
@@ -28,8 +28,8 @@ class TestNetworkInput(unittest.TestCase):
         )
         logging.info("")
 
-        from pyOFW.openFlowsWaterConfig import OpenFlowsWaterConfig
-        cls.setup_water = OpenFlowsWaterConfig()
+        from pyOFW.ofwConfig import OFWConfig
+        cls.setup_water = OFWConfig()
 
         from OpenFlows.Water.Domain import IWaterModel
         from pyOFW.networkInput import NetworkInput

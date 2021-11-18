@@ -46,7 +46,7 @@ pip install pyofw
 # | --------------------------------------------------------
 
 
-from pyOFW.openFlowsWaterConfig import OpenFlowsWaterConfig
+from pyOFW.ofwConfig import OpenFlowsWaterConfig
 
 ofw_config = OpenFlowsWaterConfig()
 

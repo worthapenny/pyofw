@@ -8,7 +8,7 @@
 
 from typing import Any
 
-from pyOFW.openFlowsWaterConfig import AppType, OpenFlowsWaterConfig
+from pyOFW.ofwConfig import AppType, OFWConfig
 import unittest
 import logging
 
@@ -19,8 +19,8 @@ class TestOpenFlowsConfig(unittest.TestCase):
     water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
 
     wm: Any = None
-    setup_wtrg: OpenFlowsWaterConfig
-    setup_wtro: OpenFlowsWaterConfig
+    setup_wtrg: OFWConfig
+    setup_wtro: OFWConfig
 
     # region Setup and Teardown
 
@@ -49,7 +49,7 @@ class TestOpenFlowsConfig(unittest.TestCase):
     # region Tests
 
     def test_wtrg(self):
-        TestOpenFlowsConfig.setup_wtrg = OpenFlowsWaterConfig(
+        TestOpenFlowsConfig.setup_wtrg = OFWConfig(
             app_type=AppType.WaterGEMS,
             dlls_dir=self.wtrg_installation_path,
         )
@@ -67,7 +67,7 @@ class TestOpenFlowsConfig(unittest.TestCase):
     def test_wtrc(self):
         self.assertRaises(
             ValueError,
-            OpenFlowsWaterConfig,
+            OFWConfig,
             app_type=AppType.WaterCAD,
             dlls_dir=self.wtrc_installation_path,
         )

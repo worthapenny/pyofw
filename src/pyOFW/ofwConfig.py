@@ -2,9 +2,10 @@
  # @ Author: Akshaya Niraula
  # @ Create Time: 2021-10-14 19:43:01
  # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-15 01:42:22
+ # @ Modified time: 2021-11-18 02:43:51
  # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
  '''
+
 
 from enum import Enum
 import os
@@ -20,7 +21,7 @@ class AppType(Enum):
     WaterOPS = 3
 
 
-class OpenFlowsWaterConfig:
+class OFWConfig:
     wtrg_install_dir = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
     wtrc_install_dir = r"C:\Program Files (x86)\Bentley\WaterCAD\x64"
     wops_install_dir = r"C:\Program Files\Bentley\WaterOPS"

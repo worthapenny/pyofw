@@ -15,9 +15,9 @@
 # | --------------------------------------------------------
 
 
-from pyOFW.openFlowsWaterConfig import OpenFlowsWaterConfig
+from pyOFW.ofwConfig import OFWConfig
 
-ofw_config = OpenFlowsWaterConfig()
+ofw_config = OFWConfig()
 
 from OpenFlows.Water.Domain import IWaterModel
 

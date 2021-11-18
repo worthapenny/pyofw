@@ -16,8 +16,8 @@
 # | FAILURE to do above will result in NO IntelliSense
 # | --------------------------------------------------------
 
-
-from pyOFW.openFlowsWaterConfig import AppType, OpenFlowsWaterConfig
+import numpy as np
+from pyOFW.ofwConfig import AppType, OFWConfig
 
 # if logging is desired
 import logging
@@ -31,13 +31,15 @@ log = logging.getLogger(__name__)
 
 
 # Default setup is for WaterGEMS where no arguments are needed
-# Example for WaterCAD
-ofw_config = OpenFlowsWaterConfig(
-    app_type=AppType.WaterCAD,
-    dlls_dir=OpenFlowsWaterConfig.wtrc_install_dir)
+ofw_config = OFWConfig()
 # Above class loads the OpenFlow* assemblies
 # as well as opens up the session where licensing
 # information are checked
+
+# Example for WaterCAD
+# ofw_config = OpenFlowsWaterConfig(
+#     app_type=AppType.WaterCAD,
+#     dlls_dir=OpenFlowsWaterConfig.wtrc_install_dir)
 
 
 # NOTE:
@@ -47,12 +49,52 @@ ofw_config = OpenFlowsWaterConfig(
 from OpenFlows.Water.Domain import IWaterModel
 
 # Path of the model file to be opened
+# Path of the model file to be opened
+print("Opening model...")
 model_filepath = r"C:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-model: IWaterModel = ofw_config.open_model(model_filepath)
+model = OpenFlowsWater.Open(model_filepath)
 
-message = f"Active scenario is: {model.ActiveScenario}"
-print(message)
-log.info(message)
+
+# Network elements (Pipes), Unit, Format value with given unit
+print(f"There are '{model.Network.Pipes.Count}' pipes.")
+lengths = model.Network.Pipes.Input.Lengths()
+# Note: if you do type(lengths)
+# you will see it is an object of System.Collections.Generic
+# so follow .NET approach to some level
+lengths_array = [l for l in lengths.Values]  # notice ".Values"
+sum = np.sum(lengths_array)
+length_unit = model.Units.NetworkUnits.Pipe.LengthUnit
+formatted_sum = model.Units.FormatValue(sum, length_unit)
+print(f"The total pipe length is {formatted_sum} {length_unit.ShortLabel}")
+
+# Change pipe size
+pipes = model.Network.Pipes.Elements()
+pipe = pipes[10]
+print(f"Current Diameter of {pipe} is: {pipe.Input.Diameter}")
+pipe.Input.Diameter = 100
+print(f"New Diameter of {pipe} is: {pipe.Input.Diameter}")
+
+
+# Components > Patterns
+patterns = model.Components.Patterns.Elements()
+print(f"The first pattern is: {patterns[0].Label}")
+
+
+# Scenario Information
+print(f"Active scenario is: {model.ActiveScenario}")
+print(f"And there are '{model.Scenarios.Count}' scenarios in the model")
+
+
+# Find scenario by label, and run it
+scenario_label = "Variable Speed Pumping"
+scenario = model.Scenarios.Element(scenario_label)
+print(f"Found scenario: {scenario}")
+
+print("Running simulation...")
+scenario.Run()
+
+# Close the model, don't save anything
+OpenFlowsWater.EndSession()
 
 
 # To close the model and and the session
