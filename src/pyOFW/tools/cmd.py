@@ -83,7 +83,12 @@ def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
         success = __copy_dir(stub_files_path, to_path)
 
         if success:
-            print("Setup complete (typings directory added).")
+            template_filename = __copy_template_getting_started()
+            if template_filename:
+                print(
+                    f"Setup complete (typings directory and {template_filename} added)")
+            else:
+                print("Setup complete (typings directory added).")
         else:
             print("Setup was unsuccessful, see previous errors.")
     except Exception as ex:
@@ -103,21 +108,50 @@ def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> boo
     # create a new 'typings' dir
     destination_path.mkdir(parents=True, exist_ok=True)
 
-    for path in source_path.rglob("*"):
-        try:
-            copy_tree(str(source_path), str(destination_path))
+    # for path in source_path.rglob("*"):
+    try:
+        copy_tree(str(source_path), str(destination_path))
 
-        except Exception as ex:
-            success = False
-            print(f"ERROR: {ex}")
+    except Exception as ex:
         success = False
+        print(f"ERROR: {ex}")
 
     return success
 
 # endregion - Copy stubs
 
+# region Copy Template
+
+
+def __copy_template_getting_started() -> str:
+    template_dir_name = "template"
+    template_filename = "getting_started"
+
+    src_template_path = pathlib.Path(__file__).parent.parent.joinpath(
+        template_dir_name, f"{template_filename}.py")
+    target_template_path = pathlib.Path(
+        os.getcwd()).joinpath(f"{template_filename}.py")
+
+    # Prevent overwriting users file
+    if target_template_path.exists():
+        from datetime import datetime
+        suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
+        target_template_path = pathlib.Path(os.getcwd()).joinpath(
+            template_filename + f"_{suffix}.py")
+
+    try:
+
+        copied_file_path: pathlib.Path = shutil.copyfile(
+            src_template_path, target_template_path)
+
+        return copied_file_path.name
+    except Exception as ex:
+        print(f"ERROR: Failed to copy {target_template_path.name} file.\r{ex}")
+
+# endregion
+
 
 def __setting_up_msg(ver: str) -> str:
-    return f"Setting up for the {ver} version of WaterGEMS/WaterCAD/WaterOPS."
+    return f"Setting up for the {ver} version of Water[GEMS/CAD/OPS]."
 
 # endregion private methods
