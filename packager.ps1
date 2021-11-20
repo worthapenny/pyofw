@@ -10,7 +10,7 @@
 # Run this file to build and publish
 
 # this are the arguments passed in
-param($build, $publish, $copyTypings)
+param($build, $publish, $copyTypings, $publishToProd)
 
 # branches map to be build
 # The key of the map MUST be the Branches of assembly--crawler project
@@ -64,6 +64,18 @@ function Import-Env {
   if ([string]::IsNullOrEmpty($script:pypiPassword)) { throw $errorMessage + "pypiPassword" }
 
   Write-Host "Got the env variables" -ForegroundColor DarkGreen
+}
+
+function Get-Version {
+  $setup_filepath = Join-Path $PSScriptRoot "setup.py"
+  if (!(Test-Path $setup_filepath)) {
+    Write-Host "setup.py could not be located. Returning." -ForegroundColor DarkRed
+    return -1
+  }
+
+  $match = Get-Content $setup_filepath | Select-String -Pattern 'package_version = "(.*)"'
+  $version = $match.Matches.Groups[1].Value
+  return $version
 }
 
 function Copy-Branches {
@@ -128,9 +140,25 @@ function Publish-Build {
   Set-Location $script:currentWorkingDir
   Write-Host "CWD = $($script:currentWorkingDir)" -ForegroundColor DarkBlue
 
-  Write-Host "PUBLISH: working..." -ForegroundColor DarkBlue
-  twine.exe upload dist/* -u $script:pypiUsername -p $script:pypiPassword --verbose
-  Write-Host "PUBLISH: Done" -ForegroundColor DarkGreen
+  $version = Get-Version
+
+  # Make sure this action wasn't accidental
+  $response = Read-Host "Are you sure to publish $version version to $publishToProd ? yes/no"
+  if ($response -eq "yes") {
+    Write-Host "PUBLISH [$version]: working..." -ForegroundColor DarkBlue
+    
+    if ($publishToProd -eq "pypi.org") {
+      twine.exe upload dist/$version/*.whl -u $script:pypiUsername -p $script:pypiPassword --verbose
+      Write-Host "PUBLISH [$version]: Done. Published to pypi.org" -ForegroundColor DarkGreen
+    }
+    else {
+      twine.exe upload --repository testpypi dist/$version/*.whl -u $script:pypiUsername -p $script:pypiPassword --verbose
+      Write-Host "PUBLISH [$version]: Done. Published to TEST.pypi.org" -ForegroundColor DarkGreen
+    }
+  }
+  else {
+    Write-Host "OK. Skipped." -ForegroundColor DarkYellow
+  }
 }
 
 # Perform Build if selected

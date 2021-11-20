@@ -36,7 +36,20 @@
       "cwd": "${workspaceFolder}"
     },
     {
-      "name": "PS: Publish",
+      "name": "PS: Publish PyPI",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/packager.ps1",
+      "args": [
+        "do-not-build",
+        "publish",
+        "False", // Copy the typeings
+        "pypi.org", // Upload to pypi.org
+      ],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "PS: Publish Test PyPI",
       "type": "PowerShell",
       "request": "launch",
       "script": "${workspaceFolder}/packager.ps1",
@@ -44,6 +57,7 @@
         "do-not-build",
         "publish",
         "False", // Copy the typeings 
+        "test.pypi.org", // upload to test.pypi.org
       ],
       "cwd": "${workspaceFolder}"
     },

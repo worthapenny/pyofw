@@ -53,6 +53,7 @@
     "pythonnet",
     "sdist",
     "tcvs",
+    "testpypi",
     "Thres",
     "unmanaged",
     "vspb",

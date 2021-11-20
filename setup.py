@@ -2,6 +2,10 @@
 
 import setuptools
 import pathlib
+from distutils.command.bdist import bdist as _bdist
+from distutils.command.sdist import sdist as _sdist
+
+dist_dir = 'my-dist-dir'
 
 # the name of the installer for user to install
 # this name will be in pypi, user will do pip install this name
@@ -30,12 +34,34 @@ app_path = pathlib.Path(__file__).parent
 # the src directory where the package (namespace) starts
 src_path = app_path.joinpath("src")
 
+# Distribution files (dist) path
+dist_path = app_path.joinpath("dist", package_version)
+dist_path.mkdir(parents=True, exist_ok=True)
+dist_dir = str(dist_path)
+
 # dynamically add the contents from README.md
 # so that pypi wll show the exact same readme as of github
 with open(app_path.joinpath("README.md"), "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+
+class bdist(_bdist):
+    def finalize_options(self):
+        _bdist.finalize_options(self)
+        self.dist_dir = dist_dir
+
+
+class sdist(_sdist):
+    def finalize_options(self):
+        _sdist.finalize_options(self)
+        self.dist_dir = dist_dir
+
+
 setuptools.setup(
+    cmdclass={
+        'bdist': bdist,
+        'sdist': sdist,
+    },
     name=pypi_package_name,
     version=package_version,
     author="Akshaya Niraula",
