@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "PS: Current File",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${file}",
+      "cwd": "${workspaceFolder}"
+    },
+    {
       "name": "PS: Build No Copy",
       "type": "PowerShell",
       "request": "launch",

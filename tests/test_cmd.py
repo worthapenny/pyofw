@@ -7,14 +7,13 @@
  '''
 
 
-from os import path
 import shutil
 from typing import Tuple
 import unittest
 import logging
-from importlib_metadata import pathlib
+from black import os
+import pathlib
 
-from sqlalchemy import true
 from pyOFW.tools import cmd
 
 
@@ -45,6 +44,13 @@ class TestCMD(unittest.TestCase):
 
     def test_copy_1035(self):
         tests_path = pathlib.Path(__file__).parent
+        getting_started_path = tests_path.parent.joinpath("getting_started.py")
+
+        if getting_started_path.exists():
+            os.remove(str(getting_started_path))
+
+        self.assertFalse(getting_started_path.exists())
+
         typings_path = tests_path.parent.joinpath("typings")
         if typings_path.exists():
             shutil.rmtree(typings_path)
@@ -68,9 +74,12 @@ class TestCMD(unittest.TestCase):
             self.assertTupleEqual(
                 src_typings_pyofw_1035_contents, cmd_typings_contents)
 
+            self.assertTrue(getting_started_path.exists())
         finally:
             if typings_path.exists():
                 shutil.rmtree(typings_path)
+            if getting_started_path.exists():
+                os.remove(str(getting_started_path))
     # endregion
 
     # region private functions

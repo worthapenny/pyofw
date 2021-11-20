@@ -8,7 +8,7 @@ import pathlib
 pypi_package_name = "pyofw"
 
 # version number of the package
-package_version = "10.3.5"
+package_version = "10.3.5.0"
 
 # the first letter of the namespace (aka package)
 # name of the directory under the src directory
