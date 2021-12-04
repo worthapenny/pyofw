@@ -92,6 +92,8 @@ class TestCMD(unittest.TestCase):
             if f.is_file():
                 num_of_files += 1
 
+        logging.info(
+            f"{path}: Directory Count = {num_of_sub_dirs}, Files Count = {num_of_files}")
         return (num_of_sub_dirs, num_of_files)
     # endregion
 
