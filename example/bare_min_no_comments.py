@@ -1,10 +1,8 @@
 '''
- # @ Author: Akshaya Niraula
- # @ Create Time: 2021-11-14 07:10:24
- # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-15 15:15:17
- # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
- '''
+Author: Akshaya Niraula
+Create Time: 2021-11-14 07:10:24
+Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
+'''
 
 # -------------------- VERY FIRST STEP ---------------------
 # | From command line run:

@@ -19,7 +19,7 @@
   "python.testing.unittestArgs": [
     "-v",
     "-s",
-    "./tests",
+    "./testsLocal",
     "-p",
     "test_*.py"
   ],

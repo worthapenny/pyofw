@@ -1,10 +1,8 @@
 '''
- # @ Author: Akshaya Niraula
- # @ Create Time: 2021-11-15 15:10:11
- # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-15 15:15:45
- # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
- '''
+Author: Akshaya Niraula
+Create Time: 2021-11-15 15:10:11
+Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
+'''
 
 
 # -------------------- VERY FIRST STEP ---------------------

@@ -1,10 +1,8 @@
 '''
- # @ Author: Akshaya Niraula
- # @ Create Time: 2021-10-14 19:43:01
- # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-18 02:43:51
- # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
- '''
+Author: Akshaya Niraula
+Create Time: 2021-10-14 19:43:01
+Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
+'''
 
 
 from enum import Enum
@@ -22,9 +20,9 @@ class AppType(Enum):
 
 
 class OFWConfig:
-    wtrg_install_dir = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
-    wtrc_install_dir = r"C:\Program Files (x86)\Bentley\WaterCAD\x64"
-    wops_install_dir = r"C:\Program Files\Bentley\WaterOPS"
+    WTRG_INSTALL_DIR = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
+    WTRC_INSTALL_DIR = r"C:\Program Files (x86)\Bentley\WaterCAD\x64"
+    WOPS_INSTALL_DIR = r"C:\Program Files\Bentley\WaterOPS"
 
     dlls_dir: str
     __IWaterModel: Any
@@ -36,12 +34,12 @@ class OFWConfig:
     # region Constructor
     def __init__(self, app_type: AppType = AppType.WaterGEMS, dlls_dir: str = "") -> None:
 
-        if not dlls_dir and os.path.exists(self.wtrg_install_dir):
-            dlls_dir = self.wtrg_install_dir
-        if not dlls_dir and os.path.exists(self.wtrc_install_dir):
-            dlls_dir = self.wtrc_install_dir
-        if not dlls_dir and os.path.extsep(self.wops_install_dir):
-            dlls_dir = self.wops_install_dir
+        if not dlls_dir and os.path.exists(self.WTRG_INSTALL_DIR):
+            dlls_dir = self.WTRG_INSTALL_DIR
+        if not dlls_dir and os.path.exists(self.WTRC_INSTALL_DIR):
+            dlls_dir = self.WTRC_INSTALL_DIR
+        if not dlls_dir and os.path.extsep(self.WOPS_INSTALL_DIR):
+            dlls_dir = self.WOPS_INSTALL_DIR
 
         self.__app_type = app_type
         self.dlls_dir = dlls_dir

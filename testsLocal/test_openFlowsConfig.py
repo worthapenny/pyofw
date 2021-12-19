@@ -1,16 +1,15 @@
 '''
- # @ Author: Akshaya Niraula
- # @ Create Time: 2021-10-14 20:08:38
- # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-15 02:02:52
- # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
- '''
+Author: Akshaya Niraula
+Create Time: 2021-10-14 20:08:38
+Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
+'''
 
-from typing import Any
 
-from pyOFW.ofwConfig import AppType, OFWConfig
 import unittest
 import logging
+from typing import Any
+
+from src.pyOFW.ofwConfig import AppType, OFWConfig
 
 
 class TestOpenFlowsConfig(unittest.TestCase):

@@ -1,13 +1,25 @@
 <#
 * @ Author: Akshaya Niraula
 * @ Create Time: 2021-11-14 07:14:31
-* @ Modified by: Akshaya Niraula
-* @ Modified time: 2021-11-15 01:33:46
 * @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
 #>
 
 
 # Run this file to build and publish
+#
+#
+####################################################################################
+# Make sure:
+# To update the version number in setup.py <<< IMPORTANT
+# To update the Water version in cmd.py <<< IMPORTANT
+# To update the MANIFEST.in, if any new file [types] are added
+# To run the tests - all test should pass
+# From debug tab (Ctrl + Shift + D), select the right option to build/publish.
+# ----------------------------------------------------------------------------------
+# NO need to run this file directly!
+####################################################################################
+#
+#
 
 # this are the arguments passed in
 param($build, $publish, $copyTypings, $publishToProd)

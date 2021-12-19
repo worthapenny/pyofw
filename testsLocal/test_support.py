@@ -1,15 +1,14 @@
 '''
- # @ Author: Akshaya Niraula
- # @ Create Time: 2021-10-18 06:57:08
- # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-15 02:02:47
- # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
- '''
+Author: Akshaya Niraula
+Create Time: 2021-10-18 06:57:08
+Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
+'''
 
-from pyOFW import support
 import pandas as pd
 import unittest
 import logging
+
+from src.pyOFW import support
 
 
 class TestSupport(unittest.TestCase):

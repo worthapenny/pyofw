@@ -12,7 +12,7 @@ dist_dir = 'my-dist-dir'
 pypi_package_name = "pyofw"
 
 # version number of the package
-package_version = "10.3.5.0"
+package_version = "10.3.5.1"
 
 # the first letter of the namespace (aka package)
 # name of the directory under the src directory

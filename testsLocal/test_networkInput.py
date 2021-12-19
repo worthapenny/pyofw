@@ -1,18 +1,18 @@
 '''
- # @ Author: Akshaya Niraula
- # @ Create Time: 2021-10-14 20:08:58
- # @ Modified by: Akshaya Niraula
- # @ Modified time: 2021-11-15 02:02:57
- # @ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
- '''
+Author: Akshaya Niraula
+Create Time: 2021-10-14 20:08:58
+Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
+'''
 
-from typing import Any
 import unittest
-from pyOFW.ofwConfig import OFWConfig
 import logging
+from typing import Any
+
+from src.pyOFW.ofwConfig import AppType, OFWConfig
+from testsLocal.test_base import TestOfwBase
 
 
-class TestNetworkInput(unittest.TestCase):
+class TestNetworkInput(TestOfwBase):
     water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
     setup_water: OFWConfig
     wm: Any
@@ -21,18 +21,14 @@ class TestNetworkInput(unittest.TestCase):
     # region Setup and Teardown
     @classmethod
     def setUpClass(cls):
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format="%(asctime)s.%(msecs)03d %(levelname)s [%(filename)s]:\t%(message)s",
-            datefmt="%d %H:%M:%S",
-        )
-        logging.info("")
+        logging.info("Test for Network Input started.")
 
-        from pyOFW.ofwConfig import OFWConfig
-        cls.setup_water = OFWConfig()
+        #
+        cls.setup_water = OFWConfig(
+            AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
 
         from OpenFlows.Water.Domain import IWaterModel
-        from pyOFW.networkInput import NetworkInput
+        from src.pyOFW.networkInput import NetworkInput
 
         cls.wm: IWaterModel = cls.setup_water.open_model(cls.water_model_path)
         cls.ni: NetworkInput = NetworkInput(cls.wm)
@@ -42,6 +38,7 @@ class TestNetworkInput(unittest.TestCase):
     def tearDownClass(cls):
         cls.wm.Close()
         cls.setup_water.end_session()
+        logging.info("Test for Network Input ended.")
 
     # endregion
 
@@ -139,7 +136,7 @@ class TestNetworkInput(unittest.TestCase):
                    'UnitDmdPattern', 'UnitDmdPatternId', 'NumUnitDmd']
         self.assertTrue(set(columns).issubset(df.columns))
 
-        df_shape = (0, 15)
+        df_shape = (0, 16)
         self.assertEqual(df_shape[0], df.shape[0])
         self.assertEqual(df_shape[1], df.shape[1])
 

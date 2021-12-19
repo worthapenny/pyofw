@@ -3,3 +3,4 @@ include *.py
 include *.txt
 recursive-include src *.pyi
 recursive-include src *.py
+recursive-include src *.ipynb
