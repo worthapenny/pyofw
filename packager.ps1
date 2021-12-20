@@ -10,6 +10,7 @@
 #
 ####################################################################################
 # Make sure:
+# To sync assembly-crawler on web (GitHub) <<< IMPORTANT (Make sure the checkout contents)
 # To update the version number in setup.py <<< IMPORTANT
 # To update the Water version in cmd.py <<< IMPORTANT
 # To update the MANIFEST.in, if any new file [types] are added
@@ -97,8 +98,12 @@ function Copy-Branches {
 
   foreach ($map in $branchesToLocalDirMap.GetEnumerator()) {
     git checkout $map.Key
+    Write-Host "Checked out $($map.Key)"
+    
     $sourceDir = Join-Path $assemblyCrawlerDir "typings"
     $targetDir = Join-Path $script:typingsDir $map.Value
+    Write-Host "Source Dir: $sourceDir"
+    Write-Host "Target Dir: $targetDir"
 
     # remove the existing folder
     Remove-Item -Force -Recurse $targetDir
