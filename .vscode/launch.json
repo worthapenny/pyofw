@@ -62,6 +62,17 @@
       "cwd": "${workspaceFolder}"
     },
     {
+      "name": "Py: Update Local Module",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/copy_to_site_packages.py",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Py: Module",
       "type": "python",
       "request": "launch",

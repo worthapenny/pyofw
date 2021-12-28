@@ -141,7 +141,7 @@ class TestCMD(unittest.TestCase):
                 num_of_files += 1
 
         logging.info(
-            f"{path}: Directory Count = {num_of_sub_dirs}, Files Count = {num_of_files}")
+            f"Directory Count = {num_of_sub_dirs}, Files Count = {num_of_files}, Path: {path}")
         return (num_of_sub_dirs, num_of_files)
     # endregion
 
