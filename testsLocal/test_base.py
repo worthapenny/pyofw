@@ -9,6 +9,7 @@ import logging
 
 
 class TestOfwBase(unittest.TestCase):
+    WTRG_EX_5_WTG = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
 
     def __init__(self, methodName: str = ...) -> None:
         super().__init__(methodName=methodName)

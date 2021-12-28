@@ -17,9 +17,8 @@ class TestOpenFlowsConfig(unittest.TestCase):
     wtrc_installation_path: str = r"_"  # left blank to test
     water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
 
-    wm: Any = None
-    setup_wtrg: OFWConfig
-    setup_wtro: OFWConfig
+    ofw_wtrg: OFWConfig
+    ofw_wtro: OFWConfig
 
     # region Setup and Teardown
 
@@ -32,33 +31,33 @@ class TestOpenFlowsConfig(unittest.TestCase):
         )
         logging.info("")
 
-        cls.setup_wtrg = None
-        cls.setup_wtro = None
+        cls.ofw_wtrg = None
+        cls.ofw_wtro = None
         pass
 
     @classmethod
     def tearDownClass(cls):
-        if cls.setup_wtrg:
-            cls.setup_wtrg.end_session()
-        if cls.setup_wtro:
-            cls.setup_wtro.end_session()
+        if cls.ofw_wtrg:
+            cls.ofw_wtrg.end_session()
+        if cls.ofw_wtro:
+            cls.ofw_wtro.end_session()
 
     # endregion
 
     # region Tests
 
     def test_wtrg(self):
-        TestOpenFlowsConfig.setup_wtrg = OFWConfig(
+        self.ofw_wtrg = OFWConfig(
             app_type=AppType.WaterGEMS,
             dlls_dir=self.wtrg_installation_path,
         )
 
-        self.assertIsNotNone(TestOpenFlowsConfig.setup_wtrg)
+        self.assertIsNotNone(self.ofw_wtrg)
 
-        wm = TestOpenFlowsConfig.setup_wtrg.open_model(self.water_model_path)
-        self.assertIsNotNone(wm)
+        self.ofw_wtrg.open_model(self.water_model_path)
+        self.assertIsNotNone(self.ofw_wtrg.water_model)
 
-        end_session = TestOpenFlowsConfig.setup_wtrg.end_session()
+        end_session = self.ofw_wtrg.end_session()
         self.assertIsNone(end_session)
 
         pass

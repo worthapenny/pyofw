@@ -14,7 +14,6 @@ from src.pyOFW import modelInput as mi
 
 
 class TestModelInput(TestOfwBase):
-    water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
     ofw: OFWConfig
     # region Setup and Teardown
 
@@ -26,7 +25,7 @@ class TestModelInput(TestOfwBase):
         cls.ofw = OFWConfig(
             AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
 
-        cls.ofw.open_model(cls.water_model_path)
+        cls.ofw.open_model(super().WTRG_EX_5_WTG)
         pass
 
     @classmethod

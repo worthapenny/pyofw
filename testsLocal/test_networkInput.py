@@ -13,9 +13,7 @@ from testsLocal.test_base import TestOfwBase
 
 
 class TestNetworkInput(TestOfwBase):
-    water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-    setup_water: OFWConfig
-    wm: Any
+    ofw: OFWConfig
     ni: Any
 
     # region Setup and Teardown
@@ -24,20 +22,19 @@ class TestNetworkInput(TestOfwBase):
         logging.info("Test for Network Input started.")
 
         #
-        cls.setup_water = OFWConfig(
+        cls.ofw = OFWConfig(
             AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
 
-        from OpenFlows.Water.Domain import IWaterModel
         from src.pyOFW.networkInput import NetworkInput
 
-        cls.wm: IWaterModel = cls.setup_water.open_model(cls.water_model_path)
-        cls.ni: NetworkInput = NetworkInput(cls.wm)
+        cls.ofw.open_model(super().WTRG_EX_5_WTG)
+        cls.ni: NetworkInput = NetworkInput(cls.ofw.water_model)
         pass
 
     @classmethod
     def tearDownClass(cls):
-        cls.wm.Close()
-        cls.setup_water.end_session()
+        cls.ofw.water_model.Close()
+        cls.ofw.end_session()
         logging.info("Test for Network Input ended.")
 
     # endregion
