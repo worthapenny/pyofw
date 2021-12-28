@@ -1,10 +1,10 @@
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, List
 
 import pandas as pd
 import numpy as np
 
 
-def scenario_df(water_model) -> pd.DataFrame:
+def scenario_df(water_model: Any) -> pd.DataFrame:
     from OpenFlows.Domain.ModelingElements import IScenario
     from OpenFlows.Water.Domain import IWaterModel
 

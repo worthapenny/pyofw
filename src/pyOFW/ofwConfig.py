@@ -25,7 +25,7 @@ class OFWConfig:
     WOPS_INSTALL_DIR = r"C:\Program Files\Bentley\WaterOPS"
 
     dlls_dir: str
-    __IWaterModel: Any
+    water_model: Any  # Do no set IWaterModel type here
     __app_type: AppType
     assemblies: List[str] = [
         "OpenFlows.Water",
@@ -48,7 +48,7 @@ class OFWConfig:
             raise ValueError(
                 f"Given dlls_dir location is not valid. Dir: {self.dlls_dir}")
 
-        self.__IWaterModel = None
+        self.water_model = None
         success = True
         try:
             sys.path.append(str(self.dlls_dir))
@@ -109,20 +109,20 @@ class OFWConfig:
 
         try:
             from OpenFlows.Water import OpenFlowsWater
-            self.__IWaterModel = OpenFlowsWater.Open(wtg_filepath)
+            self.water_model = OpenFlowsWater.Open(wtg_filepath)
 
             logging.info(
                 f"Successfully opened up the model. Path: {wtg_filepath}")
         except:
             logging.exception(
                 f"Failed to open up the hydraulic model. Path: {wtg_filepath}")
-        return self.__IWaterModel
+        return self.water_model
 
     def end_session(self, end_session: bool = True) -> None:
 
-        if self.__IWaterModel:
+        if self.water_model:
             logging.debug("About to close the model...")
-            self.__IWaterModel.Close()
+            self.water_model.Close()
             logging.info("Closed the model.")
 
         if end_session:

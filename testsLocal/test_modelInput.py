@@ -4,10 +4,8 @@ Create Time: 2021-10-18 06:57:08
 Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
 '''
 
-import pandas as pd
 import unittest
 import logging
-from typing import Any
 
 from testsLocal.test_base import TestOfwBase
 
@@ -17,8 +15,7 @@ from src.pyOFW import modelInput as mi
 
 class TestModelInput(TestOfwBase):
     water_model_path = r"c:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-    setup_water: OFWConfig
-    wm: Any
+    ofw: OFWConfig
     # region Setup and Teardown
 
     @classmethod
@@ -26,18 +23,16 @@ class TestModelInput(TestOfwBase):
         logging.info("Test for Model Input started.")
 
         #
-        cls.setup_water = OFWConfig(
+        cls.ofw = OFWConfig(
             AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
 
-        from OpenFlows.Water.Domain import IWaterModel
-
-        cls.wm: IWaterModel = cls.setup_water.open_model(cls.water_model_path)
+        cls.ofw.open_model(cls.water_model_path)
         pass
 
     @classmethod
     def tearDownClass(cls):
-        cls.wm.Close()
-        cls.setup_water.end_session()
+        cls.ofw.water_model.Close()
+        cls.ofw.end_session()
         logging.info("Test for Network Input ended.")
 
     # endregion
@@ -46,7 +41,7 @@ class TestModelInput(TestOfwBase):
 
     # region Test Lat / Lng
     def test_scenario_df(self):
-        scenario_df = mi.scenario_df(self.wm)
+        scenario_df = mi.scenario_df(self.ofw.water_model)
         self.assertFalse(scenario_df.empty)
     # endregion
 
