@@ -1,7 +1,8 @@
 from enum import Enum
-from System import TypeCode, ICloneable
 from typing import overload, List, Dict, Iterator
+from System import ICloneable
 from array import array
+from System.Collections import ICollection
 
 class DictionaryEntryExStringType(Enum):
 	Key = 0
@@ -35,7 +36,7 @@ class SystemType(Enum):
 	Guid = 13
 
 class SymbolStyle(Enum):
-	None = 0
+	NONE = 0
 	CAD = 1
 	GIS = 2
 
@@ -62,7 +63,7 @@ class SortOrder(Enum):
 	Descending = 2
 
 class HmiProductBeta(Enum):
-	None = 0
+	NONE = 0
 	Test = 1
 	Maryland = 2
 	Vegas = 3
@@ -86,7 +87,7 @@ class HmiProductBeta(Enum):
 	Shanghai = 22
 
 class HmiProductRelease(Enum):
-	None = 0
+	NONE = 0
 	Test = 1
 	CivilStormDynamic = 2
 	FlowMaster = 3
@@ -124,7 +125,7 @@ class hmiProjectType(Enum):
 	hmiHendersonProject = 11
 
 class LockType(Enum):
-	None = 0
+	NONE = 0
 	Optimistic = 1
 	Pessimistic = 2
 
@@ -2207,6 +2208,68 @@ class INamable:
 		Returns
 		--------
 			``INamable`` : 
+		"""
+		pass
+
+class IMemento:
+
+	def __init__(self) -> None:
+		"""Creating a new Instance of this class is not allowed
+
+
+		Raises
+		--------
+			Exception: if this class is instantiated
+		"""
+		raise Exception("Creating a new Instance of this class is not allowed")
+		pass
+
+	@property
+	def State(self) -> object:
+		"""No Description
+
+		Returns
+		--------
+			``IMemento`` : 
+		"""
+		pass
+
+	@State.setter
+	def State(self, state: object) -> None:
+		pass
+
+class IMementoable:
+
+	def __init__(self) -> None:
+		"""Creating a new Instance of this class is not allowed
+
+
+		Raises
+		--------
+			Exception: if this class is instantiated
+		"""
+		raise Exception("Creating a new Instance of this class is not allowed")
+		pass
+
+	def CreateMemento(self) -> IMemento:
+		"""No Description
+
+		Returns
+		--------
+			``IMemento`` : 
+		"""
+		pass
+
+	def SetMemento(self, aimemento: IMemento) -> bool:
+		"""No Description
+
+		Args
+		--------
+			aimemento (``IMemento``) :  aimemento
+
+		Returns
+		--------
+			``bool`` : 
 		"""
 		pass
 

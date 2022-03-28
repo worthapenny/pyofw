@@ -27,13 +27,12 @@ class ApplicationManagerBase(IApplicationManager):
 		"""
 		pass
 
-	@overload
-	def Start(self, showUI: bool) -> None:
+	def Start(self, openUI: bool = True) -> None:
 		"""Starts the application
 
 		Args
 		--------
-			showUI (``bool``) :  showUI
+			openUI (``bool``) :  openUI
 
 		Returns
 		--------
@@ -57,20 +56,6 @@ class ApplicationManagerBase(IApplicationManager):
 
 	def Stop(self) -> None:
 		"""Stops the application.  Should be closed when application exits.
-
-		Returns
-		--------
-			``None`` : 
-		"""
-		pass
-
-	@overload
-	def Start(self, openUI: bool = True) -> None:
-		"""Starts the application
-
-		Args
-		--------
-			openUI (``bool``) :  If true, opens the specified parent form.  Defaults to false.
 
 		Returns
 		--------

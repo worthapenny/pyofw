@@ -39,7 +39,7 @@ pip install pyofw
 ```python
 # -------------------- VERY FIRST STEP ---------------------
 # | From command line run:
-# | newofw 10.3.5
+# | newofw 10.3.6
 # | --------------------------------------------------------
 # | Above command will add "typings folder" to the workspace
 # | FAILURE to do above will result in NO IntelliSense

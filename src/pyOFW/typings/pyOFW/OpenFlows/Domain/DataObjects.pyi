@@ -1,26 +1,27 @@
 from Haestad.Domain import IDomainDataSet
 from datetime import datetime
+from Haestad.Support.Support import ILabeled
 from typing import overload, Generic, List, TypeVar
-from OpenFlows.Domain.ModelingElements import IModelingElementBase, IModelingElementsBase, IElement, ModelElementType, ISelectionSets, ISelectionSet, IScenarios, IScenario, IScenarioOptions, IElementUnits
+from OpenFlows.Domain.ModelingElements import IModelingElementBase, IModelingElementsBase, IElement, ModelElementType, ISelectionSets, ISelectionSet, IEmbeddedStickyObjects, IScenarios, IScenario, IScenarioOptions, IElementUnits
 from OpenFlows.Domain.ModelingElements.Support import TNetworkElementTypeEnum, IUserFieldManager
 from OpenFlows.Domain.ModelingElements.NetworkElements import ElementStateType
 from enum import Enum
 from OpenFlows.Units import IModelUnits, TNetworkUnitsType, TComponentUnitsType, INetworkUnits, IComponentUnits
 from OpenFlows.Domain.ModelingElements.Components import IModelComponents
 
-TScenarioManagerType = TypeVar("TScenarioManagerType", IModelingElementsBase)
-TScenarioType = TypeVar("TScenarioType", IModelingElementBase)
-TNetworkElementType = TypeVar("TNetworkElementType", IElement)
-TSelectionSetsType = TypeVar("TSelectionSetsType", ISelectionSets)
-TSelectionSetElementType = TypeVar("TSelectionSetElementType", ISelectionSet)
-TSelectionSetNetworkElementType = TypeVar("TSelectionSetNetworkElementType", IElement)
-TNetworkType = TypeVar("TNetworkType", INetwork)
-TModelComponentsType = TypeVar("TModelComponentsType", IModelComponents)
-TScenarioOptionsType = TypeVar("TScenarioOptionsType", IScenarioOptions)
-TScenarioOptionsUnitsType = TypeVar("TScenarioOptionsUnitsType", IElementUnits)
-TComponentElementType = TypeVar("TComponentElementType", IElement)
-TComponentElementTypeEnum = TypeVar("TComponentElementTypeEnum", Enum)
-TModelType = TypeVar("TModelType", IModel)
+TScenarioManagerType = TypeVar("TScenarioManagerType")
+TScenarioType = TypeVar("TScenarioType")
+TNetworkElementType = TypeVar("TNetworkElementType")
+TSelectionSetsType = TypeVar("TSelectionSetsType")
+TSelectionSetElementType = TypeVar("TSelectionSetElementType")
+TSelectionSetNetworkElementType = TypeVar("TSelectionSetNetworkElementType")
+TNetworkType = TypeVar("TNetworkType")
+TModelComponentsType = TypeVar("TModelComponentsType")
+TScenarioOptionsType = TypeVar("TScenarioOptionsType")
+TScenarioOptionsUnitsType = TypeVar("TScenarioOptionsUnitsType")
+TComponentElementType = TypeVar("TComponentElementType")
+TComponentElementTypeEnum = TypeVar("TComponentElementTypeEnum")
+TModelType = TypeVar("TModelType")
 
 class IDomainModel:
 
@@ -58,7 +59,7 @@ class IDomainModel:
 		"""
 		pass
 
-class IModelInfo:
+class IModelInfo(ILabeled):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed
@@ -513,6 +514,16 @@ class IModel(Generic[TNetworkType, TModelComponentsType, TScenarioManagerType, T
 	@property
 	def UserFieldManager(self) -> IUserFieldManager[TNetworkElementTypeEnum]:
 		"""Provides a way to create custom fields in the current model.
+
+		Returns
+		--------
+			``IModel`` : 
+		"""
+		pass
+
+	@property
+	def EmbeddedStickyObjects(self) -> IEmbeddedStickyObjects[TNetworkElementTypeEnum]:
+		"""The external hyperlinks for the model.
 
 		Returns
 		--------

@@ -1,8 +1,8 @@
-from Haestad.Support.Support import INamable, ILabeled
+from Haestad.Support.Support import INamable, IMemento, IMementoable, ILabeled
 from typing import List, overload, Dict
 from enum import Enum
-from System import TypeCode, ICloneable
 from datetime import datetime
+from System import IAsyncResult, AsyncCallback, ICloneable, EventHandler, IntPtr
 from System.Runtime.Serialization import SerializationInfo, StreamingContext, ISerializable
 
 class DimensionType(Enum):
@@ -657,7 +657,7 @@ class FlowPerUnitLengthUnit(Enum):
 	LitersPerMeterPerSecond = 7
 
 class DimensionIndex(Enum):
-	None = 0
+	NONE = 0
 	Angle = 1
 	Area = 2
 	Concentration = 3
@@ -731,7 +731,7 @@ class DimensionIndex(Enum):
 	Acceleration = 71
 
 class UnitIndex(Enum):
-	None = 0
+	NONE = 0
 	AcreFeet = 1
 	AcreFeetPerDay = 2
 	AcreFeetPerHour = 3
@@ -1167,7 +1167,7 @@ class UnitIndex(Enum):
 	FeetPerSquareSecond = 433
 
 class UnitSystemIndex(Enum):
-	None = 0
+	NONE = 0
 	Si = 1
 	UsCustomary = 2
 	Both = 3

@@ -16,6 +16,7 @@ from datetime import datetime
 # region Constants
 __unreleased_stub_dir = "pyOFW"
 __1035_stub_dir = "pyOFW1035"
+__1036_stub_dir = "pyOFW1036"
 __typings_dir_name = "typings"
 # endregion
 
@@ -36,11 +37,20 @@ def newofw(args: List[str]) -> bool:
     # So that "newofw" will always get the latest released version
     if args == None or len(args) < 1:
         print(__setting_up_msg("10.3"))
-        success = __copy_stub_103(typings_path)
+        success = __copy_stub_1036(typings_path)  # // latest on 103
     else:
         arg = args[0]
         if arg == "?" or arg == "help":
             success = __show_help()
+
+        elif arg.startswith("10.3.5"):
+            print(__setting_up_msg(arg))
+            success = __copy_stub_1035(typings_path)
+
+        elif arg.startswith("10.3.6"):
+            print(__setting_up_msg(arg))
+            success = __copy_stub_1036(typings_path)
+
         elif arg.startswith("UNRELEASED"):
             print(__setting_up_msg(arg))
             success = __copy_stub_unreleased(typings_path)
@@ -62,8 +72,8 @@ def __show_help() -> bool:
     print(
         f"To get started with OpenFlows[Water], type in 'newofw targetVersion' such as:")
     print(f"newofw 10.3")
-    print(f"newofw 10.3.5")
-    print(f"If only newofw is executed, it will setup for UNRELEASED version of Water products")
+    print(f"newofw 10.3.6")
+    print(f"If only newofw is executed, it will setup for the latest version of Water products")
     print(f"To show this help message, 'newofw ?' or 'newofw help'")
 
     return True
@@ -71,8 +81,12 @@ def __show_help() -> bool:
 
 
 # region Copy Stubs from package dir to user's working directory
-def __copy_stub_103(to_path: pathlib.Path) -> bool:
+def __copy_stub_1035(to_path: pathlib.Path) -> bool:
     return __copy_stub_files(__1035_stub_dir, to_path)
+
+
+def __copy_stub_1036(to_path: pathlib.Path) -> bool:
+    return __copy_stub_files(__1036_stub_dir, to_path)
 
 
 def __copy_stub_unreleased(to_path: pathlib.Path) -> bool:

@@ -6,6 +6,7 @@ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
 
 import os
 import shutil
+from tkinter.tix import Tree
 from typing import Tuple
 import unittest
 import logging
@@ -62,37 +63,8 @@ class TestCMD(unittest.TestCase):
         self.assertFalse(getting_started_nb_path.exists())
 
         # make sure typings dir is not there
-        typings_path = tests_path.parent.joinpath("typings")
-        if typings_path.exists():
-            shutil.rmtree(typings_path)
-
-        self.assertFalse(typings_path.exists())
-
-        # make sure source path exists
-        src_path = tests_path.parent.joinpath("src")
-        self.assertTrue(src_path.exists())
-
-        # make sure stub path exists
-        src_typings_pyofw_1035_path = src_path.joinpath(
-            "pyOFW", "typings", "pyOFW1035")
-        self.assertTrue(src_typings_pyofw_1035_path.exists())
-
-        try:
-            cmd.newofw([])
-            cmd_typings_contents = self.__get_contents_count(typings_path)
-            src_typings_pyofw_1035_contents = self.__get_contents_count(
-                src_typings_pyofw_1035_path)
-
-            # Make sure the number of dirs and number of files are same compared to src
-            self.assertTupleEqual(
-                src_typings_pyofw_1035_contents, cmd_typings_contents)
-
-            # make sure getting started templates exits
-            self.assertTrue(getting_started_path.exists())
-            self.assertTrue(getting_started_nb_path.exists())
-        finally:
-            if typings_path.exists():
-                shutil.rmtree(typings_path)
+        self.__check_typings_version(
+            tests_path, getting_started_path, getting_started_nb_path, "pyOFW1036", "10.3.6")
 
         # now test for preventing overrite on getting started files
         try:
@@ -127,6 +99,50 @@ class TestCMD(unittest.TestCase):
                 getting_started_path.unlink()
             if getting_started_nb_path.exists():
                 getting_started_nb_path.unlink()
+
+    def __check_typings_version(
+            self,
+            tests_path: pathlib.Path,
+            getting_started_path: pathlib.Path,
+            getting_started_nb_path: pathlib.Path,
+            source_dir_name: str,
+            version_str: str):
+
+        typings_path = tests_path.parent.joinpath("typings")
+        if typings_path.exists():
+            shutil.rmtree(str(typings_path))
+            typings_path.mkdir(parents=True, exist_ok=Tree)
+
+        # make sure source path exists
+        src_path = tests_path.parent.joinpath("src")
+        self.assertTrue(src_path.exists())
+
+        # make sure stub path exists
+        src_typings_pyofw_version_path = src_path.joinpath(
+            "pyOFW", "typings", source_dir_name)
+        self.assertTrue(src_typings_pyofw_version_path.exists())
+
+        try:
+            cmd.newofw([version_str])
+            cmd_typings_contents = self.__get_contents_count(typings_path)
+            src_typings_pyofw_version_contents = self.__get_contents_count(
+                src_typings_pyofw_version_path)
+
+            # Make sure the number of dirs and number of files are same compared to src
+            self.assertTupleEqual(
+                src_typings_pyofw_version_contents, cmd_typings_contents)
+
+            # make sure getting started templates exits
+            self.assertTrue(getting_started_path.exists())
+            self.assertTrue(getting_started_nb_path.exists())
+
+        finally:
+            if typings_path.exists():
+                shutil.rmtree(typings_path)
+            if getting_started_path.exists():
+                getting_started_path.unlink(missing_ok=True)
+            if getting_started_nb_path.exists():
+                getting_started_nb_path.unlink(missing_ok=True)
 
     # endregion
 

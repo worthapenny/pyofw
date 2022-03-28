@@ -16,7 +16,7 @@
 # Make sure:
 # To sync assembly-crawler on web (GitHub) <<< IMPORTANT (Make sure the checkout contents)
 # To update the version number in setup.py <<< IMPORTANT
-# To update the Water version in cmd.py <<< IMPORTANT
+# To update the Water version in cmd.py <<< IMPORTANT (also update the README.md, line # 42)
 # To update the MANIFEST.in, if any new file [types] are added
 # To run the tests - all test should pass
 # From debug tab (Ctrl + Shift + D), select the right option to build/publish.
@@ -64,11 +64,12 @@
 param($build, $publish, $copyTypings, $publishToProd)
 
 # branches map to be build
-# The key of the map MUST be the Branches of assembly--crawler project
+# The key of the map MUST be the Branches of assembly--crawler project (by Kris, not the forked one)
 # The value of the map WILL be the Directory name of PYOFW (current project)
 $branchesToLocalDirMap = @{
   "main"     = "pyOFW";
   "WTRG1035" = "pyOFW1035";
+  "WTRG1036" = "pyOFW1036";
 }
 
 # Environment variables to be loaded
@@ -130,6 +131,7 @@ function Get-Version {
 }
 
 function Copy-Branches {
+  Write-Host "-------------- START COPYING BRANCHES --------------" -ForegroundColor DarkGray
   Import-Env
   
   Set-Location $script:assemblyCrawlerDir
@@ -144,8 +146,10 @@ function Copy-Branches {
     Write-Host "Target Dir: $targetDir"
 
     # remove the existing folder
-    Remove-Item -Force -Recurse $targetDir
-    Write-Host "Removed the local contents: $targetDir" -ForegroundColor Magenta
+    if (Test-Path $targetDir) {
+      Remove-Item -Force -Recurse $targetDir
+      Write-Host "Removed the local contents: $targetDir" -ForegroundColor Magenta
+    }
 
     Write-Host "[$($map.Key)] About to copy typings contents from: $sourceDir" -ForegroundColor DarkBlue
     Copy-Item -Force -Recurse -Path $sourceDir -Destination $targetDir
@@ -155,6 +159,7 @@ function Copy-Branches {
 
   Set-Location $script:currentWorkingDir
   Write-Host "Done copying branches" -ForegroundColor DarkGreen
+  Write-Host "-------------- x -------------- x --------------" -ForegroundColor DarkGray
 }
 function New-Build {
   # Check if the current directory has setup.py file
