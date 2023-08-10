@@ -6,14 +6,13 @@ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
 
 import os
 import shutil
-from tkinter.tix import Tree
 from typing import Tuple
 import unittest
 import logging
 import pathlib
 
-# from pyOFW.tools import cmd
-from src.pyOFW.tools import cmd
+# from pyofw.tools import cmd
+from src.pyofw.tools import cmd
 
 
 class TestCMD(unittest.TestCase):
@@ -64,7 +63,7 @@ class TestCMD(unittest.TestCase):
 
         # make sure typings dir is not there
         self.__check_typings_version(
-            tests_path, getting_started_path, getting_started_nb_path, "pyOFW1036", "10.3.6")
+            tests_path, getting_started_path, getting_started_nb_path, "pyofw1036", "10.3.6")
 
         # now test for preventing overrite on getting started files
         try:
@@ -111,7 +110,7 @@ class TestCMD(unittest.TestCase):
         typings_path = tests_path.parent.joinpath("typings")
         if typings_path.exists():
             shutil.rmtree(str(typings_path))
-            typings_path.mkdir(parents=True, exist_ok=Tree)
+            typings_path.mkdir(parents=True, exist_ok=True)
 
         # make sure source path exists
         src_path = tests_path.parent.joinpath("src")
@@ -119,7 +118,7 @@ class TestCMD(unittest.TestCase):
 
         # make sure stub path exists
         src_typings_pyofw_version_path = src_path.joinpath(
-            "pyOFW", "typings", source_dir_name)
+            "pyofw", "typings", source_dir_name)
         self.assertTrue(src_typings_pyofw_version_path.exists())
 
         try:

@@ -14,7 +14,7 @@ logging.info("Copying local package to site-package dir")
 logging.info("-" * 60)
 
 
-package_name = "pyOFW"
+package_name = "pyofw"
 src_path = pathlib.Path(r"src").resolve()
 src_package_path = src_path.joinpath(package_name)
 

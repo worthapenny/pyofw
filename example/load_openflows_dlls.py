@@ -7,25 +7,34 @@ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
 
 # -------------------- VERY FIRST STEP ---------------------
 # | From command line run:
-# | newofw 10.x.x
+# | newofw
 # | --------------------------------------------------------
 # | Above command will add "typings folder" to the workspace
-# | The version (10.x.x) depends on the install OpenFlows Application
-# | For WaterGEMS version 10.03.05.xx, newofw 10.3.5
-# | FAILURE to do above will result in NO IntelliSense
+# | This will enable the intellisense!
 # | --------------------------------------------------------
+# | NOTE:
+# | This example doesn't take advantage of pyofw module on purpose
+# | as it is trying to show the similarity between .NET and python
+# | on how a model can be opened
+# | --------------------------------------------------------
+
 
 import sys
 import clr
 import numpy as np
 
+from pathlib import Path
+
 # specify where the OpenFlows.dll, OpenFlows.Water.dll are
-install_dlls_dir = r"C:\Program Files (x86)\Bentley\WaterCAD\x64"
+install_dlls_dir = r"C:\Program Files (x86)\Bentley\WaterGEMS\x64"
+assert Path(install_dlls_dir).exists()
+
 sys.path.append(install_dlls_dir)
 
 # Load the dlls
 loaded = clr.AddReference('OpenFlows.Water')
 # when it fails to load, inspect loaded to learn more
+assert loaded is not None
 
 # NOTE:
 # AFTER performing the above load ONLY,
@@ -34,31 +43,28 @@ loaded = clr.AddReference('OpenFlows.Water')
 from OpenFlows.Water import OpenFlowsWater, WaterProductLicenseType
 
 print("Initializing session of OpenFlows.Water...")
-OpenFlowsWater.StartSession(WaterProductLicenseType.WaterGEMS)
+status = OpenFlowsWater.StartSession(WaterProductLicenseType.WaterGEMS)
+assert f"{status}" == "OK"
 
 # Path of the model file to be opened
 print("Opening model...")
 model_filepath = r"C:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
+assert Path(model_filepath).exists()
+
 model = OpenFlowsWater.Open(model_filepath)
+assert model is not None
+print(f"Opened the '{model}' model")
 
-
-# Network elements (Pipes), Unit, Format value with given unit
+# Pipe Count
 print(f"There are '{model.Network.Pipes.Count}' pipes.")
-lengths = model.Network.Pipes.Input.Lengths()
-# Note: if you do type(lengths)
-# you will see it is an object of System.Collections.Generic
-# so follow .NET approach to some level
-lengths_array = [l for l in lengths.Values]  # notice ".Values"
-sum = np.sum(lengths_array)
-length_unit = model.Units.NetworkUnits.Pipe.LengthUnit
-formatted_sum = model.Units.FormatValue(sum, length_unit)
-print(f"The total pipe length is {formatted_sum} {length_unit.ShortLabel}")
+
 
 # Change pipe size
 pipes = model.Network.Pipes.Elements()
 pipe = pipes[10]
-print(f"Current Diameter of {pipe} is: {pipe.Input.Diameter}")
-pipe.Input.Diameter = 100
+new_pipe_dia = 100
+print(f"Current Diameter of {pipe} is: {pipe.Input.Diameter}. It will be updated to {new_pipe_dia}")
+pipe.Input.Diameter = new_pipe_dia
 print(f"New Diameter of {pipe} is: {pipe.Input.Diameter}")
 
 
@@ -77,8 +83,10 @@ scenario_label = "Variable Speed Pumping"
 scenario = model.Scenarios.Element(scenario_label)
 print(f"Found scenario: {scenario}")
 
-print("Running simulation...")
+print(f"Running simulation... Has Results: {scenario.HasResults}")
 scenario.Run()
+print(f"Ran the simulation... Has Results: {scenario.HasResults}")
+
 
 # Close the model, don't save anything
 OpenFlowsWater.EndSession()

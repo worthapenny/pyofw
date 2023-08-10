@@ -1,9 +1,6 @@
 {
   "python.languageServer": "Pylance",
-  "python.formatting.autopep8Args": [
-    "--ignore",
-    "E402"
-  ],
+  "python.formatting.autopep8Args": ["--ignore", "E402"],
   "editor.formatOnSave": true,
   "python.analysis.diagnosticSeverityOverrides": {
     "reportMissingModuleSource": "none",
@@ -32,6 +29,7 @@
     "Chrsts",
     "Coeff",
     "datefmt",
+    "endregion",
     "fcvs",
     "Fireflow",
     "gpvs",
@@ -42,6 +40,7 @@
     "networkx",
     "newofw",
     "Niraula",
+    "openflows",
     "Orif",
     "pbvs",
     "plotly",
@@ -62,5 +61,9 @@
     "wtrg",
     "wtro",
     "Zoneable"
-  ]
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "python.formatting.provider": "none"
 }

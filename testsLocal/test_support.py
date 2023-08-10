@@ -8,7 +8,7 @@ import pandas as pd
 import unittest
 import logging
 
-from src.pyOFW import support
+from src.pyofw import support
 
 
 class TestSupport(unittest.TestCase):

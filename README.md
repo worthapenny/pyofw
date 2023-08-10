@@ -5,7 +5,7 @@
 
 Python package for OpenFlowsWater module from Bentley that mainly contains the stub (*.pyi) files and a few py files to get started.
 
-## Must Create python.exe.config File
+## Must Create python.exe.config File [**NOT** needed for 10.4 or higher]
 
 Bentley's WaterObjects.NET API contains a mixed mode (managed/unmanaged)
 assemblies as a result, a python configuration file has to placed where the python.exe is location (in your environment). The contents of the file can be copied from below or use from [here](/misc/python.exe.config).
@@ -29,42 +29,62 @@ Run the following to install:
 pip install pyofw
 ```
 
-**Failed to install?** One of the requirements package is `pythonnet` which might not get installed directly. In such case, follow the steps [below](##How-to-install-pythonnet?).
+**Failed to install?** One of the requirements package is `pythonnet` which might not get installed directly. In such case, follow the steps [how to install pythonnet](##How-to-install-pythonnet?).
 
-
- **Note:** The package itself will not add any value without the [Bentley's](https://www.bentley.com/en) OpenFlows application like [WaterGEMS](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watergems), [WaterCAD](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watercad), or WaterOPS. And the package assumes the application is installed at the default location. For WaterGEMS it is `C:\Program Files (x86)\Bentley\WaterGEMS\x64`.
+ **Note:** The package itself will not add any value without the [Bentley's](https://www.bentley.com/en) OpenFlows application like [WaterGEMS](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watergems), or [WaterCAD](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watercad). And the package assumes the application is installed at the default location. For WaterGEMS it is `C:\Program Files (x86)\Bentley\WaterGEMS\x64`.
 
 ## Usage
 
 ```python
 # -------------------- VERY FIRST STEP ---------------------
-# | From command line run:
-# | newofw 10.3.6
+# | Navigate to the folder where you are about to create your *.py files
+# | In this folder/workspace, bring up the console/terminal and run: 
+# | newofw
 # | --------------------------------------------------------
-# | Above command will add "typings folder" to the workspace
-# | FAILURE to do above will result in NO IntelliSense
+# | Above command will add "typings" folder to the workspace
+# | then ONLY the IntelliSense will work
 # | --------------------------------------------------------
 
 
-from pyOFW.ofwConfig import OpenFlowsWaterConfig
+from pyofw.config import OFWConfig
 
-ofw_config = OpenFlowsWaterConfig()
+config = OFWConfig()
 
 # NOTE:
-# AFTER creating an instance of OpenFlowsWaterConfig ONLY,
+# AFTER creating an instance of OFWConfig ONLY,
 # do the OpenFlow.* imports
 # if not, error is thrown at runtime
 from OpenFlows.Water.Domain import IWaterModel
 
 model_filepath = r"C:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
 model: IWaterModel = ofw_config.open_model(model_filepath)
+# in the above line, defining the type `IWaterModel` is not required
+# however it will help to understand the data type as well as the display # of the correct intellisense 
 
 print(f"Active scenario is: {model.ActiveScenario}")
 print(f"And there are '{model.Scenarios.Count}' scenarios in the model")
 
-# close the model and the session
-ofw_config.end_session()
+# close the model and end the session
+config.end_session()
 ```
+
+## 'newofw' command is causing error?
+
+Are you getting errors like below?
+
+* <span style="color: red;"> newofw : The term 'newofw' is not recognized as the name of a cmdlet
+* <span style="color: red;"> 'newofw' is not recognized as an internal or external command
+
+This could be possible depending on how python is installed. To troubleshoot, make sure you are using the right python.exe. 
+
+1. Find out where the python.exe is. Run `where python` in the console. This will display the full path of the python.exe. **Note** The `where python` command will not give any results in PowerShell terminal. In PowerShell, the command is `Get-Command python`.
+   > D:\SDK\python\3_10\python.exe
+2. Modify the path like the below:
+   > D:\SDK\python\3_10\Scripts\newofw.exe
+3. Check if the above file `newofw.exe` exists. 
+   1. Does **NOT** exists: reinstall the module again by running `python -m pip install pyofw`
+   2. **Exits**: run the exe from the command line. Make sure to be in the right directory.
+      >  D:\My\Correct\Folder> `D:\SDK\python\3_10\Scripts\newofw.exe`
 
 ## IntelliSense not working?
 
@@ -74,14 +94,13 @@ For IntelliSense to work properly, we have to make sure certain settings are con
 
 If VSCode is the IDE of choice,
 
-* Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and type in `Settings`. 
+* Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and type in `Settings`.
 * Select `Preferences: Open User[/Workspace] Settings`, which will open up the Settings.
 * In the search type, `stub`
 * Either on User or Workspace tab, select `pylance`
 * Under `Python • Analysis: Stub Path`, make sure `typings` is selected
 
 ![vscode_pylance_stub](misc/pylance_stub_typings.png)
-
 
 ## How to install pythonnet?
 
@@ -120,82 +139,24 @@ If VSCode is the IDE of choice,
 >Make sure the OpenFlows*.dll files are in the x64 directory of the Water products
 >You could also pass in the custom location `ofw_config = OpenFlowsWaterConfig(dlls_dir="C:\Path\To\WaterGEMS\x64")`
 
-## Get Started from Scratch (w/o pyOFW.openFlowsWaterConfig.py)
+## More Examples
 
-```python
-import sys
-import clr
-import numpy as np
+### py Files
 
-# specify where the OpenFlows.dll, OpenFlows.Water.dll are
-install_dlls_dir = r"C:\Program Files (x86)\Bentley\WaterCAD\x64"
-sys.path.append(install_dlls_dir)
+1. Very minimal with no comments: 
+[Example_Minimal](/src/pyofw/template/example_minimal.py)
 
-# Load the dlls
-loaded = clr.AddReference('OpenFlows.Water')
-# when it fails to load, inspect loaded to learn more
+1. **[Recommended]** Good example to get started:
+[Example_with_comments](/src/pyofw/template/example_with_comments.py)
 
-# NOTE:
-# AFTER performing the above load ONLY,
-# do the OpenFlow.* imports
-# if not, error is thrown at runtime
-from OpenFlows.Water import OpenFlowsWater, WaterProductLicenseType
+1. Example with minimal uses of `pyofw` module:
+[Similar to .NET](/example/load_openflows_dlls.py)
 
-print("Initializing session of OpenFlows.Water...")
-OpenFlowsWater.StartSession(WaterProductLicenseType.WaterGEMS)
+### Jupyter Notebook
 
-# Path of the model file to be opened
-print("Opening model...")
-model_filepath = r"C:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-model = OpenFlowsWater.Open(model_filepath)
+Please navigate to: [Getting_Started](../src/pyofw/template/Getting_Started.ipynb).
+This notebook also shows some charts using `plotly` library. Couple of Images:
 
+![Tank Level and Pump Flows](misc/result-tank-levels.png)
 
-# Network elements (Pipes), Unit, Format value with given unit
-print(f"There are '{model.Network.Pipes.Count}' pipes.")
-lengths = model.Network.Pipes.Input.Lengths()
-# Note: if you do type(lengths)
-# you will see it is an object of System.Collections.Generic
-# so follow .NET approach to some level
-lengths_array = [l for l in lengths.Values]  # notice ".Values"
-sum = np.sum(lengths_array)
-length_unit = model.Units.NetworkUnits.Pipe.LengthUnit
-formatted_sum = model.Units.FormatValue(sum, length_unit)
-print(f"The total pipe length is {formatted_sum} {length_unit.ShortLabel}")
-
-# Change pipe size
-pipes = model.Network.Pipes.Elements()
-pipe = pipes[10]
-print(f"Current Diameter of {pipe} is: {pipe.Input.Diameter}")
-pipe.Input.Diameter = 100
-print(f"New Diameter of {pipe} is: {pipe.Input.Diameter}")
-
-
-# Components > Patterns
-patterns = model.Components.Patterns.Elements()
-print(f"The first pattern is: {patterns[0].Label}")
-
-
-# Scenario Information
-print(f"Active scenario is: {model.ActiveScenario}")
-print(f"And there are '{model.Scenarios.Count}' scenarios in the model")
-
-
-# Find scenario by label, and run it
-scenario_label = "Variable Speed Pumping"
-scenario = model.Scenarios.Element(scenario_label)
-print(f"Found scenario: {scenario}")
-
-print("Running simulation...")
-scenario.Run()
-
-# Close the model, don't save anything
-OpenFlowsWater.EndSession()
-```
-
-## Developing pyofw
-
-To install `pyofw`, along with the tools you need to develop and run test, run the following in your [virtual]evn:
-
-```python
-pip install -e .[dev]
-```
+![Similar to WaterGEMS Chart with flows and level](misc/result-tank-levels-and-pump-flows.png)

@@ -12,11 +12,11 @@ dist_dir = 'my-dist-dir'
 pypi_package_name = "pyofw"
 
 # version number of the package
-package_version = "10.3.6.0"
+package_version = "10.40"
 
 # the first letter of the namespace (aka package)
 # name of the directory under the src directory
-package_py_openflows = "pyOFW"
+package_py_openflows = "pyofw"
 
 # the dependency of this package
 install_requires = [

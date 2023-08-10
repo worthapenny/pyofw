@@ -9,8 +9,8 @@ import logging
 
 from testsLocal.test_base import TestOfwBase
 
-from src.pyOFW.ofwConfig import AppType, OFWConfig
-from src.pyOFW import modelInput as mi
+from src.pyofw.ofwConfig import AppType, OFWConfig
+from src.pyofw import modelInput as mi
 
 
 class TestModelInput(TestOfwBase):

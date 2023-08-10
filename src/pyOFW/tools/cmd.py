@@ -14,9 +14,10 @@ from distutils.dir_util import copy_tree
 from datetime import datetime
 
 # region Constants
-__unreleased_stub_dir = "pyOFW"
-__1035_stub_dir = "pyOFW1035"
-__1036_stub_dir = "pyOFW1036"
+__unreleased_stub_dir = "pyofw"
+__1035_stub_dir = "pyofw1035"
+__1036_stub_dir = "pyofw1036"
+__1040_stub_dir = "pyofw1040"
 __typings_dir_name = "typings"
 # endregion
 
@@ -36,12 +37,16 @@ def newofw(args: List[str]) -> bool:
     # Make sure to update this section with every release of Water Product
     # So that "newofw" will always get the latest released version
     if args == None or len(args) < 1:
-        print(__setting_up_msg("10.3"))
-        success = __copy_stub_1036(typings_path)  # // latest on 103
+        print(__setting_up_msg("10.40"))
+        success = __copy_stub_1040(typings_path)  # // latest
     else:
         arg = args[0]
         if arg == "?" or arg == "help":
             success = __show_help()
+
+        elif arg.startswith("10.40"):
+            print(__setting_up_msg(arg))
+            success = __copy_stub_1040(typings_path)
 
         elif arg.startswith("10.3.5"):
             print(__setting_up_msg(arg))
@@ -65,12 +70,16 @@ def newofw(args: List[str]) -> bool:
 
 # endregion
 
+# region Private Methods
+
 # region Help Command
 
 
 def __show_help() -> bool:
     print(
-        f"To get started with OpenFlows[Water], type in 'newofw targetVersion' such as:")
+        f"To get started with OpenFlows[Water], type in 'newofw' such as:")
+    print(f"newofw")
+    print(f"For version specific, it will be:")
     print(f"newofw 10.3")
     print(f"newofw 10.3.6")
     print(f"If only newofw is executed, it will setup for the latest version of Water products")
@@ -81,13 +90,14 @@ def __show_help() -> bool:
 
 
 # region Copy Stubs from package dir to user's working directory
-def __copy_stub_1035(to_path: pathlib.Path) -> bool:
-    return __copy_stub_files(__1035_stub_dir, to_path)
-
+def __copy_stub_1040(to_path: pathlib.Path) -> bool:
+    return __copy_stub_files(__1040_stub_dir, to_path)
 
 def __copy_stub_1036(to_path: pathlib.Path) -> bool:
     return __copy_stub_files(__1036_stub_dir, to_path)
 
+def __copy_stub_1035(to_path: pathlib.Path) -> bool:
+    return __copy_stub_files(__1035_stub_dir, to_path)
 
 def __copy_stub_unreleased(to_path: pathlib.Path) -> bool:
     return __copy_stub_files(__unreleased_stub_dir, to_path)
@@ -104,7 +114,7 @@ def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
         if success:
             template_filenames = __copy_template_getting_started()
             if template_filenames:
-                names = ", ".join([f.name for f in template_filenames])
+                names = ", ".join([f.name for f in template_filenames]) #  type: ignore
                 print(
                     f"Setup complete (typings directory, {names} added)")
             else:
@@ -146,7 +156,7 @@ def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> boo
 
 def __copy_template_getting_started() -> List[str]:
     template_dir_name = "template"
-    template_files = ["getting_started.py", "Getting_Started.ipynb", ]
+    template_files = ["example_minimal.py", "example_with_comments.py","Getting_Started.ipynb", ]
 
     # source files
     src_template_paths = [
@@ -155,13 +165,13 @@ def __copy_template_getting_started() -> List[str]:
     ]
 
     # target files
-    target_tempate_paths = [
+    target_template_paths = [
         pathlib.Path(os.getcwd()).joinpath(f) for f in template_files
     ]
 
     # Prevent overwriting users file
     updated_target_file_paths: List[pathlib.Path] = []
-    for f in target_tempate_paths:
+    for f in target_template_paths:
         if f.exists():
             suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
             name = f.name.replace(f.name, f"{f.stem}_{suffix}{f.suffix}")

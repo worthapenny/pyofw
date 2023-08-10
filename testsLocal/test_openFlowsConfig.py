@@ -9,7 +9,7 @@ import unittest
 import logging
 from typing import Any
 
-from src.pyOFW.ofwConfig import AppType, OFWConfig
+from src.pyofw.ofwConfig import AppType, OFWConfig
 
 
 class TestOpenFlowsConfig(unittest.TestCase):

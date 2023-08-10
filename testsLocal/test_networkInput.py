@@ -8,7 +8,7 @@ import unittest
 import logging
 from typing import Any
 
-from src.pyOFW.ofwConfig import AppType, OFWConfig
+from src.pyofw.ofwConfig import AppType, OFWConfig
 from testsLocal.test_base import TestOfwBase
 
 
@@ -25,7 +25,7 @@ class TestNetworkInput(TestOfwBase):
         cls.ofw = OFWConfig(
             AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
 
-        from src.pyOFW.networkInput import NetworkInput
+        from src.pyofw.networkInput import NetworkInput
 
         cls.ofw.open_model(super().WTRG_EX_5_WTG)
         cls.ni: NetworkInput = NetworkInput(cls.ofw.water_model)
