@@ -8,7 +8,7 @@
 
 from typing import Any
 import unittest
-from pyofw.ofwConfig import OFWConfig
+from pyofw.config import OFWConfig
 import logging
 
 
@@ -28,7 +28,7 @@ class TestNetworkInput(unittest.TestCase):
         )
         logging.info("")
 
-        from pyofw.ofwConfig import OFWConfig
+        from pyofw.config import OFWConfig
         cls.setup_water = OFWConfig()
 
         from OpenFlows.Water.Domain import IWaterModel

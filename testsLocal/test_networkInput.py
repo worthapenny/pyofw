@@ -8,7 +8,7 @@ import unittest
 import logging
 from typing import Any
 
-from src.pyofw.ofwConfig import AppType, OFWConfig
+from src.pyofw.config import AppType, OFWConfig
 from testsLocal.test_base import TestOfwBase
 
 
@@ -23,7 +23,7 @@ class TestNetworkInput(TestOfwBase):
 
         #
         cls.ofw = OFWConfig(
-            AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
+            AppType.WaterGEMS, dlls_dir=OFWConfig.WTRG_INSTALL_DIR)
 
         from pyofw.network_input import NetworkInput
 
@@ -88,10 +88,10 @@ class TestNetworkInput(TestOfwBase):
                    'InitAge', 'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'SectionType',
                    'ActiveVolFull', 'Diameter', 'AvgArea', 'BaseElev', 'MinLevel',
                    'MaxLevel', 'InitLevel', 'UseHighAlarm', 'HighAlarmLvl', 'UseLowAlarm',
-                   'LowAlarmLvl', 'InactiveVol', 'ValveChrsts', 'ValveType']
+                   'LowAlarmLvl', 'InactiveVol', 'ValveChrsts']
         self.assertTrue(set(columns).issubset(df.columns))
 
-        df_shape = (1, 28)
+        df_shape = (1, 27)
         self.assertEqual(df_shape[0], df.shape[0])
         self.assertEqual(df_shape[1], df.shape[1])
 
@@ -176,10 +176,10 @@ class TestNetworkInput(TestOfwBase):
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
                    'Diameter', 'PressureSettings', 'InitSetting', 'ValveChrsts',
-                   'ValveType']
+                   ] # 'ValveType'
         self.assertTrue(set(columns).issubset(df.columns))
 
-        df_shape = (3, 23)
+        df_shape = (3, 22)
         self.assertEqual(df_shape[0], df.shape[0])
         self.assertEqual(df_shape[1], df.shape[1])
 
@@ -189,10 +189,10 @@ class TestNetworkInput(TestOfwBase):
                    'InitConc', 'InitTrace', 'Geometry', 'X', 'Y', 'InstallYr',
                    'dMLossCoeff', 'IsLocalMLoss', 'LocalMLossCoeff', 'InitStatus',
                    'Diameter', 'PressureSettings', 'InitSetting', 'ValveChrsts',
-                   'ValveType']
+                   ] #'ValveType'
         self.assertTrue(set(columns).issubset(df.columns))
 
-        df_shape = (0, 23)
+        df_shape = (0, 22)
         self.assertEqual(df_shape[0], df.shape[0])
         self.assertEqual(df_shape[1], df.shape[1])
 

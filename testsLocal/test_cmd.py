@@ -65,7 +65,7 @@ class TestCMD(unittest.TestCase):
         self.__check_typings_version(
             tests_path, getting_started_path, getting_started_nb_path, "pyofw1036", "10.3.6")
 
-        # now test for preventing overrite on getting started files
+        # now test for preventing override on getting started files
         try:
             files_count = sum(1 for _ in pathlib.Path(
                 getting_started_path.parent).rglob("getting_started.*"))

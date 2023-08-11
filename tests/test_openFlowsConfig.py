@@ -68,7 +68,7 @@ class TestOpenFlowsConfig(unittest.TestCase):
         self.assertRaises(
             ValueError,
             OFWConfig,
-            app_type=AppType.WaterCAD,
+            app_type=AppType.WaterGEMS,
             dlls_dir=self.wtrc_installation_path,
         )
         pass

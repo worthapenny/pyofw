@@ -92,7 +92,7 @@ class OFWConfig:
 
             if app_type == AppType.WaterGEMS:
                 OpenFlowsWater.StartSession(WaterProductLicenseType.WaterGEMS)
-            elif app_type == AppType.WaterCAD:
+            elif app_type == AppType.WaterGEMS:
                 OpenFlowsWater.StartSession(WaterProductLicenseType.WaterCAD)
             elif app_type == AppType.WaterOPS:
                 OpenFlowsWater.StartSession(WaterProductLicenseType.WaterOPS)

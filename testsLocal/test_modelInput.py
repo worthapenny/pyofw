@@ -9,7 +9,7 @@ import logging
 
 from testsLocal.test_base import TestOfwBase
 
-from src.pyofw.ofwConfig import AppType, OFWConfig
+from src.pyofw.config import AppType, OFWConfig
 from pyofw import model_input as mi
 
 
@@ -23,7 +23,7 @@ class TestModelInput(TestOfwBase):
 
         #
         cls.ofw = OFWConfig(
-            AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
+            AppType.WaterGEMS, dlls_dir=OFWConfig.WTRG_INSTALL_DIR)
 
         cls.ofw.open_model(super().WTRG_EX_5_WTG)
         pass

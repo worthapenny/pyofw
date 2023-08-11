@@ -9,8 +9,8 @@ import unittest
 import logging
 from typing import Any
 
-from src.pyofw.ofwConfig import AppType, OFWConfig
-
+from src.pyofw.config import AppType, OFWConfig
+from pathlib import Path
 
 class TestOpenFlowsConfig(unittest.TestCase):
     wtrg_installation_path: str = r"D:\Development\Perforce\Aspen\Products\WaterGEMS\Output\_Starter\x64\Debug"
@@ -49,7 +49,7 @@ class TestOpenFlowsConfig(unittest.TestCase):
     def test_wtrg(self):
         self.ofw_wtrg = OFWConfig(
             app_type=AppType.WaterGEMS,
-            dlls_dir=self.wtrg_installation_path,
+            dlls_dir=OFWConfig.WTRG_INSTALL_DIR,
         )
 
         self.assertIsNotNone(self.ofw_wtrg)
@@ -63,11 +63,14 @@ class TestOpenFlowsConfig(unittest.TestCase):
         pass
 
     def test_wtrc(self):
+        if(not Path(OFWConfig.WTRC_INSTALL_DIR).exists()):
+            return
+
         self.assertRaises(
             ValueError,
             OFWConfig,
             app_type=AppType.WaterCAD,
-            dlls_dir=self.wtrc_installation_path,
+            dlls_dir=OFWConfig.WTRC_INSTALL_DIR,
         )
         pass
 
