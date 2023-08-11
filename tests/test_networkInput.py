@@ -32,7 +32,7 @@ class TestNetworkInput(unittest.TestCase):
         cls.setup_water = OFWConfig()
 
         from OpenFlows.Water.Domain import IWaterModel
-        from pyofw.networkInput import NetworkInput
+        from pyofw.network_input import NetworkInput
 
         cls.wm: IWaterModel = cls.setup_water.open_model(cls.water_model_path)
         cls.ni: NetworkInput = NetworkInput(cls.wm)

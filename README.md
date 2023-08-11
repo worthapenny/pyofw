@@ -48,32 +48,23 @@ pip install pyofw
 
 from pyofw.config import OFWConfig
 
-config = OFWConfig()
+config = OFWConfig() # by default, prepare things for WaterGEMS
 
-# NOTE:
-# AFTER creating an instance of OFWConfig ONLY,
-# do the OpenFlow.* imports
-# if not, error is thrown at runtime
-from OpenFlows.Water.Domain import IWaterModel
+model = config.open_model(
+         r"C:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg")
 
-model_filepath = r"C:\Program Files (x86)\Bentley\WaterGEMS\Samples\Example5.wtg"
-model: IWaterModel = ofw_config.open_model(model_filepath)
-# in the above line, defining the type `IWaterModel` is not required
-# however it will help to understand the data type as well as the display # of the correct intellisense 
+print(f"Active scenario is: {model.ActiveScenario.Label}")
+print(f"And there are '{model.Scenarios.Count}' scenarios in the '{model}' model")
 
-print(f"Active scenario is: {model.ActiveScenario}")
-print(f"And there are '{model.Scenarios.Count}' scenarios in the model")
-
-# close the model and end the session
-config.end_session()
+config.end_session() # close the model and end the session
 ```
 
-## 'newofw' command is causing error?
+## 'newofw' command is showing error?
 
 Are you getting errors like below?
 
-* <span style="color: red;"> newofw : The term 'newofw' is not recognized as the name of a cmdlet
-* <span style="color: red;"> 'newofw' is not recognized as an internal or external command
+* newofw : The term 'newofw' is not recognized as the name of a cmdlet
+* 'newofw' is not recognized as an internal or external command
 
 This could be possible depending on how python is installed. To troubleshoot, make sure you are using the right python.exe. 
 
@@ -152,11 +143,55 @@ If VSCode is the IDE of choice,
 1. Example with minimal uses of `pyofw` module:
 [Similar to .NET](/example/load_openflows_dlls.py)
 
-### Jupyter Notebook
+### Jupyter Notebook (DataFrames for Elements)
+
+For more details, navigate to [Network Input Notebook](notebook/networkInputDFs.ipynb)
+
+```py
+from pyofw.network_input import NetworkInput
+ni: NetworkInput = NetworkInput(model)
+
+# Links
+ni.pipe_df.head(2)
+ni.lateral_df.head(2)
+
+# Nodes
+ni.junction_df.head(2)
+ni.hydrant_df.head(2)
+ni.tank_df.head(2)
+ni.reservoir_df.head(2)
+ni.tap_df.head(2)
+ni.pump_df.head(2)
+ni.customer_meter_df.head(2)
+ni.scada_elem_df.head(2)
+ni.pump_stn_df.head(2)
+ni.vspb_df.head(2)
+
+ni.prv_df.head(2)
+ni.psv_df.head(2)
+ni.pbv_df.head(2)
+ni.fcv_df.head(2)
+ni.tcv_df.head(2)
+ni.pbv_df.head(2)
+ni.iso_valve_df.head(2)
+
+ni.hydro_tank_df.head(2)
+ni.check_valve_df.head(2)
+```
+
+
+### Jupyter Notebook Showing Reults
 
 Please navigate to: [Getting_Started](../src/pyofw/template/Getting_Started.ipynb).
-This notebook also shows some charts using `plotly` library. Couple of Images:
+This notebook also shows some charts using `plotly` library. A few of Images..
+
+#### Tank Level and Pump Flows (using secondary axis)
 
 ![Tank Level and Pump Flows](misc/result-tank-levels.png)
 
+#### Tank Level and Pump Flows (just like in WaterGEMS)
+
 ![Similar to WaterGEMS Chart with flows and level](misc/result-tank-levels-and-pump-flows.png)
+
+#### Network display (using networkx module)
+![Network drawn using networkx](misc/networkx_network.png)

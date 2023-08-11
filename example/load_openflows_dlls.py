@@ -19,9 +19,11 @@ Copyright: Copyright (c) 2021 Akshaya Niraula. See LICENSE for details
 # | --------------------------------------------------------
 
 
+# To Open Model with just 3 lines
+# ...look at the example/readme.md (It has Jupyter Notebook example too)
+
 import sys
-import clr
-import numpy as np
+import clr # from pip install pythonnet, (NOT: pip install clr)
 
 from pathlib import Path
 

@@ -25,7 +25,7 @@ class TestNetworkInput(TestOfwBase):
         cls.ofw = OFWConfig(
             AppType.WaterCAD, dlls_dir=OFWConfig.WTRC_INSTALL_DIR)
 
-        from src.pyofw.networkInput import NetworkInput
+        from pyofw.network_input import NetworkInput
 
         cls.ofw.open_model(super().WTRG_EX_5_WTG)
         cls.ni: NetworkInput = NetworkInput(cls.ofw.water_model)
