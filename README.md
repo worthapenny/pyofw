@@ -135,13 +135,13 @@ If VSCode is the IDE of choice,
 ### py Files
 
 1. Very minimal with no comments:
-[Example_Minimal](/src/pyofw/template/example_minimal.py)
+[Example_Minimal](src/pyofw/template/example_minimal.py)
 
 1. **[Recommended]** Good example to get started:
-[Example_with_comments](/src/pyofw/template/example_with_comments.py)
+[Example_with_comments](src/pyofw/template/example_with_comments.py)
 
 1. Example with minimal uses of `pyofw` module:
-[Similar to .NET](/example/load_openflows_dlls.py)
+[Similar to .NET](example/load_openflows_dlls.py)
 
 ### Jupyter Notebook (DataFrames for Elements)
 
@@ -182,7 +182,7 @@ ni.check_valve_df.head(2)
 
 ### Jupyter Notebook Showing Reults
 
-Please navigate to: [Getting_Started](/src/pyofw/template/Getting_Started.ipynb).
+Please navigate to: [Getting_Started](src/pyofw/template/Getting_Started.ipynb).
 This notebook also shows some charts using `plotly` library. A few of Images..
 
 #### Tank Level and Pump Flows (using secondary axis)
