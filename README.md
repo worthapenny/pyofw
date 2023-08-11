@@ -180,7 +180,7 @@ ni.check_valve_df.head(2)
 ```
 
 
-### Jupyter Notebook Showing Reults
+### Jupyter Notebook Showing Results
 
 Please navigate to: [Getting_Started](src/pyofw/template/Getting_Started.ipynb).
 This notebook also shows some charts using `plotly` library. A few of Images..

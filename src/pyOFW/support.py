@@ -13,7 +13,7 @@ def add_lat_long(df: pd.DataFrame, from_epsg: int, x_col: str = "X", y_col: str 
 
     Args
     ---------
-        df (`pd.DataFrame`): Dataframe with X and Y columns
+        df (`pd.DataFrame`): DataFrame with X and Y columns
         from_epsg (`int`): EPSG code of current project
         x_col (`str`, optional): X Column. Defaults to "X".
         y_col (`str`, optional): Y Column. Defaults to "Y".
