@@ -29,7 +29,7 @@ Run the following to install:
 pip install pyofw
 ```
 
-**Failed to install?** One of the requirements package is `pythonnet` which might not get installed directly. In such case, follow the steps [how to install pythonnet](##How-to-install-pythonnet?).
+**Failed to install?** One of the requirements package is `pythonnet` which might not get installed directly. In such case, follow the steps [how to install pythonnet](#how-to-install-pythonnet).
 
  **Note:** The package itself will not add any value without the [Bentley's](https://www.bentley.com/en) OpenFlows application like [WaterGEMS](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watergems), or [WaterCAD](https://www.bentley.com/en/products/product-line/hydraulics-and-hydrology-software/watercad). And the package assumes the application is installed at the default location. For WaterGEMS it is `C:\Program Files (x86)\Bentley\WaterGEMS\x64`.
 
@@ -134,7 +134,7 @@ If VSCode is the IDE of choice,
 
 ### py Files
 
-1. Very minimal with no comments: 
+1. Very minimal with no comments:
 [Example_Minimal](/src/pyofw/template/example_minimal.py)
 
 1. **[Recommended]** Good example to get started:
@@ -182,7 +182,7 @@ ni.check_valve_df.head(2)
 
 ### Jupyter Notebook Showing Reults
 
-Please navigate to: [Getting_Started](../src/pyofw/template/Getting_Started.ipynb).
+Please navigate to: [Getting_Started](/src/pyofw/template/Getting_Started.ipynb).
 This notebook also shows some charts using `plotly` library. A few of Images..
 
 #### Tank Level and Pump Flows (using secondary axis)
