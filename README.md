@@ -135,7 +135,7 @@ If VSCode is the IDE of choice,
 ### py Files
 
 1. Very minimal with no comments:
-[Example_Minimal](src/pyofw/template/example_minimal.py)
+[Example_Minimal](/src/pyofw/template/example_minimal.py)
 
 1. **[Recommended]** Good example to get started:
 [Example_with_comments](src/pyofw/template/example_with_comments.py)
