@@ -2,3 +2,4 @@
 wheel
 plotly
 matplotlib
+twine

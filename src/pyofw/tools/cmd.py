@@ -56,7 +56,7 @@ def newofw(args: List[str]) -> bool:
             print(__setting_up_msg(arg))
             success = __copy_stub_1035(typings_path)
 
-        elif arg.startswith("10.3.6"):
+        elif arg.startswith("10.3.6") or arg.startswith("10.3") :
             print(__setting_up_msg(arg))
             success = __copy_stub_1036(typings_path)
 

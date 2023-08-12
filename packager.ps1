@@ -146,6 +146,7 @@ function Get-Version {
 
   $match = Get-Content $setup_filepath | Select-String -Pattern 'package_version = "(.*)"'
   $version = $match.Matches.Groups[1].Value
+  Write-Host "Version: $version" -ForegroundColor Gray
   return $version
 }
 
@@ -154,9 +155,13 @@ function Copy-Branches {
   Import-Env
   
   Set-Location $script:assemblyCrawlerDir
+  Write-Host "Working directory set to: $script:assemblyCrawlerDir" -ForegroundColor Magenta
 
   foreach ($map in $branchesToLocalDirMap.GetEnumerator()) {
-    git checkout $map.Key
+    Write-Host (("." * 30) + "$($map.Key)" + ("." * 30)) -ForegroundColor DarkGray
+
+    git stash
+    git checkout ($map.Key)
     Write-Host "Checked out $($map.Key)"
     
     $sourceDir = Join-Path $assemblyCrawlerDir "typings"
@@ -174,12 +179,16 @@ function Copy-Branches {
     Copy-Item -Force -Recurse -Path $sourceDir -Destination $targetDir
     Remove-Item -Force -Recurse -Path (Join-Path $targetDir "TestAssemblyNET48")
     Write-Host "[$($map.Key)] Copied contents to $targetDir" -ForegroundColor DarkGreen
+    Write-Host ("." * 100) -ForegroundColor DarkGray
   }
 
   Set-Location $script:currentWorkingDir
+  Write-Host "Working directory set back to: $script:assemblyCrawlerDir" -ForegroundColor Gray
+
   Write-Host "Done copying branches" -ForegroundColor DarkGreen
-  Write-Host "-------------- x -------------- x --------------" -ForegroundColor DarkGray
+  Write-Host "-------------- x -------------- x -------------- x --------------" -ForegroundColor DarkGray
 }
+
 function New-Build {
   # Check if the current directory has setup.py file
   $setupPyPath = Join-Path -Path $PWD -ChildPath  "setup.py"

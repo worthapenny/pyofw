@@ -187,12 +187,12 @@ This notebook also shows some charts using `plotly` library. A few of Images..
 
 #### Tank Level and Pump Flows (using secondary axis)
 
-![Tank Level and Pump Flows](misc/result-tank-levels.png)
+![Tank Level and Pump Flows](https://github.com/worthapenny/pyofw/blob/main/misc/result-tank-levels.png?raw=true)
 
 #### Tank Level and Pump Flows (just like in WaterGEMS)
 
-![Similar to WaterGEMS Chart with flows and level](misc/result-tank-levels-and-pump-flows.png)
+![Similar to WaterGEMS Chart with flows and level](https://github.com/worthapenny/pyofw/blob/main/misc/result-tank-levels-and-pump-flows.png?raw=true)
 
 #### Network display (using networkx module)
 
-![Network drawn using networkx](misc/networkx_network.png)
+![Network drawn using networkx](https://github.com/worthapenny/pyofw/blob/main/misc/networkx_network.png?raw=true)
