@@ -14,6 +14,7 @@ from distutils.dir_util import copy_tree
 from datetime import datetime
 
 # region Constants
+__package_name = "pyofw"
 __unreleased_stub_dir = "pyofw"
 __1035_stub_dir = "pyofw1035"
 __1036_stub_dir = "pyofw1036"
@@ -31,20 +32,23 @@ def newofw_command() -> None:
 
 def newofw(args: List[str]) -> bool:
     typings_path = pathlib.Path(os.getcwd()).joinpath(__typings_dir_name)
+    if not typings_path.exists():
+        typings_path.mkdir(parents=True)
+
     success: bool = True
 
     # NOTE:
     # Make sure to update this section with every release of Water Product
     # So that "newofw" will always get the latest released version
     if args == None or len(args) < 1:
-        print(__setting_up_msg("10.40"))
+        print(__setting_up_msg("10.4"))
         success = __copy_stub_1040(typings_path)  # // latest
     else:
         arg = args[0]
         if arg == "?" or arg == "help":
             success = __show_help()
 
-        elif arg.startswith("10.40"):
+        elif arg.startswith("10.4"):
             print(__setting_up_msg(arg))
             success = __copy_stub_1040(typings_path)
 
@@ -80,8 +84,9 @@ def __show_help() -> bool:
         f"To get started with OpenFlows[Water], type in 'newofw' such as:")
     print(f"newofw")
     print(f"For version specific, it will be:")
-    print(f"newofw 10.3")
+    print(f"newofw 10.4")
     print(f"newofw 10.3.6")
+    print(f"newofw 10.3")
     print(f"If only newofw is executed, it will setup for the latest version of Water products")
     print(f"To show this help message, 'newofw ?' or 'newofw help'")
 
@@ -107,6 +112,10 @@ def __copy_stub_files(stub_dir_name: str, to_path: pathlib.Path) -> bool:
     success = True
     try:
         package_path = pathlib.Path(__file__).parent.parent
+        if(package_path.name != __package_name):
+            print(f"Package directory somehow is not correct. Dir: {package_path}")
+            return False
+        
         stub_files_path = package_path.joinpath(
             __typings_dir_name, stub_dir_name)
         success = __copy_dir(stub_files_path, to_path)
@@ -156,7 +165,11 @@ def __copy_dir(source_path: pathlib.Path, destination_path: pathlib.Path) -> boo
 
 def __copy_template_getting_started() -> List[str]:
     template_dir_name = "template"
-    template_files = ["example_minimal.py", "example_with_comments.py","Getting_Started.ipynb", ]
+    template_files = [
+        "example_minimal.py", 
+        "example_with_comments.py",
+        "Getting_Started.ipynb", 
+        ]
 
     # source files
     src_template_paths = [
@@ -201,6 +214,6 @@ def __copy_template_getting_started() -> List[str]:
 
 
 def __setting_up_msg(ver: str) -> str:
-    return f"Setting up for the {ver} version of Water[GEMS/CAD/OPS]."
+    return f"Setting up for the {ver} version of Water[GEMS/CAD]."
 
 # endregion private methods
