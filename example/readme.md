@@ -2,11 +2,12 @@
 
 ## Jupyter Notebook
 
-Please navigate to: [Getting_Started](../src/pyofw/template/Getting_Started.ipynb)
+[Getting_Started](../src/pyofw/template/Getting_Started.ipynb)
+[Network Input as pandas DataFrame](notebook/networkInputDFs.ipynb)
 
 ## Different Examples
 
-1. Very minimal with no comments: 
+1. Very minimal with no comments:
 [Example_Minimal](../src/pyofw/template/example_minimal.py)
 
 2. **[Recommended]** Good example to get started:
