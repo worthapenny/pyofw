@@ -2,8 +2,8 @@
 
 ## Jupyter Notebook
 
-[Getting_Started](../src/pyofw/template/Getting_Started.ipynb)
-[Network Input as pandas DataFrame](notebook/networkInputDFs.ipynb)
+* [Getting_Started](../src/pyofw/template/Getting_Started.ipynb)
+* [Network Input as pandas DataFrame](notebook/networkInputDFs.ipynb)
 
 ## Different Examples
 
