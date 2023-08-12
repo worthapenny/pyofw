@@ -4,8 +4,9 @@
 
 # Ignore Typings dir used for examples
 /typings
-getting_started.py
-Getting_Started.ipynb
+/example_minimal.py
+/example_with_comments.py
+/Getting_Started.ipynb
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

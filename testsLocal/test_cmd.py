@@ -43,67 +43,56 @@ class TestCMD(unittest.TestCase):
         success = cmd.newofw(["?"])
         self.assertTrue(success)
 
-    def test_copy_1035(self):
+    def test_copy_1036(self):
+        self.__test_files_copy(
+            source_dir_name = "pyofw1036",
+            version = "10.3.6"
+            )
+        
+    def test_copy_1040(self):
+        self.__test_files_copy(
+            source_dir_name = "pyofw1040",
+            version = "10.4"
+            )
+
+    def __test_files_copy(self, source_dir_name: str, version: str):
         tests_path = pathlib.Path(__file__).parent
+        
+        # (clean up any leftover items)
+        # # make sure example/getting_started notebook files are not there
+        example_min_py_path = tests_path.parent.joinpath("example_minimal.py")
+        example_with_comments_py_path = tests_path.parent.joinpath("example_with_comments.py")
+        getting_started_nb_path = tests_path.parent.joinpath("Getting_Started.ipynb")
 
-        # # make sure getting_started.py file is not there
-        getting_started_path = tests_path.parent.joinpath("getting_started.py")
-        if getting_started_path.exists():
-            os.remove(str(getting_started_path))
+        if example_min_py_path.exists():
+            os.remove(str(example_min_py_path))
+            self.assertFalse(example_min_py_path.exists())
+        
+        if example_with_comments_py_path.exists():
+            os.remove(str(example_with_comments_py_path))
+            self.assertFalse(example_with_comments_py_path.exists())
 
-        self.assertFalse(getting_started_path.exists())
-
-        # # make sure Getting_Started.ipynb file is not there
-        getting_started_nb_path = tests_path.parent.joinpath(
-            "Getting_Started.ipynb")
         if getting_started_nb_path.exists():
             os.remove(str(getting_started_nb_path))
+            self.assertFalse(getting_started_nb_path.exists())
 
-        self.assertFalse(getting_started_nb_path.exists())
 
-        # make sure typings dir is not there
-        self.__check_typings_version(
-            tests_path, getting_started_path, getting_started_nb_path, "pyofw1036", "10.3.6")
+        self.__check_typings_contents(
+            tests_path, 
+            source_dir_name, 
+            version)
 
-        # now test for preventing override on getting started files
-        try:
-            files_count = sum(1 for _ in pathlib.Path(
-                getting_started_path.parent).rglob("getting_started.*"))
+        self.__check_getting_started_contents(
+            tests_path,
+            example_min_py_path, 
+            example_with_comments_py_path, 
+            getting_started_nb_path, 
+        )
 
-            # NOTE:
-            # For some unknown reason (yet), the command below doesn't work fully
-            # (this worked successfully above)
-            # It produces exception as copy fails
-            # Hence not doing any testing if the command belows goes belly up
-            # Output text shows exception which sadly is expected.
 
-            # success = cmd.newofw([])
-
-            # # if above copy fails, no need to test as will it will fails as well
-            # # need to figure out why above is not working
-            # if success:
-            #     # make sure the getting_started.py and Getting_Started.ipynb still exits
-            #     self.assertTrue(getting_started_path.exists())
-            #     self.assertTrue(getting_started_nb_path.exists())
-
-            #     # make sure new getting_started.py and Getting_Started.ipynb with current date-time is created
-            #     new_files_count = sum(1 for _ in pathlib.Path(
-            #         getting_started_path.parent).rglob("getting_started.*"))
-
-            #     # there should be 2 more files that starts with getting_started name
-            #     self.assertEqual(files_count + 2, new_files_count)
-
-        finally:
-            if getting_started_path.exists():
-                getting_started_path.unlink()
-            if getting_started_nb_path.exists():
-                getting_started_nb_path.unlink()
-
-    def __check_typings_version(
+    def __check_typings_contents(
             self,
             tests_path: pathlib.Path,
-            getting_started_path: pathlib.Path,
-            getting_started_nb_path: pathlib.Path,
             source_dir_name: str,
             version_str: str):
 
@@ -122,7 +111,9 @@ class TestCMD(unittest.TestCase):
         self.assertTrue(src_typings_pyofw_version_path.exists())
 
         try:
-            cmd.newofw([version_str])
+            success = cmd.newofw([version_str])
+            self.assertTrue(success)
+
             cmd_typings_contents = self.__get_contents_count(typings_path)
             src_typings_pyofw_version_contents = self.__get_contents_count(
                 src_typings_pyofw_version_path)
@@ -131,17 +122,38 @@ class TestCMD(unittest.TestCase):
             self.assertTupleEqual(
                 src_typings_pyofw_version_contents, cmd_typings_contents)
 
-            # make sure getting started templates exits
-            self.assertTrue(getting_started_path.exists())
-            self.assertTrue(getting_started_nb_path.exists())
-
         finally:
             if typings_path.exists():
                 shutil.rmtree(typings_path)
-            if getting_started_path.exists():
-                getting_started_path.unlink(missing_ok=True)
-            if getting_started_nb_path.exists():
-                getting_started_nb_path.unlink(missing_ok=True)
+            
+
+    def __check_getting_started_contents(
+            self,
+            tests_path: pathlib.Path,
+            example_min_py_path: pathlib.Path,
+            example_with_comments_py_path: pathlib.Path,
+            getting_started_nb_path: pathlib.Path,
+    ):
+        # expected files path
+        example_min_py_path = tests_path.parent.joinpath(example_min_py_path.name)
+        example_with_comments_py_path = tests_path.parent.joinpath(example_with_comments_py_path.name)
+        getting_started_nb_path = tests_path.parent.joinpath(getting_started_nb_path.name)
+
+        # make sure getting started template files exits    
+        self.assertTrue(example_min_py_path.exists())
+        self.assertTrue(example_with_comments_py_path.exists())
+        self.assertTrue(getting_started_nb_path.exists())
+    
+        # now delete the files
+        example_min_py_path.unlink(missing_ok=True)
+        example_with_comments_py_path.unlink(missing_ok=True)
+        getting_started_nb_path.unlink(missing_ok=True)
+
+        # make sure getting started template files are delete    
+        self.assertFalse(example_min_py_path.exists())
+        self.assertFalse(example_with_comments_py_path.exists())
+        self.assertFalse(getting_started_nb_path.exists())
+        pass
 
     # endregion
 
