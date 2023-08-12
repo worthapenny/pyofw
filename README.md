@@ -145,7 +145,7 @@ If VSCode is the IDE of choice,
 
 ### Jupyter Notebook (DataFrames for Elements)
 
-For more details, navigate to [Network Input Notebook](notebook/networkInputDFs.ipynb)
+For more details, navigate to [Network Input Notebook](example/notebook/networkInputDFs.ipynb)
 
 ```py
 from pyofw.network_input import NetworkInput
@@ -194,4 +194,5 @@ This notebook also shows some charts using `plotly` library. A few of Images..
 ![Similar to WaterGEMS Chart with flows and level](misc/result-tank-levels-and-pump-flows.png)
 
 #### Network display (using networkx module)
+
 ![Network drawn using networkx](misc/networkx_network.png)
