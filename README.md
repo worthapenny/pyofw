@@ -91,7 +91,7 @@ If VSCode is the IDE of choice,
 * Either on User or Workspace tab, select `pylance`
 * Under `Python • Analysis: Stub Path`, make sure `typings` is selected
 
-![vscode_pylance_stub](misc/pylance_stub_typings.png)
+![vscode_pylance_stub](https://raw.githubusercontent.com/worthapenny/pyofw/main/misc/pylance_stub_typings.png)
 
 ## How to install pythonnet?
 
