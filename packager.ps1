@@ -158,7 +158,7 @@ function Copy-Branches {
   Write-Host "Working directory set to: $script:assemblyCrawlerDir" -ForegroundColor Magenta
 
   foreach ($map in $branchesToLocalDirMap.GetEnumerator()) {
-    Write-Host (("." * 30) + "$($map.Key)" + ("." * 30)) -ForegroundColor DarkGray
+    Write-Host (("." * 30) + " $($map.Key) " + ("." * 30)) -ForegroundColor DarkGray
 
     git stash
     git checkout ($map.Key)
