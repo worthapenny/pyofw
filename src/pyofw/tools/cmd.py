@@ -13,7 +13,7 @@ from typing import List
 from distutils.dir_util import copy_tree
 from datetime import datetime
 
-# region Constants
+# region Constants                                  # <--------------------- Update Every Build
 __package_name = "pyofw"
 __unreleased_stub_dir = "pyofw"
 __1035_stub_dir = "pyofw1035"

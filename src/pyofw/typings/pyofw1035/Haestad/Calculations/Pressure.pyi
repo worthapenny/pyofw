@@ -1,4 +1,5 @@
 from enum import Enum
+from System import TypeCode
 
 class CalculationResultStatus(Enum):
 	Balanced = 0
@@ -93,7 +94,7 @@ class OverrideReportingTimeStepType(Enum):
 class ReportType(Enum):
 	All = 0
 	Constant = 1
-	NONE = 2
+	None = 2
 
 class PatternCategory(Enum):
 	PatternCategoryHydraulic = 0
@@ -418,7 +419,7 @@ class LogicalOperator(Enum):
 	OperatorOr = 2
 
 class EngineCalculationFlags(Enum):
-	NONE = 0
+	None = 0
 	PumpExceedsMaximumOperatingPoint = 1
 	NegativePressures = 2
 	TankEmpty = 4

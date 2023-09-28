@@ -1,6 +1,7 @@
 from typing import overload
 from datetime import datetime
 from enum import Enum
+from System import TypeCode
 
 class StreamingContextStates(Enum):
 	CrossProcess = 1

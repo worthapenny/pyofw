@@ -1,6 +1,6 @@
 from OpenFlows.Domain.ModelingElements import IScenario, IScenarios, ISelectionSet, ISelectionSets, IModelingElementBase, IElement, IModelingElementsBase, IElements, IElementManager
 from OpenFlows.Water.Domain.ModelingElements.CalculationOptions import IWaterScenarioOptions, IWaterScenarioOptionsUnits
-from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterElement
+from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterNetworkElement
 from Haestad.Support.Support import IEditLabeled, ILabeled
 
 class IWaterScenario(IScenario[IWaterScenarios, IWaterScenario, IWaterScenarioOptions, IWaterScenarioOptionsUnits]):
@@ -29,7 +29,7 @@ class IWaterScenarios(IScenarios[IWaterScenarios, IWaterScenario, IWaterScenario
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
 
-class IWaterSelectionSet(ISelectionSet[IWaterSelectionSets, IWaterSelectionSet, IWaterElement]):
+class IWaterSelectionSet(ISelectionSet[IWaterSelectionSets, IWaterSelectionSet, IWaterNetworkElement]):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed
@@ -42,7 +42,7 @@ class IWaterSelectionSet(ISelectionSet[IWaterSelectionSets, IWaterSelectionSet, 
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
 
-class IWaterSelectionSets(ISelectionSets[IWaterSelectionSets, IWaterSelectionSet, IWaterElement]):
+class IWaterSelectionSets(ISelectionSets[IWaterSelectionSets, IWaterSelectionSet, IWaterNetworkElement]):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed

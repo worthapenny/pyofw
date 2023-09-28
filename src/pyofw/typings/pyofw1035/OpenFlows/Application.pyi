@@ -1,6 +1,6 @@
 from typing import overload
 
-class ApplicationManagerBase(IApplicationManager):
+class ApplicationManager(IApplicationManager):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed
@@ -11,6 +11,16 @@ class ApplicationManagerBase(IApplicationManager):
 			Exception: if this class is instantiated
 		"""
 		raise Exception("Creating a new Instance of this class is not allowed")
+		pass
+
+	@staticmethod
+	def GetInstance() -> IApplicationManager:
+		"""Returns the current ApplicationManager.  If not yet set, creates a headless WaterApplicationManager
+
+		Returns
+		--------
+			``IApplicationManager`` : 
+		"""
 		pass
 
 	@staticmethod
@@ -27,13 +37,8 @@ class ApplicationManagerBase(IApplicationManager):
 		"""
 		pass
 
-	@overload
-	def Start(self, showUI: bool) -> None:
+	def Start(self) -> None:
 		"""Starts the application
-
-		Args
-		--------
-			showUI (``bool``) :  showUI
 
 		Returns
 		--------
@@ -65,20 +70,6 @@ class ApplicationManagerBase(IApplicationManager):
 		pass
 
 	@overload
-	def Start(self, openUI: bool = True) -> None:
-		"""Starts the application
-
-		Args
-		--------
-			openUI (``bool``) :  If true, opens the specified parent form.  Defaults to false.
-
-		Returns
-		--------
-			``None`` : 
-		"""
-		pass
-
-	@overload
 	def SetParentFormSurrogateDelegate(self, parentFormSurrgateDelegate: ParentFormSurrogateDelegate) -> None:
 		"""Provides a custom ParentFormSurrogate to use for the application
             instead of the default implementation.
@@ -99,7 +90,7 @@ class ApplicationManagerBase(IApplicationManager):
 
 		Returns
 		--------
-			``ApplicationManagerBase`` : 
+			``ApplicationManager`` : 
 		"""
 		pass
 
@@ -109,7 +100,7 @@ class ApplicationManagerBase(IApplicationManager):
 
 		Returns
 		--------
-			``ApplicationManagerBase`` : 
+			``ApplicationManager`` : 
 		"""
 		pass
 
@@ -119,7 +110,7 @@ class ApplicationManagerBase(IApplicationManager):
 
 		Returns
 		--------
-			``ApplicationManagerBase`` : 
+			``ApplicationManager`` : 
 		"""
 		pass
 
@@ -129,7 +120,7 @@ class ApplicationManagerBase(IApplicationManager):
 
 		Returns
 		--------
-			``ApplicationManagerBase`` : 
+			``ApplicationManager`` : 
 		"""
 		pass
 
@@ -139,7 +130,7 @@ class ApplicationManagerBase(IApplicationManager):
 
 		Returns
 		--------
-			``ApplicationManagerBase`` : 
+			``ApplicationManager`` : 
 		"""
 		pass
 
@@ -186,12 +177,8 @@ class IApplicationManager:
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
 
-	def Start(self, openUI: bool = True) -> None:
+	def Start(self) -> None:
 		"""Starts the application
-
-		Args
-		--------
-			openUI (``bool``) :  If true, opens the specified parent form.  Defaults to false.
 
 		Returns
 		--------

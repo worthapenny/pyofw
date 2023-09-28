@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../pyofw_stubs/pyofw_stubs"
+		}
+	],
+	"settings": {
+		"python.languageServer": "Pylance",
+		"powershell.cwd": "d:\\Development\\Python\\pyofw_stubs\\pyofw_stubs"
+	}
+}

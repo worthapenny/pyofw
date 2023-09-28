@@ -1,4 +1,5 @@
 from enum import Enum
+from System import TypeCode
 from Haestad.LicensingFacade import LicenseRunStatusEnum
 from typing import overload
 from OpenFlows.Water.Domain import IWaterModel

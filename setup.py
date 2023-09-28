@@ -1,5 +1,7 @@
 # https://github.com/pypa/sampleproject/blob/main/setup.py
 
+import sys
+import os
 import setuptools
 import pathlib
 from distutils.command.bdist import bdist as _bdist
@@ -12,11 +14,25 @@ dist_dir = 'my-dist-dir'
 pypi_package_name = "pyofw"
 
 # version number of the package
-package_version = "10.4"
+package_version = "10.4"                                                # <------------- UPDATE every build
 
 # the first letter of the namespace (aka package)
 # name of the directory under the src directory
-package_py_openflows = "pyofw"
+# src_path = pathlib.Path("./src").resolve()
+# if not src_path.exists():
+#     print(">>> E R R O R << -- src path couldn't be found")
+#     sys.exit(1)
+
+# typings_path = src_path.joinpath("pyofw", "typings")       # <------------- UPDATE every build
+# # typings_path = src_path.joinpath("pyofw", "typings", "pyofw1040")       # <------------- UPDATE every build
+# folders = [folder for folder in typings_path.rglob("*") if folder.is_dir()]
+
+# # package_py_openflows = [str(f).replace("1040", "") for f in folders]    # <------------- UPDATE every build
+# package_py_openflows = [str(f).replace(str(src_path), "") for f in folders]
+# package_py_openflows = [str(f).replace(os.sep, ".")[1:] for f in package_py_openflows]
+# package_py_openflows.append("pyofw.template")
+# package_py_openflows.append("pyofw.tools")
+package_py_openflows =["pyofw"]
 
 # the dependency of this package
 install_requires = [
@@ -88,7 +104,7 @@ setuptools.setup(
     # Say there will be three distinct packages
     # like OpenFlows, Haestad, System then
     # packages = ["OpenFlows", "Haestad", "System"]
-    packages=[package_py_openflows],
+    packages=package_py_openflows,
 
     # do not use "include_package" and provide a dictionary. WILL NOT WORK
     # use MANIFEST.in and based on that it will auto generate the contents
@@ -117,7 +133,7 @@ setuptools.setup(
     #  commandNameThatUserWillType = name.space.to-the.command:public_method_for_this_command_in_the_py_fle
     entry_points={
         'console_scripts': [
-            f'newofw={package_py_openflows}.tools.cmd:newofw_command',
+            f'newofw=pyofw.tools.cmd:newofw_command',
         ],
     },
 )

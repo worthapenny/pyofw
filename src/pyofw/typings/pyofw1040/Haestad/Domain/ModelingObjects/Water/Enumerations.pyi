@@ -142,6 +142,8 @@ class EpaNetEngine_EngineCompatibilityEnum(Enum):
 	V8iSS1 = 1
 	EPANET2_12 = 2
 	EPANET2_10 = 3
+	EPANET2_20 = 4
+	CEU4 = 5
 
 class EpaNetEngine_OverrideReportingTimeStepEnum(Enum):
 	All = 0

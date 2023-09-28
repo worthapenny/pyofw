@@ -16,7 +16,7 @@
 # Make sure:
 # To sync assembly-crawler on web (GitHub) <<< IMPORTANT (Make sure the checkout contents)
 # To update the version number in setup.py <<< IMPORTANT
-# To update the Water version in cmd.py <<< IMPORTANT
+# To update the Water version in src\pyofw\tool\cmd.py <<< IMPORTANT
 # To copy the right branch from GitHub, scroll down and update $branchesToLocalDirMap  <<< IMPORTANT
 # To update the MANIFEST.in, if any new file [types] are added
 # To run the tests - all test should pass
@@ -150,12 +150,39 @@ function Get-Version {
   return $version
 }
 
+function Test-CopyStatus {
+  param (
+    [string]$SourcePath,
+    [string]$TargetPath
+  )
+
+  # Recursively list all items in the source and target directories
+  $sourceItems = Get-ChildItem -Path $SourcePath -File -Recurse
+  $targetItems = Get-ChildItem -Path $TargetPath -File -Recurse
+
+  # Compare the two lists of items
+  $differences = Compare-Object -ReferenceObject $sourceItems -DifferenceObject $targetItems -Property FullName
+
+  if ($differences.Count -eq 0) {
+    Write-Host "All files and folders have been successfully copied." -ForegroundColor DarkGreen
+  }
+  else {
+    $notCopiedItems = $differences | ForEach-Object {
+      $_.InputObject.FullName
+    }
+    Write-Error "Some files or folders were not copied:`r`n$($notCopiedItems -join "`r`n")"
+  }
+}
+
 function Copy-Branches {
   Write-Host "-------------- START COPYING BRANCHES --------------" -ForegroundColor DarkGray
-  Import-Env
+
   
   Set-Location $script:assemblyCrawlerDir
   Write-Host "Working directory set to: $script:assemblyCrawlerDir" -ForegroundColor Magenta
+
+  # Make sure the remote branches are crated to local repo
+  git fetch
 
   foreach ($map in $branchesToLocalDirMap.GetEnumerator()) {
     Write-Host (("." * 30) + " $($map.Key) " + ("." * 30)) -ForegroundColor DarkGray
@@ -177,6 +204,8 @@ function Copy-Branches {
 
     Write-Host "[$($map.Key)] About to copy typings contents from: $sourceDir" -ForegroundColor DarkBlue
     Copy-Item -Force -Recurse -Path $sourceDir -Destination $targetDir
+    # Test-CopyStatus -SourcePath $sourceDir -TargetPath $targetDir
+    
     Remove-Item -Force -Recurse -Path (Join-Path $targetDir "TestAssemblyNET48")
     Write-Host "[$($map.Key)] Copied contents to $targetDir" -ForegroundColor DarkGreen
     Write-Host ("." * 100) -ForegroundColor DarkGray
@@ -189,7 +218,20 @@ function Copy-Branches {
   Write-Host "-------------- x -------------- x -------------- x --------------" -ForegroundColor DarkGray
 }
 
+function Copy-StubFiles {
+  Write-Host "-------------- START COPYING STUB FILES --------------" -ForegroundColor DarkGray
+
+  $sourceDir = Join-Path $assemblyCrawlerDir "typings"
+  $targetDir = Join-Path $script:typingsDir $map.Value
+  Write-Host "Source Dir: $sourceDir"
+  Write-Host "Target Dir: $targetDir"
+
+}
+
+
 function New-Build {
+  Write-Host "About to start a new build" -ForegroundColor Green
+
   # Check if the current directory has setup.py file
   $setupPyPath = Join-Path -Path $PWD -ChildPath  "setup.py"
 
@@ -197,8 +239,12 @@ function New-Build {
     throw "No setup.py file detected at this location: {$PWD} "
   }
 
+  Import-Env  
+
   if ($copyTypings -eq "True") {
+    Write-Host "Copy typings is true, So start copying..." -ForegroundColor Blue
     Copy-Branches
+    #Copy-StubFiles
   }
   else {
     Write-Host "Skipped copying typings" -ForegroundColor Red
@@ -209,6 +255,11 @@ function New-Build {
   Write-Host "CWD = $($script:currentWorkingDir)" -ForegroundColor DarkBlue
 
   Write-Host "BUILD: Perform cleaning" -ForegroundColor DarkBlue
+
+  # make sure setup.py exists
+  if (-not(Test-Path .\setup.py)) {
+    Write-Error "setup.py could not be located on root path"
+  }
   python.exe .\setup.py clean --all
 
   Write-Host "BUILD: Creating..." -ForegroundColor DarkBlue

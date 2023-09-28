@@ -1,4 +1,5 @@
 from enum import Enum
+from System import TypeCode
 
 class TargetAttribute(Enum):
 	NullAttribute = 0
@@ -30,7 +31,7 @@ class TargetAttribute(Enum):
 	SS_SurfaceElevation = -7
 
 class ActiveAlarmsEnum(Enum):
-	NONE = 0
+	None = 0
 	Low = 1
 	High = 2
 	LowHigh = 3

@@ -1,6 +1,5 @@
 from Haestad.LicensingFacade import LicenseRunStatusEnum, ProductId, LicenseStatus, ILicenseProvider
 from typing import overload
-from System import IntPtr
 
 class ILicenseManager(ILicenseProvider):
 

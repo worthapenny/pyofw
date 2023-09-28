@@ -1,11 +1,12 @@
 from enum import Enum
-from OpenFlows.Domain.DataObjects import IModel, IModelElementManager, IModelIOOperations, IModelScenarioManagement, IDomainModel, IModelSelectionSetManagement
+from System import TypeCode
+from OpenFlows import IModel, IModelElementManager, IModelIOOperations, IModelUnits, IModelScenarioManagement, IModelSelectionSetManagement
 from OpenFlows.Water.Units import INetworkElementUnits, IComponentElementUnits
-from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterNetwork, IWaterElement
+from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterNetwork, IWaterNetworkElement
 from OpenFlows.Water.Domain.ModelingElements.Components import IWaterModelSupport, IWaterComponent
 from OpenFlows.Water.Domain.ModelingElements import IWaterScenarios, IWaterScenario, IWaterSelectionSets, IWaterSelectionSet
 from OpenFlows.Water.Domain.ModelingElements.CalculationOptions import IWaterScenarioOptions, IWaterScenarioOptionsUnits
-from OpenFlows.Units import IModelUnits
+from OpenFlows.Domain.DataObjects import IDomainModel
 from OpenFlows.Water.Analysis import IAnalysisTools
 
 class CalculationType(Enum):
@@ -20,15 +21,15 @@ class CalculationType(Enum):
 	WaterQuality = 8
 
 class DemandAdjustmentsType(Enum):
-	NONE = 0
+	None = 0
 	Active = 1
 
 class UnitDemandAdjustmentType(Enum):
-	NONE = 0
+	None = 0
 	Active = 1
 
 class RoughnessAdjustmentType(Enum):
-	NONE = 0
+	None = 0
 	Active = 1
 
 class AdjustmentOperationType(Enum):
@@ -67,7 +68,7 @@ class TankSectionType(Enum):
 	NonCircular = 1
 	VariableArea = 2
 
-class IWaterModel(IModel[IWaterNetwork, IWaterModelSupport, IWaterScenarios, IWaterScenario, IWaterScenarioOptions, IWaterScenarioOptionsUnits, IWaterSelectionSets, IWaterSelectionSet, IWaterElement, IWaterElement, WaterNetworkElementType, IWaterComponent, WaterComponentType, INetworkElementUnits, IComponentElementUnits]):
+class IWaterModel(IModel[IWaterNetwork, IWaterModelSupport, IWaterScenarios, IWaterScenario, IWaterScenarioOptions, IWaterScenarioOptionsUnits, IWaterSelectionSets, IWaterSelectionSet, IWaterNetworkElement, IWaterNetworkElement, WaterNetworkElementType, IWaterComponent, WaterComponentType, INetworkElementUnits, IComponentElementUnits]):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed

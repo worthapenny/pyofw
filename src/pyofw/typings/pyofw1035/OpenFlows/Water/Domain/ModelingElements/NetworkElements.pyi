@@ -5,11 +5,12 @@ from OpenFlows.Domain.ModelingElements import IElementUnits, IElementsResults, I
 from OpenFlows.Units import IUnit
 from Haestad.Domain.ModelingObjects.Water.Enumerations import CheckValveFlowDirectionEnum, TurbineOperatingCaseEnum, TurbineStatusEnum, HammerValveType, SurgeTankTypeEnum, GasVesselLevelType, HydroTankType, OperatingRangeTypeEnum, AirFlowCalculationMethod, AirValveTypeEnum, AirValveTransitionType, SAV_SRVTypeEnum, SAVValveTypeEnum, SavClosureTriggerEnum, SRVControlTypeEnum, SRVValveTypeEnum, DischargeToAtmosphereTypeEnum, ValveTypeInitialStatusEnum
 from enum import Enum
+from System import TypeCode
 from Haestad.Calculations.Pressure import VSPBType, TankCalculationModel, IsolationValveInitialSetting
 from OpenFlows.Water.Domain import ValveSettingType, TCVCoefficientType, PressureValvesettingType, ConstituentSourceType, PipeStatusType, TankSectionType
 from Haestad.Support.Support import GeometryPoint, IEditLabeled, ILabeled
-from OpenFlows.Domain.ModelingElements.NetworkElements import INetworkElements, TElementInputType, TElementResultsType, TElementsInputType, TElementsResultsType, IActiveElementInput, IActiveElementsInput, INetworkElement, IBaseLinksResults, IBaseLinkResults, IBaseLinkInput, IBaseLinksInput, IBaseLinkUnits, IPointNodeInput, IPointNodesInput, IBasePolygonsInput, IBasePolygonsResults, IBasePolygonResults, IBasePolygonInput, IMorphable
-from OpenFlows.Domain.DataObjects import INetwork
+from OpenFlows.Domain.ModelingElements.NetworkElements import INetworkElements, TElementInputType, TElementResultsType, TElementsInputType, TElementsResultsType, IActiveElementInput, IActiveElementsInput, INetworkElement, IBaseLinksResults, IBaseLinkResults, IBaseLinkInput, IBaseLinksInput, IBaseLinkUnits, IPointNodeInput, IPointNodesInput, IBasePolygonsInput, IBasePolygonsResults, IBasePolygonResults, IBasePolygonInput
+from OpenFlows import INetwork
 
 
 class VSPBFixedHeadType(Enum):
@@ -4445,7 +4446,7 @@ class IVSPBInput(IBasePumpInput):
 		pass
 
 	@property
-	def ControlNode(self) -> IWaterElement:
+	def ControlNode(self) -> IWaterNetworkElement:
 		"""The node that the battery checks to determine whether to increase, maintain, or decrease its relative speed factor.
 
 		Returns
@@ -4455,7 +4456,7 @@ class IVSPBInput(IBasePumpInput):
 		pass
 
 	@ControlNode.setter
-	def ControlNode(self, controlnode: IWaterElement) -> None:
+	def ControlNode(self, controlnode: IWaterNetworkElement) -> None:
 		pass
 
 	@property
@@ -7456,7 +7457,7 @@ class DomainElementExtensions:
 
 	@staticmethod
 	@overload
-	def Create(scadaElements: ISCADAElements, label: str, point: GeometryPoint, targetElement: IWaterElement = None, scadaTargetAttribute: SCADATargetAttribute = SCADATargetAttribute.UnAssigned, realTimeSignal: ISCADASignal = None, historicalSignal: ISCADASignal = None) -> ISCADAElement:
+	def Create(scadaElements: ISCADAElements, label: str, point: GeometryPoint, targetElement: IWaterNetworkElement = None, scadaTargetAttribute: SCADATargetAttribute = SCADATargetAttribute.UnAssigned, realTimeSignal: ISCADASignal = None, historicalSignal: ISCADASignal = None) -> ISCADAElement:
 		"""Creates a new SCADA Element
 
 		Args
@@ -7464,7 +7465,7 @@ class DomainElementExtensions:
 			scadaElements (``ISCADAElements``) :  The SCADA element manager
 			label (``str``) :  The label of the new SCADA element
 			point (``GeometryPoint``) :  The geometry point of the SCADA element
-			targetElement (``IWaterElement``) :  The target element the SCADA element points to.  Default is null.
+			targetElement (``IWaterNetworkElement``) :  The target element the SCADA element points to.  Default is null.
 			scadaTargetAttribute (``SCADATargetAttribute``) :  The attribute to use with this SCADA element.  The default is unassigned.
 			realTimeSignal (``ISCADASignal``) :  The real-time signal to use with this SCADA element.  The default is null.
 			historicalSignal (``ISCADASignal``) :  The historical signal to use with this SCADA element.  The default is null.
@@ -7493,7 +7494,7 @@ class DomainElementExtensions:
 		"""
 		pass
 
-class IWaterElement(IElement):
+class IWaterNetworkElement(IElement):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed
@@ -7512,7 +7513,7 @@ class IWaterElement(IElement):
 
 		Returns
 		--------
-			``IWaterElement`` : 
+			``IWaterNetworkElement`` : 
 		"""
 		pass
 
@@ -7529,7 +7530,7 @@ class IWaterNetworkElements(Generic[TElementManagerType, TElementType, TUnitsTyp
 		raise Exception("Creating a new Instance of this class is not allowed")
 		pass
 
-class IWaterNetworkElement(Generic[TElementManagerType, TElementType, TUnitsType, TElementInputType, TElementResultsType, TElementsInputType, TElementsResultsType], INetworkElement[TElementManagerType, TElementType, TUnitsType, WaterNetworkElementType, TElementInputType, TElementResultsType, TElementsInputType, TElementsResultsType], IWaterElement):
+class IWaterNetworkElement(Generic[TElementManagerType, TElementType, TUnitsType, TElementInputType, TElementResultsType, TElementsInputType, TElementsResultsType], INetworkElement[TElementManagerType, TElementType, TUnitsType, WaterNetworkElementType, TElementInputType, TElementResultsType, TElementsInputType, TElementsResultsType], IWaterNetworkElement):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed
@@ -8122,7 +8123,7 @@ class IWaterQualityResultsUnits(IElementUnits):
 		"""
 		pass
 
-class IWaterNetwork(INetwork[IWaterElement, WaterNetworkElementType]):
+class IWaterNetwork(INetwork[IWaterNetworkElement, WaterNetworkElementType]):
 
 	def __init__(self) -> None:
 		"""Creating a new Instance of this class is not allowed
@@ -17516,7 +17517,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 		pass
 
 	@property
-	def AssociatedElement(self) -> IWaterElement:
+	def AssociatedElement(self) -> IWaterNetworkElement:
 		"""The demand node or pipe the customer meter is associated with.
 
 		Returns
@@ -17526,7 +17527,7 @@ class ICustomerMeterInput(IPhysicalNodeElementInput):
 		pass
 
 	@AssociatedElement.setter
-	def AssociatedElement(self, associatedelement: IWaterElement) -> None:
+	def AssociatedElement(self, associatedelement: IWaterNetworkElement) -> None:
 		pass
 
 	@property
@@ -18005,7 +18006,7 @@ class ISCADAElementInput(IPointNodeInput):
 		pass
 
 	@property
-	def TargetElement(self) -> IWaterElement:
+	def TargetElement(self) -> IWaterNetworkElement:
 		"""The Domain Element the SCADA Signal targets.
 
 		Returns
@@ -18015,7 +18016,7 @@ class ISCADAElementInput(IPointNodeInput):
 		pass
 
 	@TargetElement.setter
-	def TargetElement(self, targetelement: IWaterElement) -> None:
+	def TargetElement(self, targetelement: IWaterNetworkElement) -> None:
 		pass
 
 	@property

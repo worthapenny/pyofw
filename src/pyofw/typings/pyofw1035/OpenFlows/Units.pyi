@@ -1,9 +1,9 @@
 from enum import Enum
-from typing import Generic, overload, TypeVar
+from System import TypeCode
+from OpenFlows import TNetworkUnitsType, TComponentUnitsType
+from typing import overload, Generic
 from Haestad.Support.Units import Unit, Dimension
 
-TNetworkUnitsType = TypeVar("TNetworkUnitsType")
-TComponentUnitsType = TypeVar("TComponentUnitsType")
 
 class FormatCode(Enum):
 	Fixed = 0
@@ -14,29 +14,6 @@ class FormatCode(Enum):
 class UnitSystemType(Enum):
 	USCustomary = 0
 	SI = 1
-
-class IModelUnits(Generic[TNetworkUnitsType, TComponentUnitsType]):
-
-	def __init__(self) -> None:
-		"""Creating a new Instance of this class is not allowed
-
-
-		Raises
-		--------
-			Exception: if this class is instantiated
-		"""
-		raise Exception("Creating a new Instance of this class is not allowed")
-		pass
-
-	@property
-	def Units(self) -> IUnits[TNetworkUnitsType,TComponentUnitsType]:
-		"""The unit manager.
-
-		Returns
-		--------
-			``IModelUnits`` : 
-		"""
-		pass
 
 class INetworkUnits:
 

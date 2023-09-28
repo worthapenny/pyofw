@@ -3,13 +3,14 @@ from typing import overload, Generic, Iterator
 from OpenFlows.Units import IUnit
 from OpenFlows.Domain.ModelingElements import IElementUnits, IElement, TElementManagerType, TElementType, TUnitsType, IModelingElementBase, IModelingElementsBase, IElements, IElementManager
 from enum import Enum
+from System import TypeCode
 from Haestad.Domain.ModelingObjects.Water.Enumerations import ControlTypeEnum, ControlPriorityEnum, ConditionTypeEnum, NodeAttributeEnum, TankAttributeEnum, ControlConditionPressureValveAttributeEnum, ControlConditionFCVAttributeEnum, FCVStatusEnum, ControlConditionGPVAttributeEnum, ControlConditionGPVStatusEnum, ControlConditionTCVAttributeEnum, TCVStatusEnum, HydroTankAttributeEnum, SurgeTankAttributeEnum, LogicalOperatorEnum, ControlActionTypeEnum, PumpEfficiencyTypeEnum, UnitDemandLoadTypeEnum, MinorLossTypeEnum
 from Haestad.Calculations.Pressure import SimpleConditionType, ControlConditionPumpAttribute, ControlConditionPipeAttribute, ControlConditionValveStatus, ControlActionPipeAttribute, ControlActionPipeStatus, ControlActionPumpAttribute, ControlActionPumpStatus, ControlActionTCVAttribute, ControlActionTCVStatus, ControlActionGPVAttribute, ControlActionGPVStatus, ControlActionFCVAttribute, ControlActionFCVStatus, ControlActionPressureValveAttribute, ControlActionPressureValveStatus, PatternCategory, PatternFormat, PumpDefinitionType, WallReactionOrder
 from datetime import datetime
 from OpenFlows.Domain.ModelingElements.Components import IComponentElements, IComponentElement, IModelComponents
 from Haestad.Support.Units import PopulationUnit, AreaUnit
 from Haestad.Support.Support import IEditLabeled, ILabeled
-from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterElement, IPipe, IPump, IThrottleControlValve, IGeneralPurposeValve, IFlowControlValve, IPressureSustainingValve, IPressureBreakingValve, IPressureReducingValve, IReservoir, IJunction, IHydrant, ITank
+from OpenFlows.Water.Domain.ModelingElements.NetworkElements import IWaterNetworkElement, IPipe, IPump, IThrottleControlValve, IGeneralPurposeValve, IFlowControlValve, IPressureSustainingValve, IPressureBreakingValve, IPressureReducingValve, IReservoir, IJunction, IHydrant, ITank
 
 
 class ConditionComparisonOperator(Enum):
@@ -44,14 +45,6 @@ class FCVConditionAttribute(Enum):
 class TCVConditionAttribute(Enum):
 	Discharge = 0
 	Setting = 1
-
-class PumpConditionStatus(Enum):
-	On = 0
-	Off = 1
-
-class PipeConditionStatus(Enum):
-	Open = 0
-	Closed = 1
 
 class WaterComponentType(Enum):
 	Pattern = 50
@@ -638,7 +631,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 		pass
 
 	@property
-	def Element(self) -> IWaterElement:
+	def Element(self) -> IWaterNetworkElement:
 		"""The element to associate with this condition.
 
 		Returns
@@ -648,7 +641,7 @@ class IElementControlConditionInput(IControlSimpleConditionInput):
 		pass
 
 	@Element.setter
-	def Element(self, element: IWaterElement) -> None:
+	def Element(self, element: IWaterNetworkElement) -> None:
 		pass
 
 	@property
@@ -765,7 +758,7 @@ class IElementConditionInput:
 		pass
 
 	@property
-	def Element(self) -> IWaterElement:
+	def Element(self) -> IWaterNetworkElement:
 		"""The element assigned to the condition.
 
 		Returns
@@ -1024,7 +1017,7 @@ class IPumpConditionInput(IElementConditionInput):
 		pass
 
 	@property
-	def PumpStatus(self) -> PumpConditionStatus:
+	def PumpStatus(self) -> PumpStatus:
 		"""Pump status
 
 		Returns
@@ -1034,7 +1027,7 @@ class IPumpConditionInput(IElementConditionInput):
 		pass
 
 	@PumpStatus.setter
-	def PumpStatus(self, pumpstatus: PumpConditionStatus) -> None:
+	def PumpStatus(self, pumpstatus: PumpStatus) -> None:
 		pass
 
 class IPipeConditionInput(IElementConditionInput):
@@ -1079,7 +1072,7 @@ class IPipeConditionInput(IElementConditionInput):
 		pass
 
 	@property
-	def PipeStatus(self) -> PipeConditionStatus:
+	def PipeStatus(self) -> PipeStatus:
 		"""Pipe status
 
 		Returns
@@ -1089,7 +1082,7 @@ class IPipeConditionInput(IElementConditionInput):
 		pass
 
 	@PipeStatus.setter
-	def PipeStatus(self, pipestatus: PipeConditionStatus) -> None:
+	def PipeStatus(self, pipestatus: PipeStatus) -> None:
 		pass
 
 class IPressureValveConditionInput(IElementConditionInput):
@@ -1836,7 +1829,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 		pass
 
 	@property
-	def Element(self) -> IWaterElement:
+	def Element(self) -> IWaterNetworkElement:
 		"""The element assigned to the action.
 
 		Returns
@@ -1846,7 +1839,7 @@ class IControlAction(IWaterComponentBase[IControlActions, IControlAction, IContr
 		pass
 
 	@Element.setter
-	def Element(self, element: IWaterElement) -> None:
+	def Element(self, element: IWaterNetworkElement) -> None:
 		pass
 
 	@property
@@ -1971,7 +1964,7 @@ class IElementActionInput:
 		pass
 
 	@property
-	def Element(self) -> IWaterElement:
+	def Element(self) -> IWaterNetworkElement:
 		"""The assigned element for the action
 
 		Returns
@@ -2876,14 +2869,14 @@ class ControlExtensionMethods:
 
 	@staticmethod
 	@overload
-	def CreateCondition(conditions: IControlConditions, pump: IPump, status: PumpConditionStatus) -> IControlCondition:
+	def CreateCondition(conditions: IControlConditions, pump: IPump, status: PumpStatus) -> IControlCondition:
 		"""Create a condition for the pump using its status.
 
 		Args
 		--------
 			conditions (``IControlConditions``) :  conditions
 			pump (``IPump``) :  pump
-			status (``PumpConditionStatus``) :  status
+			status (``PumpStatus``) :  status
 
 		Returns
 		--------
@@ -2911,14 +2904,14 @@ class ControlExtensionMethods:
 
 	@staticmethod
 	@overload
-	def CreateCondition(conditions: IControlConditions, pipe: IPipe, status: PipeConditionStatus) -> IControlCondition:
+	def CreateCondition(conditions: IControlConditions, pipe: IPipe, status: PipeStatus) -> IControlCondition:
 		"""No Description
 
 		Args
 		--------
 			conditions (``IControlConditions``) :  conditions
 			pipe (``IPipe``) :  pipe
-			status (``PipeConditionStatus``) :  status
+			status (``PipeStatus``) :  status
 
 		Returns
 		--------

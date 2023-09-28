@@ -1,11 +1,11 @@
 from typing import List, Generic, overload, TypeVar
 from enum import Enum
-from OpenFlows.Domain.ModelingElements.NetworkElements import ElementStateType
-from OpenFlows.Domain.ModelingElements import IElement, IElementUnits, IScenarioOptions, ISelectionSet, ModelElementType, IModelingElementBase, IModelingElementsBase, ISelectionSets
-from OpenFlows.Units import IComponentUnits, INetworkUnits, IUnits
-from OpenFlows.Domain.DataObjects import IDomainModel, IModelInfo
-from OpenFlows.Domain.ModelingElements.Components import IModelComponents
-from OpenFlows.Domain.ModelingElements.Support import IUserFieldManager
+from OpenFlows.Domain.ModelingElements.INetworkElements import ElementStateType
+from OpenFlows.Domain.IModelingElements import IElement, IElementUnits, IScenarioOptions, ISelectionSet, ModelElementType, IModelingElementBase, IModelingElementsBase, ISelectionSets
+from OpenFlows.IUnits import IComponentUnits, INetworkUnits, IUnits
+from OpenFlows.Domain.IDataObjects import IDomainModel, IModelInfo
+from OpenFlows.Domain.ModelingElements.IComponents import IModelComponents
+from OpenFlows.Domain.ModelingElements.ISupport import IUserFieldManager
 
 TNetworkElementTypeEnum = TypeVar("TNetworkElementTypeEnum", Enum)
 TNetworkElementType = TypeVar("TNetworkElementType", IElement)

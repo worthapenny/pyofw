@@ -1,15 +1,16 @@
 from enum import Enum
+from System import TypeCode
 from Haestad.Support.Support import IField, FieldDataType, INamable, ILabeled
 from Haestad.Domain import DomainFieldType
 from Haestad.Support.Units import Unit
 from OpenFlows.Units import IUnit
 from System.Collections.Generic import IReadOnlyCollection
+from OpenFlows import TNetworkElementTypeEnum
 from typing import List, Generic, TypeVar
 
 TValueType = TypeVar("TValueType")
-TNetworkElementTypeEnum = TypeVar("TNetworkElementTypeEnum")
 TFieldType = TypeVar("TFieldType")
-TNetworkElementType = TypeVar("TNetworkElementType")
+TNetworkElementType = TypeVar("TNetworkElementType", Enum)
 
 class UserFieldDataType(Enum):
 	Integer = 1
